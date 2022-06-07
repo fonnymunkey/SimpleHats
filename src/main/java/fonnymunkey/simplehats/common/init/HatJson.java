@@ -1,11 +1,11 @@
-package fonnymunkey.simplehats.common;
+package fonnymunkey.simplehats.common.init;
 
 import com.google.common.io.Files;
 import com.google.gson.*;
 import fonnymunkey.simplehats.SimpleHats;
 import fonnymunkey.simplehats.util.HatEntry;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Rarity;
-import org.apache.http.util.TextUtils;
 import org.apache.logging.log4j.Level;
 
 import java.io.File;
@@ -19,10 +19,11 @@ import java.util.Map;
 
 public class HatJson {
     private static List<HatEntry> hatList = new ArrayList<>();
+
     private static List<HatEntry> defaultHats = Arrays.asList(
-            new HatEntry("acornhat", Rarity.COMMON, 0),
-            new HatEntry("beehat", Rarity.COMMON, 25),
-            new HatEntry("bigeyes", Rarity.COMMON, 25),
+            new HatEntry("acornhat", Rarity.COMMON, 5),
+            new HatEntry("beehat", Rarity.COMMON, 5, 3),
+            new HatEntry("bigeyes", Rarity.COMMON, 5),
             new HatEntry("burgerhat", Rarity.COMMON, 5),
             new HatEntry("cyclopseye", Rarity.COMMON, 5),
             new HatEntry("fakeblight", Rarity.COMMON, 5),
@@ -31,20 +32,21 @@ public class HatJson {
             new HatEntry("jesterhat", Rarity.COMMON, 5),
             new HatEntry("rabbitears", Rarity.COMMON, 5),
             new HatEntry("redeyes", Rarity.COMMON, 5),
-            new HatEntry("rubbernipple", Rarity.COMMON, 10),
-            new HatEntry("triangleshades", Rarity.UNCOMMON, 1)
-            );
-
+            new HatEntry("rubbernipple", Rarity.COMMON, 5),
+            new HatEntry("triangleshades", Rarity.COMMON, 5),
+            new HatEntry("rat", Rarity.COMMON, 5)
+    );
     public static List<HatEntry> getHatList() {
         return hatList;
     }
 
     public static void registerHatJson(Path path) {
-
         try {
             File file = new File(path.toFile(), SimpleHats.modId + ".json");
 
             if(!file.exists()) {
+                SimpleHats.logger.log(Level.INFO, "SimpleHats simplehats.json not found, generating default file.");
+
                 file.createNewFile();
                 file.setWritable(true);
 
@@ -63,6 +65,7 @@ public class HatJson {
                 writer.close();
 
                 hatList = defaultHats;
+                SimpleHats.logger.log(Level.INFO, "Loaded " + hatList.size() + " hat entries from default file.");
             }
             else {
                 file.setWritable(true);
@@ -71,18 +74,41 @@ public class HatJson {
 
                 Gson gson = new Gson();
 
+                outer:
                 for(Map.Entry<String, JsonElement> entry : json.entrySet()){
                     JsonElement dataElement = entry.getValue();
                     HatEntry hatEntry = gson.fromJson(dataElement, HatEntry.class);
 
-                    if(TextUtils.isEmpty(hatEntry.getHatName())) continue;
-
+                    if(hatEntry.getHatName().isEmpty()) {
+                        SimpleHats.logger.log(Level.WARN, "Attempted to load empty hat name, skipping.");
+                        continue;
+                    }
+                    if(!validateName(hatEntry.getHatName())) {
+                        SimpleHats.logger.log(Level.WARN, "Attempted to load invalid hat name \"" + hatEntry.getHatName() + "\", skipping.");
+                        continue;
+                    }
+                    for(HatEntry temp : hatList) {
+                        if(temp.getHatName().equalsIgnoreCase(hatEntry.getHatName()) || hatEntry.getHatName().equalsIgnoreCase("special")) {
+                            SimpleHats.logger.log(Level.WARN, "Attempted to load duplicate hat name \"" + hatEntry.getHatName() + "\", skipping.");
+                            continue outer;
+                        }
+                    }
+                    //validate entries from json and set defaults
+                    hatEntry.validateDeserializedEntry();
                     hatList.add(hatEntry);
                 }
+                SimpleHats.logger.log(Level.INFO, "Loaded " + hatList.size() + " hat entries from simplehats.json");
             }
         }
         catch(Exception ex) {
-            SimpleHats.logger.log(Level.ERROR, "Loading HatJson failed: " + ex);
+            SimpleHats.logger.log(Level.ERROR, "Loading simplehats.json failed: " + ex);
         }
+    }
+
+    private static boolean validateName(String name) {
+        for(char c : name.toCharArray()) {
+            if(!ResourceLocation.validPathChar(c)) return false;
+        }
+        return true;
     }
 }

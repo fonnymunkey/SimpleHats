@@ -1,0 +1,28 @@
+{
+	"credit": "Made with Blockbench",
+	"parent": "simplehats:item/hatparent",
+	"texture_size": [32, 32],
+	"textures": {
+		"0": "simplehats:item/hats/rat"
+	},
+	"elements": [
+		{
+			"from": [0, 4, 0],
+			"to": [0.25, 20, 16],
+			"faces": {
+				"north": {"uv": [12.516, 0.016, 12.984, 3.984], "texture": "#0"},
+				"east": {"uv": [0.016, 0.016, 11.984, 11.984], "texture": "#0"},
+				"south": {"uv": [12.016, 0.016, 12.484, 3.984], "texture": "#0"},
+				"west": {"uv": [0.016, 0.016, 11.984, 11.984], "texture": "#0"},
+				"up": {"uv": [5.468, 12.984, 0, 12.516], "rotation": 90, "texture": "#0"},
+				"down": {"uv": [5.484, 12.016, 0.016, 12.484], "rotation": 270, "texture": "#0"}
+			}
+		}
+	],
+	"display": {
+		"head": {
+			"rotation": [0, 90, 0],
+			"translation": [0, -4, -15.25]
+		}
+	}
+}

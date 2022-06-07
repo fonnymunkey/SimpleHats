@@ -1,15 +1,10 @@
-package fonnymunkey.simplehats.common;
+package fonnymunkey.simplehats.common.init;
 
 import net.minecraftforge.common.ForgeConfigSpec;
-import net.minecraftforge.fml.event.config.ModConfigEvent;
 
 public class Config {
-//TODO all this blegh
-    public static void reloadConfig(ModConfigEvent event) {
-        if(event.getConfig().getSpec() == CLIENT_SPEC) cachedClient.refresh();
-        else if(event.getConfig().getSpec() == COMMON_SPEC) cachedCommon.refresh();
-        else if(event.getConfig().getSpec() == SERVER_SPEC) cachedServer.refresh();
-    }
+//TODO: all this blegh
+
 
     public static ForgeConfigSpec CLIENT_SPEC;
     public static ForgeConfigSpec.BooleanValue CLIENT_BOOL;

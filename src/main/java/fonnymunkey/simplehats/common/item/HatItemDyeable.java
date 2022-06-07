@@ -4,6 +4,7 @@ import fonnymunkey.simplehats.util.HatEntry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.item.DyeableLeatherItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -19,22 +20,22 @@ public class HatItemDyeable extends HatItem implements DyeableLeatherItem {
     }
 
     @Override
-    public int getColor(ItemStack pStack) {
-        CompoundTag compoundtag = pStack.getTagElement("display");
+    public int getColor(ItemStack stack) {
+        CompoundTag compoundtag = stack.getTagElement("display");
         return compoundtag != null && compoundtag.contains("color", 99) ? compoundtag.getInt("color") : this.getHatEntry().getHatDyeSettings().getColorCode();
     }
 
+    private static final String[] colorList = new String[]{"\u00A7c", "\u00A7e", "\u00A7a", "\u00A7b", "\u00A79", "\u00A7d", "\u00A75"};
+
     @Override
     @OnlyIn(Dist.CLIENT)
-    public void appendHoverText(ItemStack itemStack, Level world, List<Component> tooltip, TooltipFlag flag) {
-        tooltip.add(new TextComponent(
-                "\u00A7c" + "D" +
-                        "\u00A7e" + "y" +
-                        "\u00A7a" + "e" +
-                        "\u00A7b" + "a" +
-                        "\u00A79" + "b" +
-                        "\u00A7d" + "l" +
-                        "\u00A75" + "e"
-                ));
+    public void appendHoverText(ItemStack itemStack, Level level, List<Component> tooltip, TooltipFlag flag) {
+        super.appendHoverText(itemStack, level, tooltip, flag);
+        TextComponent component = new TextComponent("");
+        char[] c = (new TranslatableComponent("tooltip.simplehats.dyeable")).getString().toCharArray();
+        for(int i=0; i<c.length; i++) {
+            component.append(colorList[i%colorList.length] + c[i]);
+        }
+        tooltip.add(component);
     }
 }

@@ -1,17 +1,15 @@
 package fonnymunkey.simplehats;
 
-import fonnymunkey.simplehats.common.HatJson;
-import fonnymunkey.simplehats.common.Config;
-import fonnymunkey.simplehats.common.init.ModItems;
-import fonnymunkey.simplehats.common.item.HatItem;
-import fonnymunkey.simplehats.common.item.HatItemDyeable;
-import net.minecraft.core.cauldron.CauldronInteraction;
+import fonnymunkey.simplehats.common.init.HatJson;
+import fonnymunkey.simplehats.common.init.Config;
+import fonnymunkey.simplehats.common.init.ModRegistry;
+import fonnymunkey.simplehats.util.UUIDHandler;
 import net.minecraft.world.item.Item;
-import net.minecraftforge.client.event.ColorHandlerEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.InterModComms;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
@@ -28,22 +26,24 @@ import top.theillusivec4.curios.api.client.ICurioRenderer;
 public class SimpleHats {
     public static final String modId = "simplehats";
     public static Logger logger = LogManager.getLogger();
-//TODO siding checks/tests
+
     public SimpleHats() {
         IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
 
-        ModLoadingContext.get().registerConfig(net.minecraftforge.fml.config.ModConfig.Type.CLIENT, Config.CLIENT_SPEC);
-        ModLoadingContext.get().registerConfig(net.minecraftforge.fml.config.ModConfig.Type.COMMON, Config.COMMON_SPEC);
-        ModLoadingContext.get().registerConfig(net.minecraftforge.fml.config.ModConfig.Type.SERVER, Config.SERVER_SPEC);
+        ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, Config.CLIENT_SPEC);
+        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Config.COMMON_SPEC);
+        ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, Config.SERVER_SPEC);
 
-        eventBus.addListener(Config::reloadConfig);
         eventBus.addListener(this::enqueueIMC);
         eventBus.addListener(this::clientSetup);
-        eventBus.addListener(this::registerItemColor);
-        eventBus.addGenericListener(Item.class, ModItems::registerHats);
 
         HatJson.registerHatJson(FMLPaths.CONFIGDIR.get());
-        ModItems.DEFREG.register(eventBus);
+        UUIDHandler.init(FMLPaths.CONFIGDIR.get());
+
+        ModRegistry.ITEM_REG.register(eventBus);
+        ModRegistry.ENTITY_REG.register(eventBus);
+        ModRegistry.RECIPE_REG.register(eventBus);
+        ModRegistry.LOOT_REG.register(eventBus);
     }
 
     public void enqueueIMC(final InterModEnqueueEvent event) {
@@ -51,18 +51,9 @@ public class SimpleHats {
     }
 
     public void clientSetup(final FMLClientSetupEvent event) {
-        for(Item hat : ModItems.hatList) {
+        for(Item hat : ModRegistry.hatList) {
             if(hat instanceof ICurioRenderer renderer) {
                 CuriosRendererRegistry.register(hat, () -> renderer);
-            }
-        }
-    }
-
-    public void registerItemColor(ColorHandlerEvent.Item event) {
-        for(HatItem hat : ModItems.hatList) {
-            if(hat instanceof HatItemDyeable hatDye) {
-                event.getItemColors().register((stack, color) -> ((HatItemDyeable)stack.getItem()).getColor(stack), hatDye);
-                CauldronInteraction.WATER.put(hatDye, CauldronInteraction.DYED_ITEM);
             }
         }
     }

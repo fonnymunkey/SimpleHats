@@ -1,0 +1,32 @@
+{
+  "tooltip.simplehats.dyeable": "Dyeable",
+  "tooltip.simplehats.variant": "Cycle variants in the crafting grid",
+  "tooltip.simplehats.special_true": "Oooh, special!",
+  "tooltip.simplehats.special_false": "Just an average, ordinary, simple hat",
+
+  "item.simplehats.hatbag_common": "Common Hat Grab-Bag",
+  "item.simplehats.hatbag_uncommon": "Uncommon Hat Grab-Bag",
+  "item.simplehats.hatbag_rare": "Rare Hat Grab-Bag",
+  "item.simplehats.hatbag_epic": "Epic Hat Grab-Bag",
+  "item.simplehats.hatbag_easter": "Easter Hat Grab-Bag",
+  "item.simplehats.hatbag_summer": "Summer Hat Grab-Bag",
+  "item.simplehats.hatbag_halloween": "Halloween Hat Grab-Bag",
+  "item.simplehats.hatbag_festive": "Festive Hat Grab-Bag",
+
+  "item.simplehats.hatscraps_common": "Common Hat Scraps",
+  "item.simplehats.hatscraps_uncommon": "Uncommon Hat Scraps",
+  "item.simplehats.hatscraps_rare": "Rare Hat Scraps",
+  "item.simplehats.hatscraps_easter": "Easter Hat Scraps",
+  "item.simplehats.hatscraps_summer": "Summer Hat Scraps",
+  "item.simplehats.hatscraps_halloween": "Halloween Hat Scraps",
+  "item.simplehats.hatscraps_festive": "Festive Hat Scraps",
+
+  "item.simplehats.haticon": "SimpleHats Icon",
+
+  "item.simplehats.hatdisplay": "Hat Stand",
+  "entity.simplehats.hatdisplay": "Hat Stand",
+
+  "itemGroup.simplehats": "Simple Hats",
+
+  "item.simplehats.special": "The Simple Hat"
+}

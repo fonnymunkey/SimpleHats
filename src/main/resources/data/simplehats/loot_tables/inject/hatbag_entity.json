@@ -1,0 +1,34 @@
+{
+  "type": "minecraft:entity",
+  "pools": [
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "weight": 20,
+          "name": "simplehats:hatbag_common"
+        },
+        {
+          "type": "minecraft:item",
+          "weight": 15,
+          "name": "simplehats:hatbag_uncommon"
+        },
+        {
+          "type": "minecraft:item",
+          "weight": 10,
+          "name": "simplehats:hatbag_rare"
+        },
+        {
+          "type": "minecraft:item",
+          "weight": 5,
+          "name": "simplehats:hatbag_epic"
+        },
+        {
+          "type": "minecraft:empty",
+          "weight": 200
+        }
+      ]
+    }
+  ]
+}
