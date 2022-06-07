@@ -19,3 +19,4 @@ gradle-app.setting
 .idea
 **/lib/
 **/run/
+**/libs/
