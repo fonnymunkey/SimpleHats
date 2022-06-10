@@ -63,6 +63,7 @@ public class HatDisplay extends LivingEntity {
     public void setItemSlot(EquipmentSlot slot, ItemStack stack) {
         if(!stack.isEmpty() && !(stack.getItem() instanceof HatItem)) {
             SimpleHats.logger.log(org.apache.logging.log4j.Level.ERROR, "Attempted to place non-hat item \"" + stack.getItem().getRegistryName() + "\" on hat display stand");
+            return;
         }
         this.verifyEquippedItem(stack);
         this.equipEventAndSound(stack);
@@ -340,16 +341,5 @@ public class HatDisplay extends LivingEntity {
     protected void defineSynchedData() {
         super.defineSynchedData();
         this.entityData.define(DATA_CLIENT_FLAGS, (byte)0);
-    }
-
-    //I don't know what this does and I don't want to touch it
-    private byte setBit(byte p_31570_, int p_31571_, boolean p_31572_) {
-        if (p_31572_) {
-            p_31570_ = (byte)(p_31570_ | p_31571_);
-        }
-        else {
-            p_31570_ = (byte)(p_31570_ & ~p_31571_);
-        }
-        return p_31570_;
     }
 }

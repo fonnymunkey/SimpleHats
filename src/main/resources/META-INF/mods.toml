@@ -31,9 +31,3 @@ issueTrackerURL="https://github.com/fonnymunkey/SimpleHats/issues"
     versionRange="[1.18.2-5.0.6.3,)"
     ordering="NONE"
     side="BOTH"
-[[dependencies.simplehats]]
-    modId="bagofholding"
-    mandatory=false
-    versionRange="[3.1.0-1.18.2,)"
-    ordering="NONE"
-    side="BOTH"

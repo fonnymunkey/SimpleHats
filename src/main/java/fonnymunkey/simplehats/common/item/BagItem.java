@@ -1,6 +1,7 @@
 package fonnymunkey.simplehats.common.item;
 
 import fonnymunkey.simplehats.SimpleHats;
+import fonnymunkey.simplehats.common.init.ModConfig;
 import fonnymunkey.simplehats.common.init.ModRegistry;
 import fonnymunkey.simplehats.util.HatEntry;
 import fonnymunkey.simplehats.util.HatEntry.HatSeason;
@@ -79,7 +80,7 @@ public class BagItem extends Item {
 
         if(!level.isClientSide) {
             if(!this.seasonal && HatSeason.getSeason() != HatSeason.NONE) {
-                if(level.random.nextInt(0, 4) < 1) {
+                if(level.random.nextFloat() < ModConfig.COMMON.seasonalBagChance.get()) {
                     player.spawnAtLocation(getSeasonalBag());
                 }
             }

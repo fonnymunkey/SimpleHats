@@ -8,13 +8,10 @@ import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import net.minecraftforge.common.loot.GlobalLootModifierSerializer;
 import net.minecraftforge.common.loot.LootModifier;
-import net.minecraftforge.registries.ObjectHolder;
 
 import java.util.List;
 
 public class HatChestLootModifier extends LootModifier {
-    @ObjectHolder(SimpleHats.modId + ":hat_lootinject_chest")
-    public static GlobalLootModifierSerializer<HatChestLootModifier> serializer = null;
 
     public static final ResourceLocation INJECTABLE_LOOT_CHEST = new ResourceLocation(SimpleHats.modId, "inject/hatbag_chest");
 
@@ -24,7 +21,6 @@ public class HatChestLootModifier extends LootModifier {
 
     @Override
     public List<ItemStack> doApply(List<ItemStack> loot, LootContext context) {
-        //loot.addAll(context.getLootTable(INJECTABLE_LOOT).getRandomItems(context)); //infinite loop
         context.getLootTable(INJECTABLE_LOOT_CHEST).getRandomItems(context, loot::add);
         return loot;
     }

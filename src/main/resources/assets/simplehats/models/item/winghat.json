@@ -1,0 +1,79 @@
+{
+	"parent": "simplehats:item/hatparent",
+	"textures": {
+		"0": "simplehats:item/hats/winghat"
+	},
+	"elements": [
+		{
+			"from": [14.125, 8.875, 7.5],
+			"to": [27.125, 16.375, 7.6],
+			"rotation": {"angle": 0, "axis": "y", "origin": [22, 10, 0]},
+			"faces": {
+				"north": {"uv": [6.234, 0.016, 0.016, 3.484], "texture": "#0", "tintindex": 0},
+				"east": {"uv": [6.984, 0.25, 6.75, 3.25], "texture": "#0"},
+				"south": {"uv": [0.016, 0.016, 6.234, 3.484], "texture": "#0", "tintindex": 0},
+				"west": {"uv": [6.75, 0.266, 6.516, 3.234], "texture": "#0", "tintindex": 0},
+				"up": {"uv": [0.282, 4.218, 6.218, 4.016], "texture": "#0", "tintindex": 0},
+				"down": {"uv": [0.282, 3.766, 6.218, 4], "texture": "#0", "tintindex": 0}
+			}
+		},
+		{
+			"from": [-11.125, 8.875, 7.5],
+			"to": [1.875, 16.375, 7.6],
+			"rotation": {"angle": 0, "axis": "y", "origin": [-6, 10, 0]},
+			"faces": {
+				"north": {"uv": [0.016, 0.016, 6.234, 3.484], "texture": "#0", "tintindex": 0},
+				"east": {"uv": [6.516, 0.266, 6.75, 3.234], "texture": "#0", "tintindex": 0},
+				"south": {"uv": [6.234, 0.016, 0.016, 3.484], "texture": "#0", "tintindex": 0},
+				"west": {"uv": [6.75, 0.25, 6.984, 3.25], "texture": "#0"},
+				"up": {"uv": [6.218, 4.218, 0.282, 4.016], "texture": "#0", "tintindex": 0},
+				"down": {"uv": [6.218, 3.766, 0.282, 4], "texture": "#0", "tintindex": 0}
+			}
+		}
+	],
+	"display": {
+		"thirdperson_righthand": {
+			"scale": [0.4, 0.4, 0.4]
+		},
+		"thirdperson_lefthand": {
+			"scale": [0.4, 0.4, 0.4]
+		},
+		"firstperson_righthand": {
+			"rotation": [0, 135, 0],
+			"translation": [0, 1.5, 0],
+			"scale": [0.35, 0.35, 0.35]
+		},
+		"firstperson_lefthand": {
+			"rotation": [0, 135, 0],
+			"translation": [0, 1.75, 0],
+			"scale": [0.35, 0.35, 0.35]
+		},
+		"ground": {
+			"scale": [0.5, 0.5, 0.5]
+		},
+		"gui": {
+			"rotation": [35, -135, 0],
+			"translation": [0, -2, 0],
+			"scale": [0.5, 0.5, 0.5]
+		},
+		"fixed": {
+			"translation": [0, -2, 0],
+			"scale": [0.5, 0.5, 0.03]
+		}
+	},
+	"groups": [
+		{
+			"name": "batwinghat",
+			"origin": [8, 8, 8],
+			"color": 0,
+			"children": [
+				{
+					"name": "group",
+					"origin": [-6, 10, 0],
+					"color": 0,
+					"children": [0, 1]
+				}
+			]
+		}
+	]
+}

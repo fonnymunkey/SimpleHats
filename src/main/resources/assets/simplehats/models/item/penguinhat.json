@@ -1,0 +1,86 @@
+{
+	"parent": "simplehats:item/hatparent",
+	"textures": {
+		"0": "simplehats:item/hats/penguinhat"
+	},
+	"elements": [
+		{
+			"from": [0.5, 11, 0.5],
+			"to": [15.5, 17, 9.5],
+			"rotation": {"angle": 0, "axis": "y", "origin": [-4, 9.5, -4]},
+			"faces": {
+				"north": {"uv": [2.5, 2.5, 5, 3.5], "texture": "#0"},
+				"east": {"uv": [4.5, 4.5, 6, 5.5], "texture": "#0"},
+				"south": {"uv": [0, 3, 2.5, 4], "texture": "#0"},
+				"west": {"uv": [0, 5, 1.5, 6], "texture": "#0"},
+				"up": {"uv": [2.5, 1.5, 0, 0], "texture": "#0"},
+				"down": {"uv": [2.5, 1.5, 0, 3], "texture": "#0"}
+			}
+		},
+		{
+			"from": [0.5375, 9.5, 8],
+			"to": [15.4625, 15.5, 15.5],
+			"rotation": {"angle": 0, "axis": "y", "origin": [-4, 9.5, -4]},
+			"faces": {
+				"north": {"uv": [2.5, 3.5, 5, 4.5], "texture": "#0"},
+				"east": {"uv": [5, 2.75, 6.25, 3.75], "texture": "#0"},
+				"south": {"uv": [0, 4, 2.5, 5], "texture": "#0"},
+				"west": {"uv": [4.5, 5.5, 5.75, 6.5], "texture": "#0"},
+				"up": {"uv": [5, 1.25, 2.5, 0], "texture": "#0"},
+				"down": {"uv": [5, 1.25, 2.5, 2.5], "texture": "#0"}
+			}
+		},
+		{
+			"from": [3.5, 11, -3],
+			"to": [12.5, 14, 0.5],
+			"rotation": {"angle": 0, "axis": "y", "origin": [-4, 9.5, -4]},
+			"faces": {
+				"north": {"uv": [5, 0, 6.5, 0.5], "texture": "#0"},
+				"east": {"uv": [6, 4.25, 6.5, 4.75], "texture": "#0"},
+				"south": {"uv": [5, 0.75, 7, 1.5], "texture": "#0"},
+				"west": {"uv": [5.75, 6, 6.25, 6.5], "texture": "#0"},
+				"up": {"uv": [6.5, 4.25, 5, 3.75], "texture": "#0"},
+				"down": {"uv": [7.75, 5.5, 5.75, 6], "texture": "#0"}
+			}
+		}
+	],
+	"display": {
+		"thirdperson_righthand": {
+			"scale": [0.3, 0.3, 0.3]
+		},
+		"thirdperson_lefthand": {
+			"scale": [0.3, 0.3, 0.3]
+		},
+		"firstperson_righthand": {
+			"rotation": [0, 135, 0],
+			"translation": [1.5, 1.5, 0],
+			"scale": [0.35, 0.35, 0.35]
+		},
+		"firstperson_lefthand": {
+			"rotation": [0, 135, 0],
+			"translation": [1.5, 1.5, 0],
+			"scale": [0.35, 0.35, 0.35]
+		},
+		"ground": {
+			"translation": [0, -4.5, 0],
+			"scale": [0.6, 0.6, 0.6]
+		},
+		"gui": {
+			"rotation": [35, -135, 0],
+			"translation": [0, -3.75, 0],
+			"scale": [0.5, 0.5, 0.5]
+		},
+		"fixed": {
+			"translation": [0, -10.75, 0],
+			"scale": [1, 1, 0.01]
+		}
+	},
+	"groups": [
+		{
+			"name": "bunnyhat",
+			"origin": [8, 8, 8],
+			"color": 0,
+			"children": [0, 1, 2]
+		}
+	]
+}

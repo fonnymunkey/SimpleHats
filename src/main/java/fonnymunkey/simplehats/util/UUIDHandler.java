@@ -6,12 +6,12 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 import fonnymunkey.simplehats.SimpleHats;
+import net.minecraftforge.fml.loading.FMLPaths;
 import org.apache.logging.log4j.Level;
 
 import java.io.*;
 import java.net.URL;
 import java.nio.charset.Charset;
-import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -21,8 +21,8 @@ public class UUIDHandler {
 
     private static Map<String, Integer> uuidMap = new HashMap<>();
 
-    public static void init(Path resourcePath) {
-        try {//Check UUID registry on github, save to map
+    public static void setupUUIDMap() {
+        try {
             URL url = new URL(uuidUrl);
             BufferedReader read = new BufferedReader(new InputStreamReader(url.openStream()));
             uuidMap = new Gson().fromJson(read, new TypeToken<Map<String, Integer>>(){}.getType());
@@ -30,15 +30,17 @@ public class UUIDHandler {
         }
         catch(Exception ex) {
             SimpleHats.logger.log(Level.WARN, "Failed to fetch UUID file: " + ex);
-            return;
         }
-        try {//Compare existing UUID file to github UUID, if different download new uuid.json and resourcepack.zip
-            boolean changed = false;
-            File parent = resourcePath.resolve(SimpleHats.modId + "_hatdl").toFile();
+    }
+
+    public static void checkResourceUpdates() {
+        try {
+            File parent = FMLPaths.CONFIGDIR.get().resolve(SimpleHats.modId + "_hatdl").toFile();
             if(!parent.exists()) parent.mkdirs();
             File uuidFile = new File(parent, "uuids.json");
-            File zipFile = new File(parent, "simplehats_hatdl.zip");
+            File zipFile = new File(parent, SimpleHats.modId + "_hatdl.zip");
 
+            boolean changed;
             if(uuidFile.exists()) {
                 String fileString = Files.asCharSource(uuidFile, Charset.defaultCharset()).read();
                 JsonObject json = JsonParser.parseString(fileString).getAsJsonObject();

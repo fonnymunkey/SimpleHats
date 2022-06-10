@@ -1,0 +1,54 @@
+{
+	"parent": "simplehats:item/hatparent",
+	"texture_size": [32, 32],
+	"textures": {
+		"0": "simplehats:item/hats/seaweedhat"
+	},
+	"elements": [
+		{
+			"from": [0.72, 0.825, 0.72],
+			"to": [15.28, 15.385, 15.28],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 7.28, 8]},
+			"faces": {
+				"north": {"uv": [0, 0, 3, 3], "texture": "#0"},
+				"east": {"uv": [0, 3, 3, 6], "texture": "#0"},
+				"south": {"uv": [3, 0, 6, 3], "texture": "#0"},
+				"west": {"uv": [3, 3, 6, 6], "texture": "#0"},
+				"up": {"uv": [9, 6, 6, 3], "texture": "#0"},
+				"down": {"uv": [9, 0, 6, 3], "texture": "#0"}
+			}
+		}
+	],
+	"display": {
+		"thirdperson_righthand": {
+			"scale": [0.5, 0.5, 0.5]
+		},
+		"thirdperson_lefthand": {
+			"scale": [0.5, 0.5, 0.5]
+		},
+		"firstperson_righthand": {
+			"rotation": [35, 0, 0],
+			"scale": [0.6, 0.6, 0.6]
+		},
+		"firstperson_lefthand": {
+			"rotation": [35, 0, 0],
+			"scale": [0.6, 0.6, 0.6]
+		},
+		"gui": {
+			"rotation": [35, -135, 0],
+			"translation": [0.5, -0.75, 0],
+			"scale": [0.6, 0.6, 0.6]
+		},
+		"fixed": {
+			"scale": [1, 1, 0.01]
+		}
+	},
+	"groups": [
+		{
+			"name": "Spiderweb",
+			"origin": [8, 8, 8],
+			"color": 0,
+			"children": [0]
+		}
+	]
+}

@@ -1,0 +1,70 @@
+{
+	"credit": "Made with Blockbench",
+	"parent": "simplehats:item/hatparent",
+	"texture_size": [64, 64],
+	"textures": {
+		"0": "simplehats:item/hats/julytophat"
+	},
+	"elements": [
+		{
+			"from": [-2.4, 0, -2.4],
+			"to": [18.4, 1.04, 18.4],
+			"rotation": {"angle": 0, "axis": "y", "origin": [-0.32, 0, -0.32]},
+			"faces": {
+				"north": {"uv": [0.008, 10.008, 4.992, 10.242], "texture": "#0"},
+				"east": {"uv": [0.008, 10.258, 4.992, 10.492], "texture": "#0"},
+				"south": {"uv": [0.008, 10.508, 4.992, 10.742], "texture": "#0"},
+				"west": {"uv": [0.008, 10.758, 4.992, 10.992], "texture": "#0"},
+				"up": {"uv": [4.992, 4.992, 0.008, 0.008], "texture": "#0"},
+				"down": {"uv": [4.992, 5.008, 0.008, 9.992], "texture": "#0"}
+			}
+		},
+		{
+			"from": [0.72, 1.04, 0.72],
+			"to": [15.28, 18.72, 15.28],
+			"rotation": {"angle": 0, "axis": "y", "origin": [-0.32, 0, -0.32]},
+			"faces": {
+				"north": {"uv": [5.008, 0.008, 8.492, 4.242], "texture": "#0"},
+				"east": {"uv": [5.008, 4.258, 8.492, 8.492], "texture": "#0"},
+				"south": {"uv": [8.508, 0.008, 11.992, 4.242], "texture": "#0"},
+				"west": {"uv": [8.508, 4.258, 11.992, 8.492], "texture": "#0"},
+				"up": {"uv": [8.492, 11.992, 5.008, 8.508], "texture": "#0"},
+				"down": {"uv": [11.992, 8.508, 8.508, 11.992], "texture": "#0"}
+			}
+		}
+	],
+	"display": {
+		"thirdperson_righthand": {
+			"translation": [0, 3.25, 0],
+			"scale": [0.4, 0.4, 0.4]
+		},
+		"thirdperson_lefthand": {
+			"translation": [0, 3.25, 0],
+			"scale": [0.4, 0.4, 0.4]
+		},
+		"firstperson_righthand": {
+			"rotation": [0, 135, 0],
+			"translation": [0, 4, 0],
+			"scale": [0.4, 0.4, 0.4]
+		},
+		"firstperson_lefthand": {
+			"rotation": [0, 135, 0],
+			"translation": [0, 4, 0],
+			"scale": [0.4, 0.4, 0.4]
+		},
+		"ground": {
+			"translation": [0, 0.5, 0],
+			"scale": [0.5, 0.5, 0.5]
+		},
+		"gui": {
+			"rotation": [35, -135, 0],
+			"scale": [0.5, 0.5, 0.5]
+		},
+		"head": {
+			"translation": [0, 10.75, 0]
+		},
+		"fixed": {
+			"scale": [1, 1, 0.02]
+		}
+	}
+}

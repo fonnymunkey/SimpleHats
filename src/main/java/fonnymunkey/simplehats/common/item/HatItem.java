@@ -4,6 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Vector3f;
 import fonnymunkey.simplehats.SimpleHats;
 import fonnymunkey.simplehats.common.entity.HatDisplay;
+import fonnymunkey.simplehats.common.init.ModConfig;
 import fonnymunkey.simplehats.common.init.ModRegistry;
 import fonnymunkey.simplehats.util.HatEntry;
 import fonnymunkey.simplehats.util.HatEntry.HatParticleSettings;
@@ -72,7 +73,7 @@ public class HatItem extends Item implements ICurioItem, ICurioRenderer {
 
     @Override
     public ICurio.DropRule getDropRule(SlotContext slotContext, DamageSource source, int lootingLevel, boolean recentlyHit, ItemStack stack) {
-        if(slotContext.entity() instanceof Player) return ICurio.DropRule.ALWAYS_KEEP;
+        if(slotContext.entity() instanceof Player && ModConfig.COMMON.keepHatOnDeath.get()) return ICurio.DropRule.ALWAYS_KEEP;
         else return defaultInstance.getDropRule(slotContext, source, lootingLevel, recentlyHit);
     }
 
@@ -100,7 +101,7 @@ public class HatItem extends Item implements ICurioItem, ICurioRenderer {
         }
         if(slotContext.entity() instanceof Player) {
             HatParticleSettings particleSettings = this.hatEntry.getHatParticleSettings();
-            if(particleSettings.getUseParticles() && !Minecraft.getInstance().isPaused() && (slotContext.entity().isInvisible() ? 0 : 2) >= slotContext.entity().getRandom().nextInt(15)) {
+            if(particleSettings.getUseParticles() && !Minecraft.getInstance().isPaused() && slotContext.entity().getRandom().nextFloat() < (slotContext.entity().isInvisible() ? particleSettings.getParticleFrequency()/2 : particleSettings.getParticleFrequency())) {
                 double d0 = slotContext.entity().getRandom().nextGaussian() * 0.02D,
                         d1 = slotContext.entity().getRandom().nextGaussian() * 0.02D,
                         d2 = slotContext.entity().getRandom().nextGaussian() * 0.02D,

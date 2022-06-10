@@ -2,15 +2,13 @@
 	"parent": "simplehats:item/hatparent",
 	"texture_size": [64, 64],
 	"textures": {
-		"1": "simplehats:item/hats/beehat"
+		"1": "simplehats:item/hats/beehead"
 	},
 	"overrides":[
 	{"predicate": {"custom_model_data": 1},
-      "model": "simplehats:item/beehat1"},
+      "model": "simplehats:item/beehatpride"},
 	{"predicate": {"custom_model_data": 2},
-      "model": "simplehats:item/beehat2"},
-	{"predicate": {"custom_model_data": 3},
-      "model": "simplehats:item/beehat3"}
+      "model": "simplehats:item/beehattrans"}
 	],
 	"elements": [
 		{
@@ -63,5 +61,35 @@
 				"down": {"uv": [11, 9, 10.75, 11], "texture": "#1"}
 			}
 		}
-	]
+	],
+	"display": {
+		"thirdperson_righthand": {
+			"scale": [0.4, 0.4, 0.4]
+		},
+		"thirdperson_lefthand": {
+			"scale": [0.4, 0.4, 0.4]
+		},
+		"firstperson_righthand": {
+			"rotation": [0, -50, 0],
+			"translation": [2, 0, 0],
+			"scale": [0.4, 0.4, 0.4]
+		},
+		"firstperson_lefthand": {
+			"rotation": [0, -50, 0],
+			"translation": [2, 0, 0],
+			"scale": [0.4, 0.4, 0.4]
+		},
+		"ground": {
+			"scale": [0.53, 0.53, 0.53]
+		},
+		"gui": {
+			"rotation": [35, -135, 0],
+			"translation": [0.5, -2, 0],
+			"scale": [0.45, 0.45, 0.45]
+		},
+		"fixed": {
+			"translation": [0, -2.75, 0],
+			"scale": [0.66, 0.66, 0.21]
+		}
+	}
 }

@@ -2,7 +2,6 @@ package fonnymunkey.simplehats.common;
 
 import fonnymunkey.simplehats.SimpleHats;
 import fonnymunkey.simplehats.common.entity.HatDisplay;
-import fonnymunkey.simplehats.common.init.Config;
 import fonnymunkey.simplehats.common.init.HatJson;
 import fonnymunkey.simplehats.common.init.ModRegistry;
 import fonnymunkey.simplehats.common.item.HatItem;
@@ -17,7 +16,6 @@ import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.event.config.ModConfigEvent;
 import org.apache.logging.log4j.Level;
 import top.theillusivec4.curios.api.event.CurioEquipEvent;
 
@@ -28,13 +26,6 @@ public class EventHandler {
         @SubscribeEvent
         public static void entityAttributeCreation(EntityAttributeCreationEvent event) {
             event.put(ModRegistry.HATDISPLAYENTITY.get(), HatDisplay.createAttributes().build());
-        }
-
-        @SubscribeEvent
-        public static void reloadConfig(ModConfigEvent event) {
-            if(event.getConfig().getSpec() == Config.CLIENT_SPEC) Config.cachedClient.refresh();
-            else if(event.getConfig().getSpec() == Config.COMMON_SPEC) Config.cachedCommon.refresh();
-            else if(event.getConfig().getSpec() == Config.SERVER_SPEC) Config.cachedServer.refresh();
         }
 
         @SubscribeEvent

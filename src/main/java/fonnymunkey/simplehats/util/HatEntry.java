@@ -13,7 +13,7 @@ import java.util.Date;
 
 public class HatEntry {
     public static final HatDyeSettings DYE_NONE = new HatDyeSettings(false, 0);
-    public static final HatParticleSettings PARTICLE_NONE = new HatParticleSettings(false, "minecraft:heart", HatParticleSettings.HatParticleMovement.TRAILING_FULL);
+    public static final HatParticleSettings PARTICLE_NONE = new HatParticleSettings(false, "minecraft:heart", 0, HatParticleSettings.HatParticleMovement.TRAILING_FULL);
 
     @SerializedName("name")
     private String hatName;
@@ -30,6 +30,9 @@ public class HatEntry {
     @SerializedName("Particle Settings")
     private HatParticleSettings hatParticleSettings;
 
+    public HatEntry(String name) {
+        this(name, Rarity.COMMON, 0, 0, DYE_NONE, PARTICLE_NONE, HatSeason.NONE);
+    }
     public HatEntry(String name, Rarity rarity, int weight) {
         this(name, rarity, weight, 0, DYE_NONE, PARTICLE_NONE, HatSeason.NONE);
     }
@@ -124,14 +127,17 @@ public class HatEntry {
         private boolean useParticle;
         @SerializedName("name")
         private String particleTypeString;
+        @SerializedName("frequency")
+        private float particleFrequency;
         @SerializedName("movement")
         private HatParticleMovement particleMovement;
 
         private transient SimpleParticleType particleTypeParsed = ParticleTypes.HEART;
 
-        public HatParticleSettings(boolean useParticle, String particleTypeString, HatParticleMovement particleMovement) {
+        public HatParticleSettings(boolean useParticle, String particleTypeString, float particleFrequency, HatParticleMovement particleMovement) {
             this.useParticle = useParticle;
             this.particleTypeString = particleTypeString;
+            this.particleFrequency = particleFrequency;
             this.particleMovement = particleMovement;
             this.parseParticleString();
         }
@@ -139,6 +145,8 @@ public class HatEntry {
         public boolean getUseParticles() { return this.useParticle; }
 
         public SimpleParticleType getParticleType() { return this.particleTypeParsed; }
+
+        public float getParticleFrequency() { return this.particleFrequency; }
 
         public HatParticleMovement getParticleMovement() { return this.particleMovement; }
 

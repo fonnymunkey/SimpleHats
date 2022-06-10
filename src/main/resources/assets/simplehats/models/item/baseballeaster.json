@@ -1,0 +1,76 @@
+{
+	"credit": "Made with Blockbench",
+	"parent": "simplehats:item/hatparent",
+	"textures": {
+		"0": "simplehats:item/hats/baseballhateaster"
+	},
+	"elements": [
+		{
+			"from": [0.72, 9.19, 0.72],
+			"to": [15.28, 16.47, 15.28],
+			"rotation": {"angle": 0, "axis": "y", "origin": [-6.56, -6.56, -6.56]},
+			"faces": {
+				"north": {"uv": [4, 4, 8, 6], "texture": "#0"},
+				"east": {"uv": [4, 6, 8, 8], "texture": "#0"},
+				"south": {"uv": [0, 8, 4, 10], "texture": "#0"},
+				"west": {"uv": [8, 0, 12, 2], "texture": "#0"},
+				"up": {"uv": [4, 4, 0, 0], "texture": "#0"},
+				"down": {"uv": [4, 4, 0, 8], "texture": "#0"}
+			}
+		},
+		{
+			"from": [0.72, 9.19, -6.56],
+			"to": [15.28, 11.01, 0.72],
+			"rotation": {"angle": 0, "axis": "y", "origin": [-6.56, -6.56, -6.56]},
+			"faces": {
+				"north": {"uv": [8, 2, 12, 2.5], "texture": "#0"},
+				"east": {"uv": [8, 3, 10, 3.5], "texture": "#0"},
+				"south": {"uv": [8, 2.5, 12, 3], "texture": "#0"},
+				"west": {"uv": [8, 3.5, 10, 4], "texture": "#0"},
+				"up": {"uv": [8, 2, 4, 0], "texture": "#0"},
+				"down": {"uv": [8, 2, 4, 4], "texture": "#0"}
+			}
+		}
+	],
+	"display": {
+		"thirdperson_righthand": {
+			"translation": [0, -0.5, 0],
+			"scale": [0.35, 0.35, 0.35]
+		},
+		"thirdperson_lefthand": {
+			"translation": [0, -0.5, 0],
+			"scale": [0.35, 0.35, 0.35]
+		},
+		"firstperson_righthand": {
+			"rotation": [0, 135, 0],
+			"translation": [3.5, 1, 0],
+			"scale": [0.5, 0.5, 0.5]
+		},
+		"firstperson_lefthand": {
+			"rotation": [0, 135, 0],
+			"translation": [3.5, 1, 0],
+			"scale": [0.5, 0.5, 0.5]
+		},
+		"ground": {
+			"translation": [0, -4.5, 0],
+			"scale": [0.5, 0.5, 0.5]
+		},
+		"gui": {
+			"rotation": [35, -135, 0],
+			"translation": [-1, -1, 0],
+			"scale": [0.5, 0.5, 0.5]
+		},
+		"fixed": {
+			"translation": [0, -3, 0],
+			"scale": [1, 1, 0.01]
+		}
+	},
+	"groups": [
+		{
+			"name": "Baseballhatjuly",
+			"origin": [8, 8, 8],
+			"color": 0,
+			"children": [0, 1]
+		}
+	]
+}

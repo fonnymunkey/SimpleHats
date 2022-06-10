@@ -5,6 +5,7 @@ import net.minecraft.server.packs.FilePackResources;
 import net.minecraft.server.packs.repository.Pack;
 import net.minecraft.server.packs.repository.PackSource;
 import net.minecraft.server.packs.repository.RepositorySource;
+import org.apache.logging.log4j.Level;
 
 import java.io.File;
 import java.nio.file.Path;
@@ -17,7 +18,12 @@ public class HatRepositorySource implements RepositorySource {
 
     public HatRepositorySource(Path path){
         directory = path.resolve(SimpleHats.modId + "_hatdl").toFile();
-        if(!directory.exists()) directory.mkdirs();
+        try {
+            if(!directory.exists()) directory.mkdirs();
+        }
+        catch(Exception ex) {
+            SimpleHats.logger.log(Level.WARN, "Failed to create config folder: " + ex);
+        }
     }
     @Override
     public void loadPacks(Consumer<Pack> consumer, Pack.PackConstructor constructor) {
@@ -25,6 +31,7 @@ public class HatRepositorySource implements RepositorySource {
             if(path.getName().endsWith(".zip")) {
                 final Pack pack = Pack.create("resources/" + path.getName(), true, () -> new FilePackResources(path), constructor, Pack.Position.TOP, PackSource.BUILT_IN);
                 if(pack!=null) consumer.accept(pack);
+                else SimpleHats.logger.log(Level.WARN, "Failed to load config resourcepack");
             }
         }
     }

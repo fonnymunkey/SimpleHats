@@ -1,0 +1,53 @@
+{
+	"parent": "simplehats:item/hatparent",
+	"texture_size": [64, 64],
+	"textures": {
+		"0": "simplehats:item/hats/stress"
+	},
+	"elements": [
+		{
+			"from": [-3.5, 0, 1],
+			"to": [18.5, 21, 1],
+			"faces": {
+				"north": {"uv": [2.25, 0.75, 13, 11.25], "texture": "#0"},
+				"east": {"uv": [0, 0, 0, 4.25], "texture": "#0"},
+				"south": {"uv": [2.25, 0.75, 13, 11.25], "texture": "#0"},
+				"west": {"uv": [0, 0, 0, 4.25], "texture": "#0"},
+				"up": {"uv": [5.25, 0, 0, 0], "texture": "#0"},
+				"down": {"uv": [5.25, 0, 0, 0], "texture": "#0"}
+			}
+		}
+	],
+	"display": {
+		"thirdperson_righthand": {
+			"scale": [0.5, 0.5, 0.5]
+		},
+		"thirdperson_lefthand": {
+			"scale": [0.5, 0.5, 0.5]
+		},
+		"firstperson_righthand": {
+			"translation": [6.5, 0, 0],
+			"scale": [0.55, 0.55, 0.55]
+		},
+		"firstperson_lefthand": {
+			"translation": [6.5, 0, 0],
+			"scale": [0.55, 0.55, 0.55]
+		},
+		"ground": {
+			"translation": [0, 0, 6.75],
+			"scale": [0.85, 0.85, 0.85]
+		},
+		"gui": {
+			"rotation": [7, 0, 0],
+			"translation": [0.5, 0, 0],
+			"scale": [0.85, 0.85, 0.85]
+		},
+		"head": {
+			"translation": [0.5, 13.25, 7],
+			"scale": [1.37, 1.37, 1.37]
+		},
+		"fixed": {
+			"translation": [0.5, 2.25, 5.5]
+		}
+	}
+}

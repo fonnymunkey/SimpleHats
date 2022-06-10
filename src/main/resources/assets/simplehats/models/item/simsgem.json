@@ -1,0 +1,44 @@
+{
+	"parent": "simplehats:item/hatparent",
+	"textures": {
+		"0": "simplehats:item/hats/simsgem"
+	},
+	"elements": [
+		{
+			"from": [1, 18, 7.925],
+			"to": [15, 32, 8],
+			"faces": {
+				"north": {"uv": [15.5, 0.5, 0.5, 15.5], "texture": "#0"},
+				"east": {"uv": [0, 0, 0.075, 16], "texture": "#0"},
+				"south": {"uv": [0.5, 0.5, 15.5, 15.5], "texture": "#0"},
+				"west": {"uv": [0, 0, 0.075, 16], "texture": "#0"},
+				"up": {"uv": [0, 0, 16, 0.075], "texture": "#0"},
+				"down": {"uv": [0, 0, 16, 0.075], "texture": "#0"}
+			}
+		}
+	],
+	"display": {
+		"thirdperson_righthand": {
+			"translation": [0, -11.5, 0]
+		},
+		"thirdperson_lefthand": {
+			"translation": [0, -11.5, 0]
+		},
+		"firstperson_righthand": {
+			"translation": [2, -14, 0]
+		},
+		"firstperson_lefthand": {
+			"translation": [2, -14, 0]
+		},
+		"ground": {
+			"translation": [0, -15.75, 0]
+		},
+		"gui": {
+			"rotation": [35, -135, 0],
+			"translation": [0, -14, 0]
+		},
+		"fixed": {
+			"translation": [0, -17, 0]
+		}
+	}
+}
