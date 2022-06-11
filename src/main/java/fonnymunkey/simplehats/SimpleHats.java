@@ -12,7 +12,6 @@ import net.minecraftforge.fml.InterModComms;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
-import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.LogManager;
@@ -33,9 +32,12 @@ public class SimpleHats {
         ModLoadingContext.get().registerConfig(net.minecraftforge.fml.config.ModConfig.Type.COMMON, ModConfig.COMMON_SPEC);
         eventBus.addListener(this::enqueueIMC);
         eventBus.addListener(this::clientSetup);
-        eventBus.addListener(this::commonSetup);
 
         HatJson.registerHatJson();
+        if(ModConfig.manualAllowUpdateCheck()) {//Resources don't load properly if loaded after configs are actually loaded, so manually do it early
+            UUIDHandler.setupUUIDMap();
+            DistExecutor.safeRunWhenOn(Dist.CLIENT, () -> UUIDHandler::checkResourceUpdates);//Only need to download resources on client
+        }
 
         ModRegistry.ITEM_REG.register(eventBus);
         ModRegistry.ENTITY_REG.register(eventBus);
@@ -54,12 +56,5 @@ public class SimpleHats {
             }
         }
         CuriosRendererRegistry.register((Item)ModRegistry.HATSPECIAL.get(), () -> (ICurioRenderer)ModRegistry.HATSPECIAL.get());
-    }
-
-    public void commonSetup(final FMLCommonSetupEvent event) {
-        if(ModConfig.COMMON.allowUpdates.get()) {
-            UUIDHandler.setupUUIDMap();
-            DistExecutor.safeRunWhenOn(Dist.CLIENT, () -> UUIDHandler::checkResourceUpdates);//Only need to download resources on client
-        }
     }
 }

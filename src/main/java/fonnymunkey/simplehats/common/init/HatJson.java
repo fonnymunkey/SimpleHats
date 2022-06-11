@@ -4,7 +4,6 @@ import com.google.common.io.Files;
 import com.google.gson.*;
 import fonnymunkey.simplehats.SimpleHats;
 import fonnymunkey.simplehats.util.HatEntry;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Rarity;
 import net.minecraftforge.fml.loading.FMLPaths;
