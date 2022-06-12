@@ -110,7 +110,7 @@ public class BagItem extends Item {
                 }
             }
             if(this.availableHatList.size() == 0) {
-                SimpleHats.logger.log(org.apache.logging.log4j.Level.ERROR, "Failed to populate " + this.getRegistryName() + " loot list.");
+                SimpleHats.logger.log(org.apache.logging.log4j.Level.ERROR, "Failed to populate " + (this.seasonal ? this.hatSeason : this.rarity) + " loot list.");
                 return Items.AIR;
             }
         }
@@ -120,7 +120,7 @@ public class BagItem extends Item {
                 this.availableHatListWeighted = new WeightedListInt(tempListBuilder.build());
             }
             catch(Exception ex) {
-                SimpleHats.logger.log(org.apache.logging.log4j.Level.ERROR, "Failed to generate " + this.getRegistryName() + " weighted loot table: " + ex);
+                SimpleHats.logger.log(org.apache.logging.log4j.Level.ERROR, "Failed to generate " + (this.seasonal ? this.hatSeason : this.rarity) + " weighted loot table: " + ex);
                 return Items.AIR;
             }
         }

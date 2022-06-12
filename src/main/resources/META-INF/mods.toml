@@ -1,6 +1,6 @@
 modLoader="javafml"
-loaderVersion="[40,)"
-license="MIT"
+loaderVersion="[41,)"
+license="https://github.com/fonnymunkey/SimpleHatsAux/blob/main/LICENSE"
 issueTrackerURL="https://github.com/fonnymunkey/SimpleHats/issues"
 [[mods]]
   modId="simplehats"
@@ -16,18 +16,18 @@ issueTrackerURL="https://github.com/fonnymunkey/SimpleHats/issues"
   [[dependencies.simplehats]]
     modId="forge"
     mandatory=true
-    versionRange="[40,)"
+    versionRange="[41,)"
     ordering="NONE"
     side="BOTH"
   [[dependencies.simplehats]]
     modId="minecraft"
     mandatory=true
-    versionRange="[1.18.2,1.19)"
+    versionRange="[1.19,)"
     ordering="NONE"
     side="BOTH"
   [[dependencies.simplehats]]
     modId="curios"
     mandatory=true
-    versionRange="[1.18.2-5.0.6.3,)"
+    versionRange="[1.19-5.1.0.1,)"
     ordering="NONE"
     side="BOTH"

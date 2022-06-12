@@ -2,14 +2,13 @@ package fonnymunkey.simplehats.common.loot;
 
 import com.google.gson.JsonObject;
 import fonnymunkey.simplehats.SimpleHats;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import net.minecraftforge.common.loot.GlobalLootModifierSerializer;
 import net.minecraftforge.common.loot.LootModifier;
-
-import java.util.List;
 
 public class HatEntityLootModifier extends LootModifier {
 
@@ -20,7 +19,7 @@ public class HatEntityLootModifier extends LootModifier {
     }
 
     @Override
-    public List<ItemStack> doApply(List<ItemStack> loot, LootContext context) {
+    public ObjectArrayList<ItemStack> doApply(ObjectArrayList<ItemStack> loot, LootContext context) {
         context.getLootTable(INJECTABLE_LOOT).getRandomItems(context, loot::add);
         return loot;
     }

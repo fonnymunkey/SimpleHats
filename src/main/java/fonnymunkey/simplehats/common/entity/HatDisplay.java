@@ -20,6 +20,7 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.item.ItemStack;
@@ -62,12 +63,11 @@ public class HatDisplay extends LivingEntity {
 
     public void setItemSlot(EquipmentSlot slot, ItemStack stack) {
         if(!stack.isEmpty() && !(stack.getItem() instanceof HatItem)) {
-            SimpleHats.logger.log(org.apache.logging.log4j.Level.ERROR, "Attempted to place non-hat item \"" + stack.getItem().getRegistryName() + "\" on hat display stand");
+            SimpleHats.logger.log(org.apache.logging.log4j.Level.ERROR, "Attempted to place non-hat item \"" + stack.getDisplayName() + "\" on hat display stand");
             return;
         }
         this.verifyEquippedItem(stack);
-        this.equipEventAndSound(stack);
-        this.hatItemSlots.set(0, stack);
+        super.onEquipItem(EquipmentSlot.HEAD, this.hatItemSlots.set(0, stack), stack);
     }
 
     public boolean canTakeItem(ItemStack itemStack) {
@@ -201,7 +201,7 @@ public class HatDisplay extends LivingEntity {
                         long i = this.level.getGameTime();
                         if(i - this.lastHit > 5L && !flag) {
                             this.level.broadcastEntityEvent(this, (byte)32);
-                            this.gameEvent(GameEvent.ENTITY_DAMAGED, source.getEntity());
+                            this.gameEvent(GameEvent.ENTITY_DAMAGE, source.getEntity());
                             this.lastHit = i;
                         }
                         else {
@@ -248,7 +248,7 @@ public class HatDisplay extends LivingEntity {
         }
         else {
             this.setHealth(f);
-            this.gameEvent(GameEvent.ENTITY_DAMAGED, source.getEntity());
+            this.gameEvent(GameEvent.ENTITY_DAMAGE, source.getEntity());
         }
     }
 

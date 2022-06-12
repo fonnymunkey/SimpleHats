@@ -3,14 +3,14 @@ package fonnymunkey.simplehats.common.item;
 import fonnymunkey.simplehats.util.HatEntry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.item.DyeableLeatherItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+
 import java.util.List;
 
 public class HatItemDyeable extends HatItem implements DyeableLeatherItem {
@@ -31,8 +31,8 @@ public class HatItemDyeable extends HatItem implements DyeableLeatherItem {
     @OnlyIn(Dist.CLIENT)
     public void appendHoverText(ItemStack itemStack, Level level, List<Component> tooltip, TooltipFlag flag) {
         super.appendHoverText(itemStack, level, tooltip, flag);
-        TextComponent component = new TextComponent("");
-        char[] c = (new TranslatableComponent("tooltip.simplehats.dyeable")).getString().toCharArray();
+        MutableComponent component = Component.empty();
+        char[] c = (Component.translatable("tooltip.simplehats.dyeable")).getString().toCharArray();
         for(int i=0; i<c.length; i++) {
             component.append(colorList[i%colorList.length] + c[i]);
         }

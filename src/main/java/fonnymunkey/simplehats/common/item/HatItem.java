@@ -19,7 +19,6 @@ import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -49,7 +48,6 @@ public class HatItem extends Item implements ICurioItem, ICurioRenderer {
                 .tab(ModRegistry.HAT_TAB)
                 .rarity(entry.getHatRarity())
                 .fireResistant());
-        if(!entry.getHatName().equalsIgnoreCase("special")) this.setRegistryName(entry.getHatName());
         this.hatEntry = entry;
     }
 
@@ -60,13 +58,13 @@ public class HatItem extends Item implements ICurioItem, ICurioRenderer {
     @Override
     @OnlyIn(Dist.CLIENT)
     public void appendHoverText(ItemStack itemStack, Level level, List<Component> tooltip, TooltipFlag flag) {
-        if(((HatItem)itemStack.getItem()).getHatEntry().getHatVariantRange()>0) tooltip.add(new TranslatableComponent("tooltip.simplehats.variant"));
+        if(((HatItem)itemStack.getItem()).getHatEntry().getHatVariantRange()>0) tooltip.add(Component.translatable("tooltip.simplehats.variant"));
         if(((HatItem)itemStack.getItem()).getHatEntry().getHatName().equalsIgnoreCase("special")) {
             if(itemStack.getTag()!=null && itemStack.getTag().getInt("CustomModelData") > 0) {
-                tooltip.add(new TranslatableComponent("tooltip.simplehats.special_true"));
+                tooltip.add(Component.translatable("tooltip.simplehats.special_true"));
             }
             else {
-                tooltip.add(new TranslatableComponent("tooltip.simplehats.special_false"));
+                tooltip.add(Component.translatable("tooltip.simplehats.special_false"));
             }
         }
     }

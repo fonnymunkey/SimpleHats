@@ -1,3 +1,4 @@
+/*
 package fonnymunkey.simplehats.compat;
 
 import fonnymunkey.simplehats.SimpleHats;
@@ -133,3 +134,4 @@ public class JEIPlugin implements IModPlugin {
         return recipes;
     }
 }
+*/

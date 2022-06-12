@@ -9,13 +9,14 @@ import fonnymunkey.simplehats.common.item.HatItemDyeable;
 import fonnymunkey.simplehats.util.HatEntry;
 import fonnymunkey.simplehats.util.UUIDHandler;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.RegisterEvent;
 import org.apache.logging.log4j.Level;
 import top.theillusivec4.curios.api.event.CurioEquipEvent;
 
@@ -29,13 +30,15 @@ public class EventHandler {
         }
 
         @SubscribeEvent
-        public static void registerHats(RegistryEvent.Register<Item> event) {
-            for(HatEntry entry : HatJson.getHatList()) {
-                HatItem hat = entry.getHatDyeSettings().getUseDye() ? new HatItemDyeable(entry) : new HatItem(entry);
-                event.getRegistry().register(hat);
-                ModRegistry.hatList.add(hat);
+        public static void registerHats(RegisterEvent event) {
+            if(event.getRegistryKey().equals(ForgeRegistries.Keys.ITEMS)) {
+                for(HatEntry entry : HatJson.getHatList()) {
+                    HatItem hat = entry.getHatDyeSettings().getUseDye() ? new HatItemDyeable(entry) : new HatItem(entry);
+                    event.register(ForgeRegistries.Keys.ITEMS, new ResourceLocation(SimpleHats.modId, entry.getHatName()), () -> hat);
+                    ModRegistry.hatList.add(hat);
+                }
+                SimpleHats.logger.log(Level.INFO, "Generated " + ModRegistry.hatList.size() + " hat items from hat entries.");
             }
-            SimpleHats.logger.log(Level.INFO, "Generated " + ModRegistry.hatList.size() + " hat items from hat entries.");
         }
     }
 
