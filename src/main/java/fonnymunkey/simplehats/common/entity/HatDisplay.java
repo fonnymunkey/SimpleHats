@@ -70,8 +70,7 @@ public class HatDisplay extends LivingEntity {
             return;
         }
         this.processEquippedStack(stack);
-        this.onEquipStack(stack);
-        this.hatItemSlots.set(0, stack);
+        this.onEquipStack(EquipmentSlot.HEAD, (ItemStack)this.hatItemSlots.set(0, stack), stack);
     }
 
     @Override
@@ -216,7 +215,7 @@ public class HatDisplay extends LivingEntity {
                         long i = this.world.getTime();
                         if(i - this.lastHit > 5L && !flag) {
                             this.world.sendEntityStatus(this, (byte)32);
-                            this.emitGameEvent(GameEvent.ENTITY_DAMAGED, source.getAttacker());
+                            this.emitGameEvent(GameEvent.ENTITY_DAMAGE, source.getAttacker());
                             this.lastHit = i;
                         }
                         else {
@@ -264,7 +263,7 @@ public class HatDisplay extends LivingEntity {
         }
         else {
             this.setHealth(f);
-            this.emitGameEvent(GameEvent.ENTITY_DAMAGED, source.getAttacker());
+            this.emitGameEvent(GameEvent.ENTITY_DAMAGE, source.getAttacker());
         }
     }
 

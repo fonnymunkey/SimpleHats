@@ -42,7 +42,7 @@ public class HatDisplayItem extends Item {
                     hatDisplay.refreshPositionAndAngles(hatDisplay.getX(), hatDisplay.getY(), hatDisplay.getZ(), f, 0.0F);
                     serverLevel.spawnEntityAndPassengers(hatDisplay);
                     level.playSound(null, hatDisplay.getX(), hatDisplay.getY(), hatDisplay.getZ(), SoundEvents.ENTITY_ARMOR_STAND_PLACE, SoundCategory.BLOCKS, 0.75F, 0.8F);
-                    level.emitGameEvent(context.getPlayer(), GameEvent.ENTITY_PLACE, hatDisplay);
+                    hatDisplay.emitGameEvent(GameEvent.ENTITY_PLACE, context.getPlayer());
                 }
                 itemStack.decrement(1);
                 return ActionResult.success(level.isClient);

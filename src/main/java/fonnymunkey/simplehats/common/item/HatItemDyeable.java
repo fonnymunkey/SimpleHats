@@ -5,9 +5,8 @@ import net.minecraft.client.item.TooltipContext;
 import net.minecraft.item.DyeableItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.text.LiteralText;
+import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.world.World;
 import java.util.List;
 
@@ -28,8 +27,8 @@ public class HatItemDyeable extends HatItem implements DyeableItem {
     @Override
     public void appendTooltip(ItemStack itemStack, World level, List<Text> tooltip, TooltipContext flag) {
         super.appendTooltip(itemStack, level, tooltip, flag);
-        LiteralText component = new LiteralText("");
-        char[] c = (new TranslatableText("tooltip.simplehats.dyeable")).getString().toCharArray();
+        MutableText component = (MutableText) Text.of("");
+        char[] c = (Text.translatable("tooltip.simplehats.dyeable")).getString().toCharArray();
         for(int i=0; i<c.length; i++) {
             component.append(colorList[i%colorList.length] + c[i]);
         }

@@ -16,8 +16,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class UUIDHandler {
-    private static final String uuidUrl = "https://raw.githubusercontent.com/fonnymunkey/SimpleHatsAux/main/Fabric-1.18.2/uuids.json";
-    private static final String zipUrl = "https://raw.githubusercontent.com/fonnymunkey/SimpleHatsAux/main/Fabric-1.18.2/simplehats_fabric_1.18.2_hatdl.zip";
+    private static final String uuidUrl = "https://raw.githubusercontent.com/fonnymunkey/SimpleHatsAux/main/Fabric-1.19/uuids.json";
+    private static final String zipUrl = "https://raw.githubusercontent.com/fonnymunkey/SimpleHatsAux/main/Fabric-1.19/simplehats_fabric_1.19_hatdl.zip";
 
     private static Map<String, Integer> uuidMap = new HashMap<>();
 

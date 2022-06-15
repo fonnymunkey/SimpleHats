@@ -28,7 +28,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.math.Vec3f;
 import net.minecraft.world.World;
 
@@ -63,13 +62,13 @@ public class HatItem extends TrinketItem implements TrinketRenderer {
     }
     @Override
     public void appendTooltip(ItemStack itemStack, World level, List<Text> tooltip, TooltipContext flag) {
-        if(((HatItem)itemStack.getItem()).getHatEntry().getHatVariantRange()>0) tooltip.add(new TranslatableText("tooltip.simplehats.variant"));
+        if(((HatItem)itemStack.getItem()).getHatEntry().getHatVariantRange()>0) tooltip.add(Text.translatable("tooltip.simplehats.variant"));
         if(((HatItem)itemStack.getItem()).getHatEntry().getHatName().equalsIgnoreCase("special")) {
             if(itemStack.getNbt()!=null && itemStack.getNbt().getInt("CustomModelData") > 0) {
-                tooltip.add(new TranslatableText("tooltip.simplehats.special_true"));
+                tooltip.add(Text.translatable("tooltip.simplehats.special_true"));
             }
             else {
-                tooltip.add(new TranslatableText("tooltip.simplehats.special_false"));
+                tooltip.add(Text.translatable("tooltip.simplehats.special_false"));
             }
         }
     }
