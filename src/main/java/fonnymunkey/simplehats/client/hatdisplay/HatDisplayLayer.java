@@ -1,40 +1,48 @@
 package fonnymunkey.simplehats.client.hatdisplay;
 
-import com.mojang.blaze3d.vertex.PoseStack;
+import dev.emi.trinkets.api.client.TrinketRendererRegistry;
 import fonnymunkey.simplehats.common.entity.HatDisplay;
 import fonnymunkey.simplehats.common.item.HatItem;
-import net.minecraft.client.model.EntityModel;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.entity.RenderLayerParent;
-import net.minecraft.client.renderer.entity.layers.RenderLayer;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.item.ItemStack;
-import top.theillusivec4.curios.api.SlotContext;
-import top.theillusivec4.curios.api.client.CuriosRendererRegistry;
+import net.minecraft.client.render.VertexConsumerProvider;
+import net.minecraft.client.render.entity.feature.FeatureRenderer;
+import net.minecraft.client.render.entity.feature.FeatureRendererContext;
+import net.minecraft.client.render.entity.model.EntityModel;
+import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.item.ItemStack;
 
-public class HatDisplayLayer<T extends LivingEntity, M extends EntityModel<T>> extends RenderLayer<T, M> {
+public class HatDisplayLayer<T extends LivingEntity, M extends EntityModel<T>> extends FeatureRenderer<T, M> {
 
-    private final RenderLayerParent<T, M> renderLayerParent;
+    private final FeatureRendererContext<T, M> renderLayerParent;
 
-    public HatDisplayLayer(RenderLayerParent<T, M> renderer) {
+    public HatDisplayLayer(FeatureRendererContext<T, M> renderer) {
         super(renderer);
         this.renderLayerParent = renderer;
     }
 
     @Override
-    public void render(PoseStack matrixStack, MultiBufferSource renderTypeBuffer, int light, T livingEntity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
+    public void render(MatrixStack matrixStack, VertexConsumerProvider renderTypeBuffer, int light, T livingEntity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
         if(livingEntity instanceof HatDisplay display) {
-            matrixStack.pushPose();
-            ItemStack stack = display.getItemBySlot(null);
+            matrixStack.push();
+            ItemStack stack = display.getEquippedStack(null);
             if(!stack.isEmpty() && stack.getItem() instanceof HatItem) {
-                SlotContext slotContext = new SlotContext("head", livingEntity, 0, true,true);
-                CuriosRendererRegistry.getRenderer(stack.getItem()).ifPresent(
+                TrinketRendererRegistry.getRenderer(stack.getItem()).ifPresent(
                         renderer -> renderer
-                                .render(stack, slotContext, matrixStack, renderLayerParent,
-                                        renderTypeBuffer, light, limbSwing, limbSwingAmount, partialTicks,
-                                        ageInTicks, netHeadYaw, headPitch));
+                                .render(stack,
+                                        null,
+                                        this.getContextModel(),
+                                        matrixStack,
+                                        renderTypeBuffer,
+                                        light,
+                                        livingEntity,
+                                        limbSwing,
+                                        limbSwingAmount,
+                                        partialTicks,
+                                        ageInTicks,
+                                        netHeadYaw,
+                                        headPitch));
             }
-            matrixStack.popPose();
+            matrixStack.pop();
         }
     }
 }

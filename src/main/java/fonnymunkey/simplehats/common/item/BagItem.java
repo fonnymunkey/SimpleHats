@@ -1,23 +1,26 @@
 package fonnymunkey.simplehats.common.item;
 
 import fonnymunkey.simplehats.SimpleHats;
-import fonnymunkey.simplehats.common.init.ModConfig;
 import fonnymunkey.simplehats.common.init.ModRegistry;
 import fonnymunkey.simplehats.util.HatEntry;
 import fonnymunkey.simplehats.util.HatEntry.HatSeason;
-import net.minecraft.sounds.SoundEvent;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.util.random.SimpleWeightedRandomList;
-import net.minecraft.util.valueproviders.ConstantInt;
-import net.minecraft.util.valueproviders.IntProvider;
-import net.minecraft.util.valueproviders.WeightedListInt;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResultHolder;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.*;
-import net.minecraft.world.level.ItemLike;
-import net.minecraft.world.level.Level;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemConvertible;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
+import net.minecraft.sound.SoundEvent;
+import net.minecraft.sound.SoundEvents;
+import net.minecraft.util.Hand;
+import net.minecraft.util.Rarity;
+import net.minecraft.util.TypedActionResult;
+import net.minecraft.util.UseAction;
+import net.minecraft.util.collection.DataPool;
+import net.minecraft.util.math.intprovider.ConstantIntProvider;
+import net.minecraft.util.math.intprovider.IntProvider;
+import net.minecraft.util.math.intprovider.WeightedListIntProvider;
+import net.minecraft.world.World;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,79 +31,79 @@ public class BagItem extends Item {
     private boolean seasonal = false;
     private Rarity rarity = Rarity.COMMON; //Don't let enchantment glint artificially change hat results
     private List<HatItem> availableHatList = new ArrayList<>();
-    private WeightedListInt availableHatListWeighted = null;
+    private WeightedListIntProvider availableHatListWeighted = null;
 
     public BagItem(Rarity rarity) {
-        super(new Properties()
+        super(new Item.Settings()
                 .rarity(rarity)
-                .tab(ModRegistry.HAT_TAB));
+                .group(SimpleHats.HAT_TAB));
         this.rarity = rarity;
     }
 
     public BagItem(HatEntry.HatSeason hatSeason) {
-        super(new Properties()
+        super(new Item.Settings()
                 .rarity(Rarity.EPIC)
-                .tab(ModRegistry.HAT_TAB));
+                .group(SimpleHats.HAT_TAB));
         this.hatSeason = hatSeason;
         this.seasonal = true;
         this.rarity = Rarity.EPIC;
     }
 
     @Override
-    public int getUseDuration(ItemStack itemStack) {
+    public int getMaxUseTime(ItemStack itemStack) {
         return 24;
     }
 
     @Override
-    public UseAnim getUseAnimation(ItemStack itemStack) {
-        return UseAnim.NONE;
+    public UseAction getUseAction(ItemStack itemStack) {
+        return UseAction.NONE;
     }
 
-    public static SoundEvent getUnwrapSound() { return SoundEvents.ARMOR_EQUIP_LEATHER; }
-    public static SoundEvent getUnwrapFinishSound() { return SoundEvents.ARMOR_EQUIP_GENERIC; }
+    public static SoundEvent getUnwrapSound() { return SoundEvents.ITEM_ARMOR_EQUIP_LEATHER; }
+    public static SoundEvent getUnwrapFinishSound() { return SoundEvents.ITEM_ARMOR_EQUIP_GENERIC; }
 
     @Override
-    public void onUsingTick(ItemStack stack, LivingEntity player, int count) {
-        if(player.getUseItemRemainingTicks() % 4 == 0 && player.getUseItemRemainingTicks() <= player.getUseItem().getUseDuration() - 7 && player.getUseItemRemainingTicks() >= 7) {
+    public void usageTick(World world, LivingEntity player, ItemStack stack, int count) {
+        if(player.getItemUseTimeLeft() % 4 == 0 && player.getItemUseTimeLeft() <= player.getItemUseTime() - 7 && player.getItemUseTimeLeft() >= 7) {
             player.playSound(getUnwrapSound(), 0.5F + 0.5F * (float)player.getRandom().nextInt(2), (player.getRandom().nextFloat() - player.getRandom().nextFloat()) * 0.2F + 1.0F);
         }
     }
 
     @Override
-    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
-        ItemStack itemstack = player.getItemInHand(hand);
-        player.startUsingItem(hand);
-        return InteractionResultHolder.sidedSuccess(itemstack, level.isClientSide());
+    public TypedActionResult<ItemStack> use(World level, PlayerEntity player, Hand hand) {
+        ItemStack itemstack = player.getStackInHand(hand);
+        player.setCurrentHand(hand);
+        return TypedActionResult.success(itemstack, level.isClient());
     }
 
     @Override
-    public ItemStack finishUsingItem(ItemStack itemStack, Level level, LivingEntity player) {
+    public ItemStack finishUsing(ItemStack itemStack, World level, LivingEntity player) {
         player.playSound(getUnwrapFinishSound(), 1.0F, 1.0F + (player.getRandom().nextFloat() - player.getRandom().nextFloat()) * 0.4F);
-        itemStack.shrink(1);
+        itemStack.decrement(1);
 
-        if(!level.isClientSide) {
+        if(!level.isClient()) {
             if(!this.seasonal && HatSeason.getSeason() != HatSeason.NONE) {
-                if(level.random.nextFloat() < ModConfig.COMMON.seasonalBagChance.get()) {
-                    player.spawnAtLocation(getSeasonalBag());
+                if(level.random.nextFloat()*100.0F < SimpleHats.config.common.seasonalBagChance) {
+                    player.dropItem(getSeasonalBag());
                 }
             }
-            player.spawnAtLocation(this.getBagResult(level));
+            player.dropItem(this.getBagResult(level));
         }
         return itemStack;
     }
 
     private static Item getSeasonalBag() {
         switch(HatSeason.getSeason()) {
-            case EASTER -> { return ModRegistry.HATBAG_EASTER.get(); }
-            case SUMMER -> { return ModRegistry.HATBAG_SUMMER.get(); }
-            case HALLOWEEN -> { return ModRegistry.HATBAG_HALLOWEEN.get(); }
-            case FESTIVE -> { return ModRegistry.HATBAG_FESTIVE.get(); }
+            case EASTER -> { return ModRegistry.HATBAG_EASTER; }
+            case SUMMER -> { return ModRegistry.HATBAG_SUMMER; }
+            case HALLOWEEN -> { return ModRegistry.HATBAG_HALLOWEEN; }
+            case FESTIVE -> { return ModRegistry.HATBAG_FESTIVE; }
         }
         SimpleHats.logger.log(org.apache.logging.log4j.Level.ERROR, "Failed to get seasonal bag type.");
         return Items.AIR;
     }
 
-    private ItemLike getBagResult(Level level) {
+    private ItemConvertible getBagResult(World level) {
         if(this.availableHatList.size() == 0) {
             for(HatItem hat : ModRegistry.hatList) {
                 if((hat.getHatEntry().getHatRarity() == this.rarity || this.seasonal) &&
@@ -110,27 +113,27 @@ public class BagItem extends Item {
                 }
             }
             if(this.availableHatList.size() == 0) {
-                SimpleHats.logger.log(org.apache.logging.log4j.Level.ERROR, "Failed to populate " + this.getRegistryName() + " loot list.");
+                SimpleHats.logger.log(org.apache.logging.log4j.Level.ERROR, "Failed to populate " + this.getName() + " loot list.");
                 return Items.AIR;
             }
         }
         if(this.availableHatListWeighted == null) {
             try {
-                SimpleWeightedRandomList.Builder<IntProvider> tempListBuilder = generateSimpleWeightedList(SimpleWeightedRandomList.<IntProvider>builder().add(ConstantInt.of(0), this.availableHatList.get(0).getHatEntry().getHatWeight()), 1);
-                this.availableHatListWeighted = new WeightedListInt(tempListBuilder.build());
+                DataPool.Builder<IntProvider> tempListBuilder = generateSimpleWeightedList(DataPool.<IntProvider>builder().add(ConstantIntProvider.create(0), this.availableHatList.get(0).getHatEntry().getHatWeight()), 1);
+                this.availableHatListWeighted = new WeightedListIntProvider(tempListBuilder.build());
             }
             catch(Exception ex) {
-                SimpleHats.logger.log(org.apache.logging.log4j.Level.ERROR, "Failed to generate " + this.getRegistryName() + " weighted loot table: " + ex);
+                SimpleHats.logger.log(org.apache.logging.log4j.Level.ERROR, "Failed to generate " + this.getName() + " weighted loot table: " + ex);
                 return Items.AIR;
             }
         }
-        return this.availableHatList.get(this.availableHatListWeighted.sample(level.random));
+        return this.availableHatList.get(this.availableHatListWeighted.get(level.random));
     }
 
     //Nasty, nasty recursion
-    private SimpleWeightedRandomList.Builder<IntProvider> generateSimpleWeightedList(SimpleWeightedRandomList.Builder<IntProvider> list, int i) {
+    private DataPool.Builder<IntProvider> generateSimpleWeightedList(DataPool.Builder<IntProvider> list, int i) {
         if(i<this.availableHatList.size()) {
-            list.add(ConstantInt.of(i), this.availableHatList.get(i).getHatEntry().getHatWeight());
+            list.add(ConstantIntProvider.create(i), this.availableHatList.get(i).getHatEntry().getHatWeight());
             i++;
             list = generateSimpleWeightedList(list, i);
         }

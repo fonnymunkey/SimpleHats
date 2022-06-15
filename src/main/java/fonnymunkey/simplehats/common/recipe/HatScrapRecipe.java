@@ -3,44 +3,44 @@ package fonnymunkey.simplehats.common.recipe;
 import fonnymunkey.simplehats.SimpleHats;
 import fonnymunkey.simplehats.common.init.ModRegistry;
 import fonnymunkey.simplehats.common.item.HatItem;
-import net.minecraft.core.NonNullList;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.inventory.CraftingContainer;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.ShearsItem;
-import net.minecraft.world.item.crafting.CustomRecipe;
-import net.minecraft.world.item.crafting.RecipeSerializer;
-import net.minecraft.world.level.Level;
+import net.minecraft.inventory.CraftingInventory;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.ShearsItem;
+import net.minecraft.recipe.RecipeSerializer;
+import net.minecraft.recipe.SpecialCraftingRecipe;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.collection.DefaultedList;
+import net.minecraft.world.World;
 
-public class HatScrapRecipe extends CustomRecipe {
-    public HatScrapRecipe(ResourceLocation location) {
+public class HatScrapRecipe extends SpecialCraftingRecipe {
+    public HatScrapRecipe(Identifier location) {
         super(location);
     }
 
     @Override
-    public ResourceLocation getId() {
-        return new ResourceLocation(SimpleHats.modId, "hatscraps");
+    public Identifier getId() {
+        return new Identifier(SimpleHats.modId, "hatscraps");
     }
 
     @Override
-    public boolean matches(CraftingContainer craftingInventory, Level level) {
+    public boolean matches(CraftingInventory craftingInventory, World level) {
         int[] list = processInventory(craftingInventory);
         return list[0] != -1 && list[1] != -1;
     }
 
     @Override
-    public ItemStack assemble(CraftingContainer craftingInventory) {
+    public ItemStack craft(CraftingInventory craftingInventory) {
         int[] list  = processInventory(craftingInventory);
         if(list[0] != -1 && list[1] != -1) {
-            return switch(((HatItem)craftingInventory.getItem(list[0]).getItem()).getHatEntry().getHatSeason()) {
-                case EASTER -> new ItemStack(ModRegistry.HATSCRAPS_EASTER.get());
-                case SUMMER -> new ItemStack(ModRegistry.HATSCRAPS_SUMMER.get());
-                case HALLOWEEN -> new ItemStack(ModRegistry.HATSCRAPS_HALLOWEEN.get());
-                case FESTIVE -> new ItemStack(ModRegistry.HATSCRAPS_FESTIVE.get());
-                case NONE -> switch (((HatItem)craftingInventory.getItem(list[0]).getItem()).getHatEntry().getHatRarity()) {
-                    case COMMON -> new ItemStack(ModRegistry.HATSCRAPS_COMMON.get());
-                    case UNCOMMON -> new ItemStack(ModRegistry.HATSCRAPS_UNCOMMON.get());
-                    case RARE, EPIC -> new ItemStack(ModRegistry.HATSCRAPS_RARE.get());
+            return switch(((HatItem)craftingInventory.getStack(list[0]).getItem()).getHatEntry().getHatSeason()) {
+                case EASTER -> new ItemStack(ModRegistry.HATSCRAPS_EASTER);
+                case SUMMER -> new ItemStack(ModRegistry.HATSCRAPS_SUMMER);
+                case HALLOWEEN -> new ItemStack(ModRegistry.HATSCRAPS_HALLOWEEN);
+                case FESTIVE -> new ItemStack(ModRegistry.HATSCRAPS_FESTIVE);
+                case NONE -> switch (((HatItem)craftingInventory.getStack(list[0]).getItem()).getHatEntry().getHatRarity()) {
+                    case COMMON -> new ItemStack(ModRegistry.HATSCRAPS_COMMON);
+                    case UNCOMMON -> new ItemStack(ModRegistry.HATSCRAPS_UNCOMMON);
+                    case RARE, EPIC -> new ItemStack(ModRegistry.HATSCRAPS_RARE);
                 };
             };
         }
@@ -48,16 +48,16 @@ public class HatScrapRecipe extends CustomRecipe {
     }
 
     @Override
-    public NonNullList<ItemStack> getRemainingItems(CraftingContainer craftingInventory) {
-        NonNullList<ItemStack> remainList = NonNullList.withSize(craftingInventory.getContainerSize(), ItemStack.EMPTY);
+    public DefaultedList<ItemStack> getRemainder(CraftingInventory craftingInventory) {
+        DefaultedList<ItemStack> remainList = DefaultedList.ofSize(craftingInventory.size(), ItemStack.EMPTY);
 
-        for(int i = 0; i < craftingInventory.getContainerSize(); ++i) {
-            ItemStack slot = craftingInventory.getItem(i);
+        for(int i = 0; i < craftingInventory.size(); ++i) {
+            ItemStack slot = craftingInventory.getStack(i);
             if(!slot.isEmpty() && slot.getItem() instanceof ShearsItem) {
                 ItemStack slot1 = slot.copy();
-                if(slot1.isDamageableItem()) {
-                    slot1.setDamageValue(slot.getDamageValue() + 1);
-                    if(slot1.getDamageValue() >= slot1.getMaxDamage()) {
+                if(slot1.isDamageable()) {
+                    slot1.setDamage(slot.getDamage() + 1);
+                    if(slot1.getDamage() >= slot1.getMaxDamage()) {
                         slot1 = ItemStack.EMPTY;
                     }
                 }
@@ -68,14 +68,14 @@ public class HatScrapRecipe extends CustomRecipe {
         return remainList;
     }
 
-    private static int[] processInventory(CraftingContainer craftingInventory) {
+    private static int[] processInventory(CraftingInventory craftingInventory) {
         int totalItems = 0;
         int[] list = new int[]{-1, -1};
-        for(int i =0; i < craftingInventory.getContainerSize(); i++) {
-            ItemStack slot = craftingInventory.getItem(i);
+        for(int i =0; i < craftingInventory.size(); i++) {
+            ItemStack slot = craftingInventory.getStack(i);
             if(!slot.isEmpty()) {
                 totalItems++;
-                if(slot.getItem() instanceof HatItem hat && hat!=ModRegistry.HATSPECIAL.get()) list[0] = i;
+                if(slot.getItem() instanceof HatItem hat && hat!=ModRegistry.HATSPECIAL) list[0] = i;
                 if(slot.getItem() instanceof ShearsItem) list[1] = i;
             }
         }
@@ -84,12 +84,12 @@ public class HatScrapRecipe extends CustomRecipe {
     }
 
     @Override
-    public boolean canCraftInDimensions(int width, int height) {
+    public boolean fits(int width, int height) {
         return width*height >= 2;
     }
 
     @Override
     public RecipeSerializer<?> getSerializer() {
-        return ModRegistry.HATSCRAP_SERIALIZER.get();
+        return ModRegistry.HATSCRAP_SERIALIZER;
     }
 }

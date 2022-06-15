@@ -1,60 +1,72 @@
 package fonnymunkey.simplehats;
 
+import fonnymunkey.simplehats.common.entity.HatDisplay;
 import fonnymunkey.simplehats.common.init.HatJson;
 import fonnymunkey.simplehats.common.init.ModConfig;
 import fonnymunkey.simplehats.common.init.ModRegistry;
 import fonnymunkey.simplehats.util.UUIDHandler;
-import net.minecraft.world.item.Item;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.fml.InterModComms;
-import net.minecraftforge.fml.ModLoadingContext;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
-import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import me.shedaniel.autoconfig.AutoConfig;
+import me.shedaniel.autoconfig.serializer.PartitioningSerializer;
+import me.shedaniel.autoconfig.serializer.Toml4jConfigSerializer;
+import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
+import net.fabricmc.fabric.api.loot.v2.LootTableEvents;
+import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
+import net.minecraft.item.ItemGroup;
+import net.minecraft.item.ItemStack;
+import net.minecraft.loot.LootPool;
+import net.minecraft.loot.condition.KilledByPlayerLootCondition;
+import net.minecraft.loot.entry.ItemEntry;
+import net.minecraft.loot.provider.number.ConstantLootNumberProvider;
+import net.minecraft.loot.provider.number.UniformLootNumberProvider;
+import net.minecraft.util.Identifier;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import top.theillusivec4.curios.api.CuriosApi;
-import top.theillusivec4.curios.api.SlotTypeMessage;
-import top.theillusivec4.curios.api.SlotTypePreset;
-import top.theillusivec4.curios.api.client.CuriosRendererRegistry;
-import top.theillusivec4.curios.api.client.ICurioRenderer;
 
-@Mod(SimpleHats.modId)
-public class SimpleHats {
+public class SimpleHats implements ModInitializer {
     public static final String modId = "simplehats";
     public static Logger logger = LogManager.getLogger();
+    public static ModConfig config;
 
-    public SimpleHats() {
-        IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
-        ModLoadingContext.get().registerConfig(net.minecraftforge.fml.config.ModConfig.Type.COMMON, ModConfig.COMMON_SPEC);
-        eventBus.addListener(this::enqueueIMC);
-        eventBus.addListener(this::clientSetup);
+    public static final ItemGroup HAT_TAB = FabricItemGroupBuilder.build(
+            new Identifier(SimpleHats.modId),
+            () -> new ItemStack(ModRegistry.HATICON));
 
+    @Override
+    public void onInitialize() {
+        config = AutoConfig.register(ModConfig.class, PartitioningSerializer.wrap(Toml4jConfigSerializer::new)).getConfig();
         HatJson.registerHatJson();
-        if(ModConfig.manualAllowUpdateCheck()) {//Resources don't load properly if loaded after configs are actually loaded, so manually do it early
+
+        if(SimpleHats.config.common.allowUpdates) {
             UUIDHandler.setupUUIDMap();
-            DistExecutor.safeRunWhenOn(Dist.CLIENT, () -> UUIDHandler::checkResourceUpdates);//Only need to download resources on client
         }
 
-        ModRegistry.ITEM_REG.register(eventBus);
-        ModRegistry.ENTITY_REG.register(eventBus);
-        ModRegistry.RECIPE_REG.register(eventBus);
-        ModRegistry.LOOT_REG.register(eventBus);
-    }
+        ModRegistry.registerHats();
 
-    public void enqueueIMC(final InterModEnqueueEvent event) {
-        InterModComms.sendTo(CuriosApi.MODID, SlotTypeMessage.REGISTER_TYPE, () -> SlotTypePreset.HEAD.getMessageBuilder().cosmetic().build());
-    }
+        FabricDefaultAttributeRegistry.register(ModRegistry.HATDISPLAYENTITY, HatDisplay.createLivingAttributes());
 
-    public void clientSetup(final FMLClientSetupEvent event) {
-        for(Item hat : ModRegistry.hatList) {
-            if(hat instanceof ICurioRenderer renderer) {
-                CuriosRendererRegistry.register(hat, () -> renderer);
+        LootTableEvents.MODIFY.register((resourceManager, lootManager, id, tableBuilder, source) -> {
+            if(ModRegistry.LOOT_HATINJECT_CHEST.contains(id)) {
+                LootPool.Builder pool = LootPool.builder()
+                        .with(ItemEntry.builder(ModRegistry.HATBAG_COMMON).weight(20))
+                        .with(ItemEntry.builder(ModRegistry.HATBAG_UNCOMMON).weight(15))
+                        .with(ItemEntry.builder(ModRegistry.HATBAG_RARE).weight(10))
+                        .with(ItemEntry.builder(ModRegistry.HATBAG_EPIC).weight(5))
+                        .with(ItemEntry.builder(ItemStack.EMPTY.getItem()).weight(150))
+                        .rolls(UniformLootNumberProvider.create(1.0F, 2.0F));
+                tableBuilder.pool(pool);
             }
-        }
-        CuriosRendererRegistry.register((Item)ModRegistry.HATSPECIAL.get(), () -> (ICurioRenderer)ModRegistry.HATSPECIAL.get());
+            else if(ModRegistry.LOOT_HATINJECT_ENTITY.contains(id)) {
+                LootPool.Builder pool = LootPool.builder()
+                        .with(ItemEntry.builder(ModRegistry.HATBAG_COMMON).weight(20))
+                        .with(ItemEntry.builder(ModRegistry.HATBAG_UNCOMMON).weight(15))
+                        .with(ItemEntry.builder(ModRegistry.HATBAG_RARE).weight(10))
+                        .with(ItemEntry.builder(ModRegistry.HATBAG_EPIC).weight(5))
+                        .with(ItemEntry.builder(ItemStack.EMPTY.getItem()).weight(200))
+                        .rolls(ConstantLootNumberProvider.create(1.0F))
+                        .conditionally(KilledByPlayerLootCondition.builder());
+                tableBuilder.pool(pool);
+            }
+        });
     }
 }

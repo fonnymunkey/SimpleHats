@@ -2,11 +2,11 @@ package fonnymunkey.simplehats.util;
 
 import com.google.gson.annotations.SerializedName;
 import fonnymunkey.simplehats.SimpleHats;
-import net.minecraft.core.Registry;
-import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.core.particles.SimpleParticleType;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.Rarity;
+import net.minecraft.particle.DefaultParticleType;
+import net.minecraft.particle.ParticleTypes;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.Rarity;
+import net.minecraft.util.registry.Registry;
 import org.apache.logging.log4j.Level;
 
 import java.util.Date;
@@ -132,7 +132,7 @@ public class HatEntry {
         @SerializedName("movement")
         private HatParticleMovement particleMovement;
 
-        private transient SimpleParticleType particleTypeParsed = ParticleTypes.HEART;
+        private transient DefaultParticleType particleTypeParsed = ParticleTypes.HEART;
 
         public HatParticleSettings(boolean useParticle, String particleTypeString, float particleFrequency, HatParticleMovement particleMovement) {
             this.useParticle = useParticle;
@@ -144,7 +144,7 @@ public class HatEntry {
 
         public boolean getUseParticles() { return this.useParticle; }
 
-        public SimpleParticleType getParticleType() { return this.particleTypeParsed; }
+        public DefaultParticleType getParticleType() { return this.particleTypeParsed; }
 
         public float getParticleFrequency() { return this.particleFrequency; }
 
@@ -158,7 +158,7 @@ public class HatEntry {
         }
 
         private void parseParticleString() {
-            this.particleTypeParsed = (SimpleParticleType) Registry.PARTICLE_TYPE.get(new ResourceLocation(this.particleTypeString));
+            this.particleTypeParsed = (DefaultParticleType) Registry.PARTICLE_TYPE.get(new Identifier(this.particleTypeString));
             if(this.particleTypeParsed == null) {
                 SimpleHats.logger.log(Level.ERROR, "Particle type \"" + this.particleTypeString + "\" failed to parse, setting default.");
                 this.particleTypeParsed = ParticleTypes.HEART;

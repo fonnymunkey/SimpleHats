@@ -2,9 +2,10 @@
   "required": true,
   "package": "fonnymunkey.simplehats.mixin.core",
   "compatibilityLevel": "JAVA_17",
-  "refmap": "mixins.simplehats.refmap.json",
+  "refmap": "simplehats-fabric-refmap.json",
   "mixins": [
-    "MixinCuriosHelper"
+    "MixinModResourcePackCreator",
+    "MixinTrinketsApi"
   ],
   "minVersion": "0.8",
   "client": [

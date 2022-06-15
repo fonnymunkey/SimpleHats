@@ -1,4 +1,12 @@
 {
+  "text.autoconfig.simplehats.title": "SimpleHats Config",
+  "text.autoconfig.simplehats.option.common.keepHatOnDeath": "Keep Hat on Death",
+  "text.autoconfig.simplehats.option.common.allowUpdates": "Allow Updates",
+  "text.autoconfig.simplehats.option.common.seasonalBagChance": "Seasonal Bag Chance",
+  "text.autoconfig.simplehats.option.common.keepHatOnDeath.@Tooltip": "Keep equipped hat on death.",
+  "text.autoconfig.simplehats.option.common.allowUpdates.@Tooltip": "Allow automatic updating of player-specific hats.",
+  "text.autoconfig.simplehats.option.common.seasonalBagChance.@Tooltip": "Chance for a seasonal bag to drop when using a bag during a season.",
+
   "tooltip.simplehats.dyeable": "Dyeable",
   "tooltip.simplehats.variant": "Cycle variants in the crafting grid",
   "tooltip.simplehats.special_true": "Oooh, special!",
@@ -26,7 +34,7 @@
   "item.simplehats.hatdisplay": "Hat Stand",
   "entity.simplehats.hatdisplay": "Hat Stand",
 
-  "itemGroup.simplehats": "Simple Hats",
+  "itemGroup.minecraft.simplehats": "Simple Hats",
 
   "item.simplehats.special": "The Simple Hat",
 

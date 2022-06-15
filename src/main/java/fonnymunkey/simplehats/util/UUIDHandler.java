@@ -6,7 +6,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 import fonnymunkey.simplehats.SimpleHats;
-import net.minecraftforge.fml.loading.FMLPaths;
+import net.fabricmc.loader.api.FabricLoader;
 import org.apache.logging.log4j.Level;
 
 import java.io.*;
@@ -16,8 +16,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class UUIDHandler {
-    private static final String uuidUrl = "https://raw.githubusercontent.com/fonnymunkey/SimpleHatsAux/main/Forge-1.18.2/uuids.json";
-    private static final String zipUrl = "https://raw.githubusercontent.com/fonnymunkey/SimpleHatsAux/main/Forge-1.18.2/simplehats_forge_1.18.2_hatdl.zip";
+    private static final String uuidUrl = "https://raw.githubusercontent.com/fonnymunkey/SimpleHatsAux/main/Fabric-1.18.2/uuids.json";
+    private static final String zipUrl = "https://raw.githubusercontent.com/fonnymunkey/SimpleHatsAux/main/Fabric-1.18.2/simplehats_fabric_1.18.2_hatdl.zip";
 
     private static Map<String, Integer> uuidMap = new HashMap<>();
 
@@ -35,7 +35,7 @@ public class UUIDHandler {
 
     public static void checkResourceUpdates() {
         try {
-            File parent = FMLPaths.CONFIGDIR.get().resolve(SimpleHats.modId + "_hatdl").toFile();
+            File parent = FabricLoader.getInstance().getConfigDir().resolve(SimpleHats.modId + "_hatdl").toFile();
             if(!parent.exists()) parent.mkdirs();
             File uuidFile = new File(parent, "uuids.json");
             File zipFile = new File(parent, SimpleHats.modId + "_hatdl.zip");

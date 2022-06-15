@@ -4,9 +4,9 @@ import com.google.common.io.Files;
 import com.google.gson.*;
 import fonnymunkey.simplehats.SimpleHats;
 import fonnymunkey.simplehats.util.HatEntry;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.Rarity;
-import net.minecraftforge.fml.loading.FMLPaths;
+import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.Rarity;
 import org.apache.logging.log4j.Level;
 
 import java.io.File;
@@ -235,7 +235,7 @@ public class HatJson {
 
     public static void registerHatJson() {
         try {
-            File file = new File(FMLPaths.CONFIGDIR.get().toFile(), SimpleHats.modId + ".json");
+            File file = new File(FabricLoader.getInstance().getConfigDir().toFile(), SimpleHats.modId + ".json");
 
             if(!file.exists()) {
                 SimpleHats.logger.log(Level.INFO, "SimpleHats simplehats.json not found, generating default file.");
@@ -300,7 +300,7 @@ public class HatJson {
 
     private static boolean validateName(String name) {
         for(char c : name.toCharArray()) {
-            if(!ResourceLocation.validPathChar(c)) return false;
+            if(!Identifier.isCharValid(c)) return false;
         }
         return true;
     }

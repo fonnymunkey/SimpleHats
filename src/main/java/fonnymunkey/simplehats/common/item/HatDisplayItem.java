@@ -2,60 +2,53 @@ package fonnymunkey.simplehats.common.item;
 
 import fonnymunkey.simplehats.common.entity.HatDisplay;
 import fonnymunkey.simplehats.common.init.ModRegistry;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
-import net.minecraft.util.Mth;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.MobSpawnType;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.world.item.context.UseOnContext;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.gameevent.GameEvent;
-import net.minecraft.world.phys.AABB;
-import net.minecraft.world.phys.Vec3;
+import net.minecraft.entity.SpawnReason;
+import net.minecraft.item.*;
+import net.minecraft.server.world.ServerWorld;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvents;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.math.*;
+import net.minecraft.world.World;
+import net.minecraft.world.event.GameEvent;
 
 public class HatDisplayItem extends Item {
 
-    public HatDisplayItem(Properties properties) {
+    public HatDisplayItem(Item.Settings properties) {
         super(properties);
     }
 
-    public InteractionResult useOn(UseOnContext context) {
-        Direction direction = context.getClickedFace();
+    public ActionResult useOnBlock(ItemUsageContext context) {
+        Direction direction = context.getSide();
         if(direction == Direction.DOWN) {
-            return InteractionResult.FAIL;
+            return ActionResult.FAIL;
         }
         else {
-            Level level = context.getLevel();
-            BlockPlaceContext blockPlaceContext = new BlockPlaceContext(context);
-            BlockPos pos = blockPlaceContext.getClickedPos();
-            ItemStack itemStack = context.getItemInHand();
-            Vec3 vec3 = Vec3.atBottomCenterOf(pos);
-            AABB aabb = ModRegistry.HATDISPLAYENTITY.get().getDimensions().makeBoundingBox(vec3.x(), vec3.y(), vec3.z());
-            if(level.noCollision(null, aabb) && level.getEntities(null, aabb).isEmpty()) {
-                if(level instanceof ServerLevel serverLevel) {
-                    HatDisplay hatDisplay = ModRegistry.HATDISPLAYENTITY.get().create(serverLevel, itemStack.getTag(), null, context.getPlayer(), pos, MobSpawnType.SPAWN_EGG, true, true);
-                    if(hatDisplay == null) return InteractionResult.FAIL;
+            World level = context.getWorld();
+            ItemPlacementContext blockPlaceContext = new ItemPlacementContext(context);
+            BlockPos pos = blockPlaceContext.getBlockPos();
+            ItemStack itemStack = context.getStack();
+            Vec3d vec3 = Vec3d.ofBottomCenter(pos);
+            Box aabb = ModRegistry.HATDISPLAYENTITY.getDimensions().getBoxAt(vec3.getX(), vec3.getY(), vec3.getZ());
+            if(level.isSpaceEmpty(null, aabb) && level.getOtherEntities(null, aabb).isEmpty()) {
+                if(level instanceof ServerWorld serverLevel) {
+                    HatDisplay hatDisplay = ModRegistry.HATDISPLAYENTITY.create(serverLevel, itemStack.getNbt(), null, context.getPlayer(), pos, SpawnReason.SPAWN_EGG, true, true);
+                    if(hatDisplay == null) return ActionResult.FAIL;
 
                     float f = 0;
-                    if(context.getPlayer() != null && context.getPlayer().isCrouching()) f = (float)Mth.floor((Mth.wrapDegrees(context.getRotation() - 180.0F) + 22.5F) / 45.0F) * 45.0F;
-                    else f = (int)Mth.wrapDegrees(context.getRotation() - 180.0F);
+                    if(context.getPlayer() != null && context.getPlayer().isSneaking()) f = (float)MathHelper.floor((MathHelper.wrapDegrees(context.getPlayerYaw() - 180.0F) + 22.5F) / 45.0F) * 45.0F;
+                    else f = (int)MathHelper.wrapDegrees(context.getPlayerYaw() - 180.0F);
 
-                    hatDisplay.moveTo(hatDisplay.getX(), hatDisplay.getY(), hatDisplay.getZ(), f, 0.0F);
-                    serverLevel.addFreshEntityWithPassengers(hatDisplay);
-                    level.playSound(null, hatDisplay.getX(), hatDisplay.getY(), hatDisplay.getZ(), SoundEvents.ARMOR_STAND_PLACE, SoundSource.BLOCKS, 0.75F, 0.8F);
-                    level.gameEvent(context.getPlayer(), GameEvent.ENTITY_PLACE, hatDisplay);
+                    hatDisplay.refreshPositionAndAngles(hatDisplay.getX(), hatDisplay.getY(), hatDisplay.getZ(), f, 0.0F);
+                    serverLevel.spawnEntityAndPassengers(hatDisplay);
+                    level.playSound(null, hatDisplay.getX(), hatDisplay.getY(), hatDisplay.getZ(), SoundEvents.ENTITY_ARMOR_STAND_PLACE, SoundCategory.BLOCKS, 0.75F, 0.8F);
+                    level.emitGameEvent(context.getPlayer(), GameEvent.ENTITY_PLACE, hatDisplay);
                 }
-                itemStack.shrink(1);
-                return InteractionResult.sidedSuccess(level.isClientSide);
+                itemStack.decrement(1);
+                return ActionResult.success(level.isClient);
             }
             else {
-                return InteractionResult.FAIL;
+                return ActionResult.FAIL;
             }
         }
     }

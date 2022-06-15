@@ -1,55 +1,51 @@
 package fonnymunkey.simplehats.common.item;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Vector3f;
+import dev.emi.trinkets.api.SlotReference;
+import dev.emi.trinkets.api.TrinketEnums;
+import dev.emi.trinkets.api.TrinketItem;
+import dev.emi.trinkets.api.client.TrinketRenderer;
 import fonnymunkey.simplehats.SimpleHats;
 import fonnymunkey.simplehats.common.entity.HatDisplay;
-import fonnymunkey.simplehats.common.init.ModConfig;
 import fonnymunkey.simplehats.common.init.ModRegistry;
 import fonnymunkey.simplehats.util.HatEntry;
 import fonnymunkey.simplehats.util.HatEntry.HatParticleSettings;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.model.EntityModel;
-import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.block.model.ItemTransforms;
-import net.minecraft.client.renderer.entity.ItemRenderer;
-import net.minecraft.client.renderer.entity.RenderLayerParent;
-import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.client.resources.model.BakedModel;
-import net.minecraft.client.resources.model.ModelResourceLocation;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
-import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.level.Level;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import top.theillusivec4.curios.api.SlotContext;
-import top.theillusivec4.curios.api.client.ICurioRenderer;
-import top.theillusivec4.curios.api.type.capability.ICurio;
-import top.theillusivec4.curios.api.type.capability.ICurioItem;
+import fonnymunkey.simplehats.util.UUIDHandler;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.item.TooltipContext;
+import net.minecraft.client.network.AbstractClientPlayerEntity;
+import net.minecraft.client.render.OverlayTexture;
+import net.minecraft.client.render.VertexConsumerProvider;
+import net.minecraft.client.render.entity.model.EntityModel;
+import net.minecraft.client.render.entity.model.PlayerEntityModel;
+import net.minecraft.client.render.item.ItemRenderer;
+import net.minecraft.client.render.model.BakedModel;
+import net.minecraft.client.render.model.json.ModelTransformation;
+import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.client.world.ClientWorld;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
+import net.minecraft.util.math.Vec3f;
+import net.minecraft.world.World;
 
 import java.util.List;
 import java.util.Objects;
 
-
-public class HatItem extends Item implements ICurioItem, ICurioRenderer {
+public class HatItem extends TrinketItem implements TrinketRenderer {
 
     private HatEntry hatEntry;
     private BakedModel hatModel;
 
     public HatItem(HatEntry entry) {
-        super(new Item.Properties()
-                .stacksTo(1)
-                .tab(ModRegistry.HAT_TAB)
+        super(new Item.Settings()
+                .maxCount(1)
+                .group(SimpleHats.HAT_TAB)
                 .rarity(entry.getHatRarity())
-                .fireResistant());
-        if(!entry.getHatName().equalsIgnoreCase("special")) this.setRegistryName(entry.getHatName());
+                .fireproof());
         this.hatEntry = entry;
     }
 
@@ -58,87 +54,64 @@ public class HatItem extends Item implements ICurioItem, ICurioRenderer {
     }
 
     @Override
-    @OnlyIn(Dist.CLIENT)
-    public void appendHoverText(ItemStack itemStack, Level level, List<Component> tooltip, TooltipFlag flag) {
-        if(((HatItem)itemStack.getItem()).getHatEntry().getHatVariantRange()>0) tooltip.add(new TranslatableComponent("tooltip.simplehats.variant"));
+    public void onEquip(ItemStack stack, SlotReference slot, LivingEntity entity) {
+        if(entity.world.isClient()) return;
+        if(stack.getItem() == ModRegistry.HATSPECIAL && entity instanceof PlayerEntity player) {
+            NbtCompound tag = stack.getOrCreateNbt();
+            tag.putInt("CustomModelData", UUIDHandler.getUUIDMap().getOrDefault(player.getUuidAsString(), 0));
+        }
+    }
+    @Override
+    public void appendTooltip(ItemStack itemStack, World level, List<Text> tooltip, TooltipContext flag) {
+        if(((HatItem)itemStack.getItem()).getHatEntry().getHatVariantRange()>0) tooltip.add(new TranslatableText("tooltip.simplehats.variant"));
         if(((HatItem)itemStack.getItem()).getHatEntry().getHatName().equalsIgnoreCase("special")) {
-            if(itemStack.getTag()!=null && itemStack.getTag().getInt("CustomModelData") > 0) {
-                tooltip.add(new TranslatableComponent("tooltip.simplehats.special_true"));
+            if(itemStack.getNbt()!=null && itemStack.getNbt().getInt("CustomModelData") > 0) {
+                tooltip.add(new TranslatableText("tooltip.simplehats.special_true"));
             }
             else {
-                tooltip.add(new TranslatableComponent("tooltip.simplehats.special_false"));
+                tooltip.add(new TranslatableText("tooltip.simplehats.special_false"));
             }
         }
     }
 
     @Override
-    public ICurio.DropRule getDropRule(SlotContext slotContext, DamageSource source, int lootingLevel, boolean recentlyHit, ItemStack stack) {
-        if(slotContext.entity() instanceof Player && ModConfig.COMMON.keepHatOnDeath.get()) return ICurio.DropRule.ALWAYS_KEEP;
-        else return defaultInstance.getDropRule(slotContext, source, lootingLevel, recentlyHit);
+    public TrinketEnums.DropRule getDropRule(ItemStack stack, SlotReference slot, LivingEntity entity) {
+        if(entity instanceof PlayerEntity && SimpleHats.config.common.keepHatOnDeath) return TrinketEnums.DropRule.KEEP;
+        else return TrinketEnums.DropRule.DEFAULT;
     }
 
     @Override
-    public boolean canEquipFromUse(SlotContext slotContext, ItemStack stack) {
-        return true;
-    }
+    public void render(ItemStack stack, SlotReference slotContext, EntityModel<? extends LivingEntity> renderLayerParent, MatrixStack matrixStack, VertexConsumerProvider renderTypeBuffer, int light, LivingEntity entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
+        ItemRenderer renderer = MinecraftClient.getInstance().getItemRenderer();
 
-    @OnlyIn(Dist.CLIENT)
-    @Override
-    public <T extends LivingEntity, M extends EntityModel<T>> void render(ItemStack stack, SlotContext slotContext, PoseStack matrixStack, RenderLayerParent<T, M> renderLayerParent, MultiBufferSource renderTypeBuffer, int light, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
-        ItemRenderer renderer = Minecraft.getInstance().getItemRenderer();
-
-        if(!slotContext.entity().isInvisible()) {
-            matrixStack.pushPose();
-            if(slotContext.entity() instanceof HatDisplay) matrixStack.translate(0D, 0.97D, 0.0D);
-            else translateToHead(matrixStack, slotContext.entity(), netHeadYaw, headPitch);
+        if(!entity.isInvisible()) {
+            matrixStack.push();
+            if(entity instanceof HatDisplay) matrixStack.translate(0D, 0.97D, 0.0D);
+            else if(entity instanceof AbstractClientPlayerEntity clientEntity && renderLayerParent instanceof PlayerEntityModel layerModel) {
+                TrinketRenderer.translateToFace(matrixStack, layerModel, clientEntity, netHeadYaw, headPitch);
+                matrixStack.translate(0.0F, 0.0F, 0.3F);
+            }
             matrixStack.scale(0.66F, 0.66F, 0.66F);
-            matrixStack.mulPose(Vector3f.XP.rotationDegrees(180.0F));
-            matrixStack.mulPose(Vector3f.YP.rotationDegrees(180.0F));
-            if(hatModel == null) hatModel = renderer.getItemModelShaper().getModelManager().getModel(new ModelResourceLocation(SimpleHats.modId + ":" + this.hatEntry.getHatName() + "#inventory"));
-            if(stack.getTag() != null && stack.getTag().getInt("CustomModelData") != 0) renderer.render(stack, ItemTransforms.TransformType.HEAD, false, matrixStack, renderTypeBuffer, light, OverlayTexture.NO_OVERLAY, Objects.requireNonNullElse(hatModel.getOverrides().resolve(hatModel, stack, (ClientLevel)slotContext.entity().level, slotContext.entity(), 0), hatModel));
-            else renderer.render(stack, ItemTransforms.TransformType.HEAD, false, matrixStack, renderTypeBuffer, light, OverlayTexture.NO_OVERLAY, hatModel);
-            matrixStack.popPose();
+            matrixStack.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(180.0F));
+            matrixStack.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(180.0F));
+            if(hatModel == null) hatModel = renderer.getModel(stack, entity.world, entity, 0);
+            if(stack.getNbt() != null && stack.getNbt().getInt("CustomModelData") != 0) renderer.renderItem(stack, ModelTransformation.Mode.HEAD, false, matrixStack, renderTypeBuffer, light, OverlayTexture.DEFAULT_UV, Objects.requireNonNullElse(hatModel.getOverrides().apply(hatModel, stack, (ClientWorld)entity.world, entity, 0), hatModel));
+            else renderer.renderItem(stack, ModelTransformation.Mode.HEAD, false, matrixStack, renderTypeBuffer, light, OverlayTexture.DEFAULT_UV, hatModel);
+            matrixStack.pop();
         }
-        if(slotContext.entity() instanceof Player) {
+        if(entity instanceof PlayerEntity) {
             HatParticleSettings particleSettings = this.hatEntry.getHatParticleSettings();
-            if(particleSettings.getUseParticles() && !Minecraft.getInstance().isPaused() && slotContext.entity().getRandom().nextFloat() < (slotContext.entity().isInvisible() ? particleSettings.getParticleFrequency()/2 : particleSettings.getParticleFrequency())) {
-                double d0 = slotContext.entity().getRandom().nextGaussian() * 0.02D,
-                        d1 = slotContext.entity().getRandom().nextGaussian() * 0.02D,
-                        d2 = slotContext.entity().getRandom().nextGaussian() * 0.02D,
+            if(particleSettings.getUseParticles() && !MinecraftClient.getInstance().isPaused() && entity.getRandom().nextFloat() < (entity.isInvisible() ? particleSettings.getParticleFrequency()/2 : particleSettings.getParticleFrequency())) {
+                double d0 = entity.getRandom().nextGaussian() * 0.02D,
+                        d1 = entity.getRandom().nextGaussian() * 0.02D,
+                        d2 = entity.getRandom().nextGaussian() * 0.02D,
                         y = switch(particleSettings.getParticleMovement()) {
-                            case TRAILING_HEAD -> slotContext.entity().getY()+1.75;
-                            case TRAILING_FEET -> slotContext.entity().getY()+0.25;
-                            case TRAILING_FULL -> slotContext.entity().getRandomY();
+                            case TRAILING_HEAD -> entity.getY()+1.75;
+                            case TRAILING_FEET -> entity.getY()+0.25;
+                            case TRAILING_FULL -> entity.getRandomBodyY();
                         };
-                slotContext.entity().level.addParticle(particleSettings.getParticleType(), slotContext.entity().getRandomX(0.5D), y, slotContext.entity().getRandomZ(0.5D), d0, d1,d2);
+                entity.world.addParticle(particleSettings.getParticleType(), entity.getX() + entity.getRandom().nextFloat() - 0.5, y, entity.getZ() + entity.getRandom().nextFloat() - 0.5, d0, d1,d2);
             }
         }
-    }
-
-    /*
-    private static void renderFire(PoseStack poseStack, MultiBufferSource bufferSource, Entity entity) {
-        try {
-            Method methodFire = EntityRenderDispatcher.class.getDeclaredMethod("renderFlame", PoseStack.class, MultiBufferSource.class, Entity.class);
-            methodFire.setAccessible(true);
-            methodFire.invoke(Minecraft.getInstance().getEntityRenderDispatcher(), poseStack, bufferSource, entity);
-        }
-        catch(Exception ex) {
-            System.out.println("Failed rendering fire: " + ex);
-        }
-    }
-     */
-
-    private static void translateToHead(PoseStack poseStack, LivingEntity entity, float headYaw, float headPitch) {
-        if(entity.isVisuallySwimming() || entity.isFallFlying()) {
-            poseStack.mulPose(Vector3f.ZP.rotationDegrees(entity.yHeadRot));
-            poseStack.mulPose(Vector3f.YP.rotationDegrees(headYaw));
-            poseStack.mulPose(Vector3f.XP.rotationDegrees(-45.0F));
-        }
-        else {
-            if(entity.isCrouching()) poseStack.translate(0.0F, 0.25F, 0.0F);
-            poseStack.mulPose(Vector3f.YP.rotationDegrees(headYaw));
-            poseStack.mulPose(Vector3f.XP.rotationDegrees(headPitch));
-        }
-        poseStack.translate(0.0F, -0.25F, 0.0F);
     }
 }

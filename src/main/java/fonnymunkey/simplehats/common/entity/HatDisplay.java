@@ -3,138 +3,152 @@ package fonnymunkey.simplehats.common.entity;
 import fonnymunkey.simplehats.SimpleHats;
 import fonnymunkey.simplehats.common.init.ModRegistry;
 import fonnymunkey.simplehats.common.item.HatItem;
-import net.minecraft.core.NonNullList;
-import net.minecraft.core.particles.BlockParticleOption;
-import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.network.syncher.EntityDataAccessor;
-import net.minecraft.network.syncher.EntityDataSerializers;
-import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.sounds.SoundEvent;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.*;
-import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
-import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.projectile.AbstractArrow;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.gameevent.GameEvent;
-import net.minecraft.world.phys.Vec3;
+import net.minecraft.block.Block;
+import net.minecraft.block.Blocks;
+import net.minecraft.entity.*;
+import net.minecraft.entity.attribute.DefaultAttributeContainer;
+import net.minecraft.entity.attribute.EntityAttributes;
+import net.minecraft.entity.damage.DamageSource;
+import net.minecraft.entity.data.DataTracker;
+import net.minecraft.entity.data.TrackedData;
+import net.minecraft.entity.data.TrackedDataHandlerRegistry;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.projectile.PersistentProjectileEntity;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtList;
+import net.minecraft.particle.BlockStateParticleEffect;
+import net.minecraft.particle.ParticleTypes;
+import net.minecraft.server.world.ServerWorld;
+import net.minecraft.sound.SoundEvent;
+import net.minecraft.sound.SoundEvents;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.Arm;
+import net.minecraft.util.Hand;
+import net.minecraft.util.collection.DefaultedList;
+import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.World;
+import net.minecraft.world.event.GameEvent;
 
 public class HatDisplay extends LivingEntity {
-    private final NonNullList<ItemStack> hatItemSlots = NonNullList.withSize(1, ItemStack.EMPTY);
-    public static final EntityDataAccessor<Byte> DATA_CLIENT_FLAGS = SynchedEntityData.defineId(HatDisplay.class, EntityDataSerializers.BYTE);
+    private final DefaultedList<ItemStack> hatItemSlots = DefaultedList.ofSize(1, ItemStack.EMPTY);
+    public static final TrackedData<Byte> DATA_CLIENT_FLAGS = DataTracker.registerData(HatDisplay.class, TrackedDataHandlerRegistry.BYTE);
     public long lastHit;
 
-    public HatDisplay(EntityType<? extends HatDisplay> type, Level level) {
+    public HatDisplay(EntityType<? extends HatDisplay> type, World level) {
         super(type, level);
     }
 
-    public HatDisplay(Level level, double x, double y, double z) {
-        this(ModRegistry.HATDISPLAYENTITY.get(), level);
+    public HatDisplay(World level, double x, double y, double z) {
+        this(ModRegistry.HATDISPLAYENTITY, level);
         this.setPos(x, y, z);
     }
 
-    public void refreshDimensions() {
+    @Override
+    public void calculateDimensions() {
         double d0 = this.getX();
         double d1 = this.getY();
         double d2 = this.getZ();
-        super.refreshDimensions();
+        super.calculateDimensions();
         this.setPos(d0, d1, d2);
     }
 
-    public static AttributeSupplier.Builder createAttributes() {
-        return LivingEntity.createLivingAttributes().add(Attributes.MAX_HEALTH, 5D).add(Attributes.MOVEMENT_SPEED, 0D);
+    public static DefaultAttributeContainer.Builder createLivingAttributes() {
+        return DefaultAttributeContainer.builder().add(EntityAttributes.GENERIC_MAX_HEALTH, 5D).add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0D);
     }
 
-    public ItemStack getItemBySlot(EquipmentSlot slot) {
+    @Override
+    public ItemStack getEquippedStack(EquipmentSlot slot) {
         return this.hatItemSlots.get(0);
     }
 
-    public void setItemSlot(EquipmentSlot slot, ItemStack stack) {
+    @Override
+    public void equipStack(EquipmentSlot slot, ItemStack stack) {
         if(!stack.isEmpty() && !(stack.getItem() instanceof HatItem)) {
-            SimpleHats.logger.log(org.apache.logging.log4j.Level.ERROR, "Attempted to place non-hat item \"" + stack.getItem().getRegistryName() + "\" on hat display stand");
+            SimpleHats.logger.log(org.apache.logging.log4j.Level.ERROR, "Attempted to place non-hat item \"" + stack.getItem().getName() + "\" on hat display stand");
             return;
         }
-        this.verifyEquippedItem(stack);
-        this.equipEventAndSound(stack);
+        this.processEquippedStack(stack);
+        this.onEquipStack(stack);
         this.hatItemSlots.set(0, stack);
     }
 
-    public boolean canTakeItem(ItemStack itemStack) {
-        return this.getItemBySlot(null).isEmpty();
+    @Override
+    public boolean canEquip(ItemStack itemStack) {
+        return this.getEquippedStack(null).isEmpty();
     }
 
-    public Iterable<ItemStack> getArmorSlots() { return this.hatItemSlots; }
-    
-    public HumanoidArm getMainArm() {
-        return HumanoidArm.RIGHT;
+    @Override
+    public Iterable<ItemStack> getArmorItems() { return this.hatItemSlots; }
+
+    @Override
+    public Arm getMainArm() {
+        return Arm.RIGHT;
     }
 
-    public void addAdditionalSaveData(CompoundTag compound) {
-        super.addAdditionalSaveData(compound);
-        ListTag listTag = new ListTag();
+    @Override
+    public void writeCustomDataToNbt(NbtCompound compound) {
+        super.writeCustomDataToNbt(compound);
+        NbtList listTag = new NbtList();
 
         ItemStack itemStack = this.hatItemSlots.get(0);
-        CompoundTag compoundTag = new CompoundTag();
-        if(!itemStack.isEmpty()) itemStack.save(compoundTag);
+        NbtCompound compoundTag = new NbtCompound();
+        if(!itemStack.isEmpty()) itemStack.writeNbt(compoundTag);
         listTag.add(compoundTag);
 
         compound.put("HatItem", listTag);
     }
 
-    public void readAdditionalSaveData(CompoundTag compound) {
-        super.readAdditionalSaveData(compound);
+    @Override
+    public void readCustomDataFromNbt(NbtCompound compound) {
+        super.readCustomDataFromNbt(compound);
         if(compound.contains("HatItem", 9)) {
-            ListTag listTag = compound.getList("HatItem", 10);
-            this.hatItemSlots.set(0, ItemStack.of(listTag.getCompound(0)));
+            NbtList listTag = compound.getList("HatItem", 10);
+            this.hatItemSlots.set(0, ItemStack.fromNbt(listTag.getCompound(0)));
         }
     }
 
+    @Override
     public boolean isPushable() {
         return false;
     }
 
-    protected void doPush(Entity entity) { }
+    @Override
+    protected void pushAway(Entity entity) { }
 
-    protected void pushEntities() { }
-    public InteractionResult interactAt(Player player, Vec3 vec3, InteractionHand hand) {
-        ItemStack itemStack = player.getItemInHand(hand);
-        if(!itemStack.is(Items.NAME_TAG)) {
+    @Override
+    protected void tickCramming() { }
+
+    @Override
+    public ActionResult interactAt(PlayerEntity player, Vec3d vec3, Hand hand) {
+        ItemStack itemStack = player.getStackInHand(hand);
+        if(!itemStack.isOf(Items.NAME_TAG)) {
             if(player.isSpectator()) {
-                return InteractionResult.SUCCESS;
+                return ActionResult.SUCCESS;
             }
-            else if(player.level.isClientSide) {
-                return InteractionResult.CONSUME;
+            else if(player.world.isClient()) {
+                return ActionResult.CONSUME;
             }
             else {
                 if(this.swapItem(player, itemStack, hand)) {
-                    return InteractionResult.SUCCESS;
+                    return ActionResult.SUCCESS;
                 }
-                return InteractionResult.PASS;
+                return ActionResult.PASS;
             }
         }
         else {
-            return InteractionResult.PASS;
+            return ActionResult.PASS;
         }
     }
 
-    private boolean swapItem(Player player, ItemStack stack, InteractionHand hand) {
-        ItemStack itemStack = this.getItemBySlot(null);
+    private boolean swapItem(PlayerEntity player, ItemStack stack, Hand hand) {
+        ItemStack itemStack = this.getEquippedStack(null);
         if(!stack.isEmpty() && !(stack.getItem() instanceof HatItem)) return false;
-        if(player.getAbilities().instabuild && itemStack.isEmpty() && !stack.isEmpty()) {
+        if(player.getAbilities().creativeMode && itemStack.isEmpty() && !stack.isEmpty()) {
             ItemStack itemStack2 = stack.copy();
             itemStack2.setCount(1);
-            this.setItemSlot(null, itemStack2);
+            this.equipStack(null, itemStack2);
             return true;
         }
         else if(!stack.isEmpty() && stack.getCount() > 1) {
@@ -144,69 +158,70 @@ public class HatDisplay extends LivingEntity {
             else {
                 ItemStack itemStack1 = stack.copy();
                 itemStack1.setCount(1);
-                this.setItemSlot(null, itemStack1);
-                stack.shrink(1);
+                this.equipStack(null, itemStack1);
+                stack.decrement(1);
                 return true;
             }
         }
         else {
-            this.setItemSlot(null, stack);
-            player.setItemInHand(hand, itemStack);
+            this.equipStack(null, stack);
+            player.setStackInHand(hand, itemStack);
             return true;
         }
     }
 
-    public boolean hurt(DamageSource source, float amount) {
-        if(!this.level.isClientSide && !this.isRemoved()) {
+    @Override
+    public boolean damage(DamageSource source, float amount) {
+        if(!this.world.isClient() && !this.isRemoved()) {
             if(DamageSource.OUT_OF_WORLD.equals(source)) {
                 this.kill();
                 return false;
             }
             else if(!this.isInvulnerableTo(source)) {
-                if(source.isExplosion()) {
-                    this.brokenByAnything(source);
+                if(source.isExplosive()) {
+                    this.onBreak(source);
                     this.kill();
                     return false;
                 }
                 else if(DamageSource.IN_FIRE.equals(source)) {
                     if(this.isOnFire()) {
-                        this.causeDamage(source, 0.15F);
+                        this.updateHealth(source, 0.15F);
                     }
                     else {
-                        this.setSecondsOnFire(5);
+                        this.setOnFireFor(5);
                     }
                     return false;
                 }
                 else if(DamageSource.ON_FIRE.equals(source) && this.getHealth() > 0.5F) {
-                    this.causeDamage(source, 4.0F);
+                    this.updateHealth(source, 4.0F);
                     return false;
                 }
                 else {
-                    boolean flag = source.getDirectEntity() instanceof AbstractArrow;
-                    boolean flag1 = flag && ((AbstractArrow)source.getDirectEntity()).getPierceLevel() > 0;
-                    boolean flag2 = "player".equals(source.getMsgId());
+                    boolean flag = source.getSource() instanceof PersistentProjectileEntity;
+                    boolean flag1 = flag && ((PersistentProjectileEntity)source.getSource()).getPierceLevel() > 0;
+                    boolean flag2 = "player".equals(source.getName());
                     if(!flag2 && !flag) {
                         return false;
                     }
-                    else if(source.getEntity() instanceof Player && !((Player)source.getEntity()).getAbilities().mayBuild) {
+                    else if(source.getAttacker() instanceof PlayerEntity && !((PlayerEntity)source.getAttacker()).getAbilities().allowModifyWorld) {
                         return false;
                     }
-                    else if(source.isCreativePlayer()) {
-                        this.playBrokenSound();
-                        this.showBreakingParticles();
+                    else if(source.isSourceCreativePlayer()) {
+                        this.playBreakSound();
+                        this.spawnBreakParticles();
                         this.kill();
                         return flag1;
                     }
                     else {
-                        long i = this.level.getGameTime();
+                        long i = this.world.getTime();
                         if(i - this.lastHit > 5L && !flag) {
-                            this.level.broadcastEntityEvent(this, (byte)32);
-                            this.gameEvent(GameEvent.ENTITY_DAMAGED, source.getEntity());
+                            this.world.sendEntityStatus(this, (byte)32);
+                            this.emitGameEvent(GameEvent.ENTITY_DAMAGED, source.getAttacker());
                             this.lastHit = i;
                         }
                         else {
-                            this.brokenByPlayer(source);
-                            this.showBreakingParticles();
+                            this.breakAndDropItem(source);
+                            this.spawnBreakParticles();
                             this.kill();
                         }
                         return true;
@@ -222,124 +237,141 @@ public class HatDisplay extends LivingEntity {
         }
     }
 
-    public void handleEntityEvent(byte id) {
+    @Override
+    public void handleStatus(byte id) {
         if(id == 32) {
-            if(this.level.isClientSide) {
-                this.level.playLocalSound(this.getX(), this.getY(), this.getZ(), SoundEvents.ARMOR_STAND_HIT, this.getSoundSource(), 0.3F, 1.0F, false);
-                this.lastHit = this.level.getGameTime();
+            if(this.world.isClient()) {
+                this.world.playSound(this.getX(), this.getY(), this.getZ(), SoundEvents.ENTITY_ARMOR_STAND_HIT, this.getSoundCategory(), 0.3F, 1.0F, false);
+                this.lastHit = this.world.getTime();
             }
         }
         else {
-            super.handleEntityEvent(id);
+            super.handleStatus(id);
         }
     }
 
-    private void showBreakingParticles() {
-        if(this.level instanceof ServerLevel) {
-            ((ServerLevel)this.level).sendParticles(new BlockParticleOption(ParticleTypes.BLOCK, Blocks.OAK_PLANKS.defaultBlockState()), this.getX(), this.getY(0.66D), this.getZ(), 10, (double)(this.getBbWidth() / 4.0F), (double)(this.getBbHeight() / 4.0F), (double)(this.getBbWidth() / 4.0F), 0.05D);
+    private void spawnBreakParticles() {
+        if(this.world instanceof ServerWorld) {
+            ((ServerWorld)this.world).spawnParticles(new BlockStateParticleEffect(ParticleTypes.BLOCK, Blocks.OAK_PLANKS.getDefaultState()), this.getX(), this.getBodyY(0.66D), this.getZ(), 10, (double)(this.getWidth() / 4.0F), (double)(this.getHeight() / 4.0F), (double)(this.getWidth() / 4.0F), 0.05D);
         }
     }
 
-    private void causeDamage(DamageSource source, float dmg) {
+    private void updateHealth(DamageSource source, float dmg) {
         float f = this.getHealth() - dmg;
         if(f <= 0.5F) {
-            this.brokenByAnything(source);
+            this.onBreak(source);
             this.kill();
         }
         else {
             this.setHealth(f);
-            this.gameEvent(GameEvent.ENTITY_DAMAGED, source.getEntity());
+            this.emitGameEvent(GameEvent.ENTITY_DAMAGED, source.getAttacker());
         }
     }
 
-    private void brokenByPlayer(DamageSource source) {
-        Block.popResource(this.level, this.blockPosition(), new ItemStack(ModRegistry.HATDISPLAYITEM.get()));
-        this.brokenByAnything(source);
+    private void breakAndDropItem(DamageSource source) {
+        Block.dropStack(this.world, this.getBlockPos(), new ItemStack(ModRegistry.HATDISPLAYITEM));
+        this.onBreak(source);
     }
 
-    private void brokenByAnything(DamageSource source) {
-        this.playBrokenSound();
-        this.dropAllDeathLoot(source);
+    private void onBreak(DamageSource source) {
+        this.playBreakSound();
+        this.drop(source);
 
         ItemStack itemStack = this.hatItemSlots.get(0);
         if(!itemStack.isEmpty()) {
-            Block.popResource(this.level, this.blockPosition().above(), itemStack);
+            Block.dropStack(this.world, this.getBlockPos().up(), itemStack);
             this.hatItemSlots.set(0, ItemStack.EMPTY);
         }
     }
 
-    private void playBrokenSound() {
-        this.level.playSound(null, this.getX(), this.getY(), this.getZ(), SoundEvents.ARMOR_STAND_BREAK, this.getSoundSource(), 1.0F, 1.0F);
+    private void playBreakSound() {
+        this.world.playSound(null, this.getX(), this.getY(), this.getZ(), SoundEvents.ENTITY_ARMOR_STAND_BREAK, this.getSoundCategory(), 1.0F, 1.0F);
     }
 
-    protected float tickHeadTurn(float f1, float f2) {
-        this.yBodyRotO = this.yRotO;
-        this.yBodyRot = this.getYRot();
+    @Override
+    protected float turnHead(float f1, float f2) {
+        this.prevBodyYaw = this.prevYaw;
+        this.bodyYaw = this.getYaw();
         return 0.0F;
     }
 
-    public double getMyRidingOffset() {
+    @Override
+    public double getHeightOffset() {
         return 0.1D;
     }
 
-    public void setYBodyRot(float offset) {
-        this.yBodyRotO = this.yRotO = offset;
-        this.yHeadRotO = this.yHeadRot = offset;
+    @Override
+    public void setBodyYaw(float offset) {
+        this.prevBodyYaw = this.prevYaw = offset;
+        this.prevHeadYaw = this.headYaw = offset;
     }
 
-    public void setYHeadRot(float rotation) {
-        this.yBodyRotO = this.yRotO = rotation;
-        this.yHeadRotO = this.yHeadRot = rotation;
+    @Override
+    public void setHeadYaw(float rotation) {
+        this.prevBodyYaw = this.prevYaw = rotation;
+        this.prevHeadYaw = this.headYaw = rotation;
     }
 
+    @Override
     public void kill() {
         this.remove(Entity.RemovalReason.KILLED);
     }
 
-    public boolean skipAttackInteraction(Entity entity) {
-        return entity instanceof Player && !this.level.mayInteract((Player)entity, this.blockPosition());
+    @Override
+    public boolean handleAttack(Entity entity) {
+        return entity instanceof PlayerEntity && !this.world.canPlayerModifyAt((PlayerEntity)entity, this.getBlockPos());
     }
 
-    public LivingEntity.Fallsounds getFallSounds() {
-        return new LivingEntity.Fallsounds(SoundEvents.ARMOR_STAND_FALL, SoundEvents.ARMOR_STAND_FALL);
+    @Override
+    public LivingEntity.FallSounds getFallSounds() {
+        return new LivingEntity.FallSounds(SoundEvents.ENTITY_ARMOR_STAND_FALL, SoundEvents.ENTITY_ARMOR_STAND_FALL);
     }
 
+    @Override
     protected SoundEvent getHurtSound(DamageSource damageSource) {
-        return SoundEvents.ARMOR_STAND_HIT;
+        return SoundEvents.ENTITY_ARMOR_STAND_HIT;
     }
 
+    @Override
     protected SoundEvent getDeathSound() {
-        return SoundEvents.ARMOR_STAND_BREAK;
+        return SoundEvents.ENTITY_ARMOR_STAND_BREAK;
     }
 
-    public void thunderHit(ServerLevel pLevel, LightningBolt pLightning) { }
+    @Override
+    public void onStruckByLightning(ServerWorld pLevel, LightningEntity pLightning) { }
 
-    public boolean isAffectedByPotions() {
+    @Override
+    public boolean isAffectedBySplashPotions() {
         return false;
     }
 
-    public boolean attackable() {
+    @Override
+    public boolean isMobOrPlayer() {
         return false;
     }
 
-    public EntityDimensions getDimensions(Pose pose) {
+    @Override
+    public EntityDimensions getDimensions(EntityPose pose) {
         return this.getType().getDimensions();
     }
 
-    public ItemStack getPickResult() {
-        return new ItemStack(ModRegistry.HATDISPLAYITEM.get());
+    @Override
+    public ItemStack getPickBlockStack() {
+        return new ItemStack(ModRegistry.HATDISPLAYITEM);
     }
 
-    public void onSyncedDataUpdated(EntityDataAccessor<?> pKey) {
+    @Override
+    public void onTrackedDataSet(TrackedData<?> pKey) {
         if(DATA_CLIENT_FLAGS.equals(pKey)) {
-            this.refreshDimensions();
-            this.blocksBuilding = true;
+            this.calculateDimensions();
+            this.intersectionChecked = true;
         }
-        super.onSyncedDataUpdated(pKey);
+        super.onTrackedDataSet(pKey);
     }
 
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        this.entityData.define(DATA_CLIENT_FLAGS, (byte)0);
+    @Override
+    protected void initDataTracker() {
+        super.initDataTracker();
+        this.dataTracker.startTracking(DATA_CLIENT_FLAGS, (byte)0);
     }
 }

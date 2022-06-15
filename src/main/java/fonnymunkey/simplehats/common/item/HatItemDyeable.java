@@ -1,19 +1,17 @@
 package fonnymunkey.simplehats.common.item;
 
 import fonnymunkey.simplehats.util.HatEntry;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
-import net.minecraft.world.item.DyeableLeatherItem;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.level.Level;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraft.client.item.TooltipContext;
+import net.minecraft.item.DyeableItem;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.text.LiteralText;
+import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
+import net.minecraft.world.World;
 import java.util.List;
 
-public class HatItemDyeable extends HatItem implements DyeableLeatherItem {
+public class HatItemDyeable extends HatItem implements DyeableItem {
 
     public HatItemDyeable(HatEntry entry) {
         super(entry);
@@ -21,18 +19,17 @@ public class HatItemDyeable extends HatItem implements DyeableLeatherItem {
 
     @Override
     public int getColor(ItemStack stack) {
-        CompoundTag compoundtag = stack.getTagElement("display");
+        NbtCompound compoundtag = stack.getSubNbt("display");
         return compoundtag != null && compoundtag.contains("color", 99) ? compoundtag.getInt("color") : this.getHatEntry().getHatDyeSettings().getColorCode();
     }
 
     private static final String[] colorList = new String[]{"\u00A7c", "\u00A7e", "\u00A7a", "\u00A7b", "\u00A79", "\u00A7d", "\u00A75"};
 
     @Override
-    @OnlyIn(Dist.CLIENT)
-    public void appendHoverText(ItemStack itemStack, Level level, List<Component> tooltip, TooltipFlag flag) {
-        super.appendHoverText(itemStack, level, tooltip, flag);
-        TextComponent component = new TextComponent("");
-        char[] c = (new TranslatableComponent("tooltip.simplehats.dyeable")).getString().toCharArray();
+    public void appendTooltip(ItemStack itemStack, World level, List<Text> tooltip, TooltipContext flag) {
+        super.appendTooltip(itemStack, level, tooltip, flag);
+        LiteralText component = new LiteralText("");
+        char[] c = (new TranslatableText("tooltip.simplehats.dyeable")).getString().toCharArray();
         for(int i=0; i<c.length; i++) {
             component.append(colorList[i%colorList.length] + c[i]);
         }
