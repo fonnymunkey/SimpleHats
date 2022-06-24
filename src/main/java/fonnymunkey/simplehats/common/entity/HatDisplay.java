@@ -12,6 +12,7 @@ import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
+import net.minecraft.entity.decoration.ArmorStandEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.PersistentProjectileEntity;
 import net.minecraft.item.ItemStack;
@@ -54,9 +55,12 @@ public class HatDisplay extends LivingEntity {
         this.setPos(d0, d1, d2);
     }
 
+    //Don't think this is actually needed, causes conflict with Porting Lib
+    /*
     public static DefaultAttributeContainer.Builder createLivingAttributes() {
         return DefaultAttributeContainer.builder().add(EntityAttributes.GENERIC_MAX_HEALTH, 5D).add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0D);
     }
+*/
 
     @Override
     public ItemStack getEquippedStack(EquipmentSlot slot) {
