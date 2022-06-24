@@ -1,4 +1,3 @@
-/*
 package fonnymunkey.simplehats.compat;
 
 import fonnymunkey.simplehats.SimpleHats;
@@ -78,7 +77,7 @@ public class JEIPlugin implements IModPlugin {
                 ModRegistry.HATSCRAPS_RARE.get(), rareList);
         for(Map.Entry<Item, List<Ingredient>> entry : map.entrySet()) {
             if(entry.getValue().isEmpty()) continue;
-            ResourceLocation location = new ResourceLocation(SimpleHats.modId, entry.getKey().getRegistryName().getPath() + "_scrapping");
+            ResourceLocation location = new ResourceLocation(SimpleHats.modId, entry.getKey().getDescriptionId() + "_scrapping");
             recipes.add(new ShapelessRecipe(
                     location,
                     RecipeTypes.CRAFTING.getUid().getPath(),
@@ -107,7 +106,7 @@ public class JEIPlugin implements IModPlugin {
                     stack1.setTag(tag1);
                     ItemStack output = stack1;
 
-                    ResourceLocation location = new ResourceLocation(SimpleHats.modId, "hatvariant_" + hat.getRegistryName().getPath() + "_" + i);
+                    ResourceLocation location = new ResourceLocation(SimpleHats.modId, "hatvariant_" + hat.getHatEntry().getHatName() + "_" + i);
                     recipes.add(new ShapelessRecipe(location, RecipeTypes.CRAFTING.getUid().getPath(), output, input));
                 }
             }
@@ -120,7 +119,7 @@ public class JEIPlugin implements IModPlugin {
 
         for(HatItem hat : ModRegistry.hatList) {
             if(hat instanceof HatItemDyeable hatDyeable) {
-                ResourceLocation location = new ResourceLocation(SimpleHats.modId, "hatdyeing_" + hat.getRegistryName().getPath());
+                ResourceLocation location = new ResourceLocation(SimpleHats.modId, "hatdyeing_" + hat.getHatEntry().getHatName());
                 recipes.add(new ShapelessRecipe(
                         location,
                         RecipeTypes.CRAFTING.getUid().getPath(),
@@ -134,4 +133,3 @@ public class JEIPlugin implements IModPlugin {
         return recipes;
     }
 }
-*/
