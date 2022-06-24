@@ -54,9 +54,11 @@ public class HatDisplay extends LivingEntity {
         this.setPos(d0, d1, d2);
     }
 
+    /*
     public static DefaultAttributeContainer.Builder createLivingAttributes() {
         return DefaultAttributeContainer.builder().add(EntityAttributes.GENERIC_MAX_HEALTH, 5D).add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0D);
     }
+     */
 
     @Override
     public ItemStack getEquippedStack(EquipmentSlot slot) {
