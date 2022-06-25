@@ -23,6 +23,11 @@ public class ModConfig extends PartitioningSerializer.GlobalData {
         @ConfigEntry.BoundedDiscrete(min = 0, max = 100)
         public int seasonalBagChance = 20;
 
+        @ConfigEntry.Gui.Tooltip
+        public boolean enableMobLoot = true;
+
+        @ConfigEntry.Gui.Tooltip
+        public boolean enableChestLoot = true;
         private Common() {}
     }
 }

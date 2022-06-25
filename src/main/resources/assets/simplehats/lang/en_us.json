@@ -3,9 +3,13 @@
   "text.autoconfig.simplehats.option.common.keepHatOnDeath": "Keep Hat on Death",
   "text.autoconfig.simplehats.option.common.allowUpdates": "Allow Updates",
   "text.autoconfig.simplehats.option.common.seasonalBagChance": "Seasonal Bag Chance",
+  "text.autoconfig.simplehats.option.common.enableMobLoot": "Enable Mob Loot",
+  "text.autoconfig.simplehats.option.common.enableChestLoot": "Enable Chest Loot",
   "text.autoconfig.simplehats.option.common.keepHatOnDeath.@Tooltip": "Keep equipped hat on death.",
   "text.autoconfig.simplehats.option.common.allowUpdates.@Tooltip": "Allow automatic updating of player-specific hats.",
   "text.autoconfig.simplehats.option.common.seasonalBagChance.@Tooltip": "Chance for a seasonal bag to drop when using a bag during a season.",
+  "text.autoconfig.simplehats.option.common.enableMobLoot.@Tooltip": "Drop hat bags from hostile mobs.",
+  "text.autoconfig.simplehats.option.common.enableChestLoot.@Tooltip": "Add hat bags to dungeon chests.",
 
   "tooltip.simplehats.dyeable": "Dyeable",
   "tooltip.simplehats.variant": "Cycle variants in the crafting grid",

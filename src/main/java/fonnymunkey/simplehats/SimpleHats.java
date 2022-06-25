@@ -46,7 +46,7 @@ public class SimpleHats implements ModInitializer {
         FabricDefaultAttributeRegistry.register(ModRegistry.HATDISPLAYENTITY, HatDisplay.createLivingAttributes());
 
         LootTableEvents.MODIFY.register((resourceManager, lootManager, id, tableBuilder, source) -> {
-            if(ModRegistry.LOOT_HATINJECT_CHEST.contains(id)) {
+            if(SimpleHats.config.common.enableChestLoot && ModRegistry.LOOT_HATINJECT_CHEST.contains(id)) {
                 LootPool.Builder pool = LootPool.builder()
                         .with(ItemEntry.builder(ModRegistry.HATBAG_COMMON).weight(20))
                         .with(ItemEntry.builder(ModRegistry.HATBAG_UNCOMMON).weight(15))
@@ -56,7 +56,7 @@ public class SimpleHats implements ModInitializer {
                         .rolls(UniformLootNumberProvider.create(1.0F, 2.0F));
                 tableBuilder.pool(pool);
             }
-            else if(ModRegistry.LOOT_HATINJECT_ENTITY.contains(id)) {
+            else if(SimpleHats.config.common.enableMobLoot && ModRegistry.LOOT_HATINJECT_ENTITY.contains(id)) {
                 LootPool.Builder pool = LootPool.builder()
                         .with(ItemEntry.builder(ModRegistry.HATBAG_COMMON).weight(20))
                         .with(ItemEntry.builder(ModRegistry.HATBAG_UNCOMMON).weight(15))
