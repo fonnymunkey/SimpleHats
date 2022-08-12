@@ -30,6 +30,7 @@ public class SimpleHats {
     public SimpleHats() {
         IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
         ModLoadingContext.get().registerConfig(net.minecraftforge.fml.config.ModConfig.Type.COMMON, ModConfig.COMMON_SPEC);
+        ModLoadingContext.get().registerConfig(net.minecraftforge.fml.config.ModConfig.Type.CLIENT, ModConfig.CLIENT_SPEC);
         eventBus.addListener(this::enqueueIMC);
         eventBus.addListener(this::clientSetup);
 
