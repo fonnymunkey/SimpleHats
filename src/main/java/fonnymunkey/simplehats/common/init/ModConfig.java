@@ -13,6 +13,10 @@ public class ModConfig extends PartitioningSerializer.GlobalData {
     @ConfigEntry.Gui.TransitiveObject
     public Common common = new Common();
 
+    @ConfigEntry.Category("client")
+    @ConfigEntry.Gui.TransitiveObject
+    public Client client = new Client();
+
     @Config(name = "common")
     public static class Common implements ConfigData {
         @ConfigEntry.Gui.Tooltip
@@ -29,5 +33,16 @@ public class ModConfig extends PartitioningSerializer.GlobalData {
         @ConfigEntry.Gui.Tooltip
         public boolean enableChestLoot = true;
         private Common() {}
+    }
+
+    @Config(name = "client")
+    public static class Client implements ConfigData {
+        @ConfigEntry.Gui.Tooltip
+        public boolean forceFirstPersonNoRender = false;
+
+        @ConfigEntry.Gui.Tooltip
+        public double hatYOffset = 0.0D;
+
+        private Client() {}
     }
 }

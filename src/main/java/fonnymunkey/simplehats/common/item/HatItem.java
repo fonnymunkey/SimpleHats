@@ -13,6 +13,7 @@ import fonnymunkey.simplehats.util.UUIDHandler;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
+import net.minecraft.client.option.Perspective;
 import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.model.EntityModel;
@@ -83,12 +84,14 @@ public class HatItem extends TrinketItem implements TrinketRenderer {
     public void render(ItemStack stack, SlotReference slotContext, EntityModel<? extends LivingEntity> renderLayerParent, MatrixStack matrixStack, VertexConsumerProvider renderTypeBuffer, int light, LivingEntity entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
         ItemRenderer renderer = MinecraftClient.getInstance().getItemRenderer();
 
+        if(entity == MinecraftClient.getInstance().cameraEntity && MinecraftClient.getInstance().options.getPerspective() == Perspective.FIRST_PERSON && SimpleHats.config.client.forceFirstPersonNoRender) return;
+
         if(!entity.isInvisible()) {
             matrixStack.push();
             if(entity instanceof HatDisplay) matrixStack.translate(0D, 0.97D, 0.0D);
             else if(entity instanceof AbstractClientPlayerEntity clientEntity && renderLayerParent instanceof PlayerEntityModel layerModel) {
                 TrinketRenderer.translateToFace(matrixStack, layerModel, clientEntity, netHeadYaw, headPitch);
-                matrixStack.translate(0.0F, 0.0F, 0.3F);
+                matrixStack.translate(0.0F, 0.0F - SimpleHats.config.client.hatYOffset, 0.3F);
             }
             matrixStack.scale(0.66F, 0.66F, 0.66F);
             matrixStack.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(180.0F));
