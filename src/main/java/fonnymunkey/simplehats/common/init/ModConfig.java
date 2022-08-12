@@ -10,9 +10,12 @@ import java.io.File;
 import java.nio.charset.Charset;
 
 public class ModConfig {
-    private static final ForgeConfigSpec.Builder BUILDER = new ForgeConfigSpec.Builder();
-    public static final Common COMMON = new Common(BUILDER);
-    public static final ForgeConfigSpec COMMON_SPEC = BUILDER.build();
+    private static final ForgeConfigSpec.Builder COMMON_BUILDER = new ForgeConfigSpec.Builder();
+    private static final ForgeConfigSpec.Builder CLIENT_BUILDER = new ForgeConfigSpec.Builder();
+    public static final Common COMMON = new Common(COMMON_BUILDER);
+    public static final Client CLIENT = new Client(CLIENT_BUILDER);
+    public static final ForgeConfigSpec COMMON_SPEC = COMMON_BUILDER.build();
+    public static final ForgeConfigSpec CLIENT_SPEC = CLIENT_BUILDER.build();
 
     public static class Common {
         public final ForgeConfigSpec.BooleanValue keepHatOnDeath;
@@ -27,7 +30,7 @@ public class ModConfig {
                     .define("keepHatOnDeath", true);
 
             allowUpdates = builder
-                    .comment("Allow automatic updating of player-specific hats")
+                    .comment("Allow automatic updating of player-specific hats.")
                     .define("allowUpdates", true);
 
             seasonalBagChance = builder
@@ -35,6 +38,25 @@ public class ModConfig {
                     .defineInRange("seasonalBagChance", 0.2D, 0.0D, 1.0D);
 
         builder.pop();
+        }
+    }
+
+    public static class Client {
+        public final ForgeConfigSpec.DoubleValue hatYOffset;
+        public final ForgeConfigSpec.BooleanValue forceFirstPersonNoRender;
+
+        Client(ForgeConfigSpec.Builder builder) {
+            builder.push("Client");
+
+            hatYOffset = builder
+                    .comment("Y Offset for hats to match skin's features if desired.")
+                    .defineInRange("hatYOffset", 0.0D, -1.0D, 1.0D);
+
+            forceFirstPersonNoRender = builder
+                    .comment("Force hats to not render on self when in first person. (For compatability with First-Person-Model mods, normally not needed)")
+                    .define("forceFirstPersonNoRender", false);
+
+            builder.pop();
         }
     }
 

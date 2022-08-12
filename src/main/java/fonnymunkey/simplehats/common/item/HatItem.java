@@ -1,5 +1,6 @@
 package fonnymunkey.simplehats.common.item;
 
+import com.mojang.authlib.minecraft.client.MinecraftClient;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Vector3f;
 import fonnymunkey.simplehats.SimpleHats;
@@ -8,7 +9,9 @@ import fonnymunkey.simplehats.common.init.ModConfig;
 import fonnymunkey.simplehats.common.init.ModRegistry;
 import fonnymunkey.simplehats.util.HatEntry;
 import fonnymunkey.simplehats.util.HatEntry.HatParticleSettings;
+import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -85,6 +88,9 @@ public class HatItem extends Item implements ICurioItem, ICurioRenderer {
     public <T extends LivingEntity, M extends EntityModel<T>> void render(ItemStack stack, SlotContext slotContext, PoseStack matrixStack, RenderLayerParent<T, M> renderLayerParent, MultiBufferSource renderTypeBuffer, int light, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
         ItemRenderer renderer = Minecraft.getInstance().getItemRenderer();
 
+        //Hopefully fixes hats rendering over the camera when using the first person render mod?
+        if(slotContext.entity() == Minecraft.getInstance().cameraEntity && Minecraft.getInstance().options.getCameraType() == CameraType.FIRST_PERSON && ModConfig.CLIENT.forceFirstPersonNoRender.get()) return;
+
         if(!slotContext.entity().isInvisible()) {
             matrixStack.pushPose();
             if(slotContext.entity() instanceof HatDisplay) matrixStack.translate(0D, 0.97D, 0.0D);
@@ -137,6 +143,6 @@ public class HatItem extends Item implements ICurioItem, ICurioRenderer {
             poseStack.mulPose(Vector3f.YP.rotationDegrees(headYaw));
             poseStack.mulPose(Vector3f.XP.rotationDegrees(headPitch));
         }
-        poseStack.translate(0.0F, -0.25F, 0.0F);
+        poseStack.translate(0.0F, -0.25F - ModConfig.CLIENT.hatYOffset.get(), 0.0F);
     }
 }

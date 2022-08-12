@@ -1,5 +1,6 @@
 package fonnymunkey.simplehats.common.init;
 
+import com.mojang.serialization.Codec;
 import fonnymunkey.simplehats.SimpleHats;
 import fonnymunkey.simplehats.common.entity.HatDisplay;
 import fonnymunkey.simplehats.common.item.BagItem;
@@ -21,7 +22,7 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.SimpleRecipeSerializer;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.loot.GlobalLootModifierSerializer;
+import net.minecraftforge.common.loot.IGlobalLootModifier;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
@@ -65,7 +66,7 @@ public class ModRegistry {
     ////
     //Entity Registry
     ////
-    public static final DeferredRegister<EntityType<?>> ENTITY_REG = DeferredRegister.create(ForgeRegistries.ENTITIES, SimpleHats.modId);
+    public static final DeferredRegister<EntityType<?>> ENTITY_REG = DeferredRegister.create(ForgeRegistries.ENTITY_TYPES, SimpleHats.modId);
     public static final RegistryObject<EntityType<HatDisplay>> HATDISPLAYENTITY = ENTITY_REG.register("hatdisplay", () -> EntityType.Builder.<HatDisplay>of(HatDisplay::new, MobCategory.MISC).sized(0.75F, 0.8125F).clientTrackingRange(10).build("hatdisplay"));
     ////
     //Recipe Registry
@@ -76,7 +77,7 @@ public class ModRegistry {
     ////
     //Loot registry
     ////
-    public static final DeferredRegister<GlobalLootModifierSerializer<?>> LOOT_REG = DeferredRegister.create(ForgeRegistries.Keys.LOOT_MODIFIER_SERIALIZERS, SimpleHats.modId);
-    public static final RegistryObject<HatChestLootModifier.Serializer> HAT_LOOTINJECT_CHEST = LOOT_REG.register("hat_lootinject_chest", HatChestLootModifier.Serializer::new);
-    public static final RegistryObject<HatEntityLootModifier.Serializer> HAT_LOOTINJECT_ENTITY = LOOT_REG.register("hat_lootinject_entity", HatEntityLootModifier.Serializer::new);
+    public static final DeferredRegister<Codec<? extends IGlobalLootModifier>> LOOT_REG = DeferredRegister.create(ForgeRegistries.Keys.GLOBAL_LOOT_MODIFIER_SERIALIZERS, SimpleHats.modId);
+    public static final RegistryObject<Codec<HatChestLootModifier>> HAT_LOOTINJECT_CHEST = LOOT_REG.register("hat_lootinject_chest", HatChestLootModifier.CODEC);
+    public static final RegistryObject<Codec<HatEntityLootModifier>> HAT_LOOTINJECT_ENTITY = LOOT_REG.register("hat_lootinject_entity", HatEntityLootModifier.CODEC);
 }
