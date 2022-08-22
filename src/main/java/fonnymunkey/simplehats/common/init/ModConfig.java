@@ -32,6 +32,10 @@ public class ModConfig extends PartitioningSerializer.GlobalData {
 
         @ConfigEntry.Gui.Tooltip
         public boolean enableChestLoot = true;
+
+        @ConfigEntry.Gui.Tooltip
+        public boolean allowHatInHelmetSlot = false;
+
         private Common() {}
     }
 

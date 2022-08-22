@@ -4,6 +4,7 @@
   "compatibilityLevel": "JAVA_17",
   "refmap": "simplehats-fabric-refmap.json",
   "mixins": [
+    "MixinLivingEntity",
     "MixinModResourcePackCreator",
     "MixinTrinketsApi"
   ],

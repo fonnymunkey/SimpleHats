@@ -7,6 +7,7 @@
   "text.autoconfig.simplehats.option.common.seasonalBagChance": "Seasonal Bag Chance",
   "text.autoconfig.simplehats.option.common.enableMobLoot": "Enable Mob Loot",
   "text.autoconfig.simplehats.option.common.enableChestLoot": "Enable Chest Loot",
+  "text.autoconfig.simplehats.option.common.allowHatInHelmetSlot": "Allow Hat In Helmet Slot",
   "text.autoconfig.simplehats.option.client.forceFirstPersonNoRender": "Force No First Person Render",
   "text.autoconfig.simplehats.option.client.hatYOffset": "Hat Y Offset",
   "text.autoconfig.simplehats.option.common.keepHatOnDeath.@Tooltip": "Keep equipped hat on death.",
@@ -14,6 +15,7 @@
   "text.autoconfig.simplehats.option.common.seasonalBagChance.@Tooltip": "Chance for a seasonal bag to drop when using a bag during a season.",
   "text.autoconfig.simplehats.option.common.enableMobLoot.@Tooltip": "Drop hat bags from hostile mobs.",
   "text.autoconfig.simplehats.option.common.enableChestLoot.@Tooltip": "Add hat bags to dungeon chests.",
+  "text.autoconfig.simplehats.option.common.allowHatInHelmetSlot.@Tooltip": "Allow for hats to be equipped in the helmet slot for compatibility with non-player entity decoration.",
   "text.autoconfig.simplehats.option.client.forceFirstPersonNoRender.@Tooltip": "Force hats to not render on the player while in first person. (For compat with FirstPersonRender mods, not normally needed)",
   "text.autoconfig.simplehats.option.client.hatYOffset.@Tooltip": "Offset the hat height if there are issues with hats matching skins. (-1.0 to 1.0)",
 
