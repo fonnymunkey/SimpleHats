@@ -1,6 +1,5 @@
 package fonnymunkey.simplehats.common.item;
 
-import com.mojang.authlib.minecraft.client.MinecraftClient;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Vector3f;
 import fonnymunkey.simplehats.SimpleHats;
@@ -11,7 +10,6 @@ import fonnymunkey.simplehats.util.HatEntry;
 import fonnymunkey.simplehats.util.HatEntry.HatParticleSettings;
 import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -23,6 +21,7 @@ import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -36,6 +35,7 @@ import top.theillusivec4.curios.api.client.ICurioRenderer;
 import top.theillusivec4.curios.api.type.capability.ICurio;
 import top.theillusivec4.curios.api.type.capability.ICurioItem;
 
+import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Objects;
 
@@ -70,6 +70,13 @@ public class HatItem extends Item implements ICurioItem, ICurioRenderer {
                 tooltip.add(Component.translatable("tooltip.simplehats.special_false"));
             }
         }
+    }
+
+    @Override
+    @Nullable
+    public EquipmentSlot getEquipmentSlot(ItemStack stack)
+    {
+        return ModConfig.COMMON.allowHatInHelmetSlot.get() ? EquipmentSlot.HEAD : null;
     }
 
     @Override
