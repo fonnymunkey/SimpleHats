@@ -6,7 +6,6 @@ import dev.emi.trinkets.api.TrinketItem;
 import dev.emi.trinkets.api.client.TrinketRenderer;
 import fonnymunkey.simplehats.SimpleHats;
 import fonnymunkey.simplehats.common.entity.HatDisplay;
-import fonnymunkey.simplehats.common.init.ModConfig;
 import fonnymunkey.simplehats.common.init.ModRegistry;
 import fonnymunkey.simplehats.util.HatEntry;
 import fonnymunkey.simplehats.util.HatEntry.HatParticleSettings;
