@@ -21,6 +21,7 @@ public class ModConfig {
         public final ForgeConfigSpec.BooleanValue keepHatOnDeath;
         public final ForgeConfigSpec.BooleanValue allowUpdates;
         public final ForgeConfigSpec.DoubleValue seasonalBagChance;
+        public final ForgeConfigSpec.BooleanValue allowHatInHelmetSlot;
 
         Common(ForgeConfigSpec.Builder builder) {
             builder.push("General");
@@ -36,6 +37,10 @@ public class ModConfig {
             seasonalBagChance = builder
                     .comment("Chance for a seasonal bag to drop when using a bag during a seasonal event. (0 effectively disables seasons)")
                     .defineInRange("seasonalBagChance", 0.2D, 0.0D, 1.0D);
+
+            allowHatInHelmetSlot = builder
+                    .comment("Allow equipping hat in helmet slot for compatibility with non-player entities/displays.")
+                    .define("allowHatInHelmetSlot", false);
 
         builder.pop();
         }

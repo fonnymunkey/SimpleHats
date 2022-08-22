@@ -22,6 +22,7 @@ import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -35,6 +36,7 @@ import top.theillusivec4.curios.api.client.ICurioRenderer;
 import top.theillusivec4.curios.api.type.capability.ICurio;
 import top.theillusivec4.curios.api.type.capability.ICurioItem;
 
+import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Objects;
 
@@ -70,6 +72,13 @@ public class HatItem extends Item implements ICurioItem, ICurioRenderer {
                 tooltip.add(new TranslatableComponent("tooltip.simplehats.special_false"));
             }
         }
+    }
+
+    @Override
+    @Nullable
+    public EquipmentSlot getEquipmentSlot(ItemStack stack)
+    {
+        return ModConfig.COMMON.allowHatInHelmetSlot.get() ? EquipmentSlot.HEAD : null;
     }
 
     @Override
