@@ -11,7 +11,9 @@ import fonnymunkey.simplehats.util.HatEntry.HatParticleSettings;
 import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.EntityModel;
+import net.minecraft.client.model.PlayerModel;
 import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.entity.ItemRenderer;
@@ -101,7 +103,10 @@ public class HatItem extends Item implements ICurioItem, ICurioRenderer {
         if(!slotContext.entity().isInvisible()) {
             matrixStack.pushPose();
             if(slotContext.entity() instanceof HatDisplay) matrixStack.translate(0D, 0.97D, 0.0D);
-            else translateToHead(matrixStack, slotContext.entity(), netHeadYaw, headPitch);
+            else {
+                translateToHead(matrixStack, renderLayerParent, slotContext.entity(), netHeadYaw, headPitch);
+                if(slotContext.entity().isCrouching()) matrixStack.translate(0.0F, 0.0F, 0.015F); //Translate after to fix wierd scaling
+            }
             matrixStack.scale(0.66F, 0.66F, 0.66F);
             matrixStack.mulPose(Vector3f.XP.rotationDegrees(180.0F));
             matrixStack.mulPose(Vector3f.YP.rotationDegrees(180.0F));
@@ -139,9 +144,11 @@ public class HatItem extends Item implements ICurioItem, ICurioRenderer {
     }
      */
 
-    private static void translateToHead(PoseStack poseStack, LivingEntity entity, float headYaw, float headPitch) {
+    private static void translateToHead(PoseStack poseStack, RenderLayerParent renderLayerParent, LivingEntity entity, float headYaw, float headPitch) {
         if(entity.isVisuallySwimming() || entity.isFallFlying()) {
-            poseStack.mulPose(Vector3f.ZP.rotationDegrees(entity.yHeadRot));
+            if(renderLayerParent instanceof PlayerModel layerModel) {
+                poseStack.mulPose(Vector3f.ZP.rotationDegrees(layerModel.head.zRot));
+            }
             poseStack.mulPose(Vector3f.YP.rotationDegrees(headYaw));
             poseStack.mulPose(Vector3f.XP.rotationDegrees(-45.0F));
         }
@@ -150,6 +157,6 @@ public class HatItem extends Item implements ICurioItem, ICurioRenderer {
             poseStack.mulPose(Vector3f.YP.rotationDegrees(headYaw));
             poseStack.mulPose(Vector3f.XP.rotationDegrees(headPitch));
         }
-        poseStack.translate(0.0F, -0.25F - ModConfig.CLIENT.hatYOffset.get(), 0.0F);
+        poseStack.translate(0.0F, -0.25F - ModConfig.CLIENT.hatYOffset.get(), 0.01F);
     }
 }
