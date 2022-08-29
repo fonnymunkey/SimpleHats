@@ -92,7 +92,8 @@ public class HatItem extends TrinketItem implements TrinketRenderer {
             if(entity instanceof HatDisplay) matrixStack.translate(0D, 0.97D, 0.0D);
             else if(entity instanceof AbstractClientPlayerEntity clientEntity && renderLayerParent instanceof PlayerEntityModel layerModel) {
                 TrinketRenderer.translateToFace(matrixStack, layerModel, clientEntity, netHeadYaw, headPitch);
-                matrixStack.translate(0.0F, 0.0F - SimpleHats.config.client.hatYOffset, 0.3F);
+                matrixStack.translate(0.0F, 0.0F - SimpleHats.config.client.hatYOffset, 0.31F);
+                if(entity.isInSneakingPose()) matrixStack.translate(0.0F, 0.0F, 0.015F);
             }
             matrixStack.scale(0.66F, 0.66F, 0.66F);
             matrixStack.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(180.0F));
