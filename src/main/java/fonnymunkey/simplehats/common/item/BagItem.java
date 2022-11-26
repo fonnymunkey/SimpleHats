@@ -4,7 +4,6 @@ import fonnymunkey.simplehats.SimpleHats;
 import fonnymunkey.simplehats.common.init.ModRegistry;
 import fonnymunkey.simplehats.util.HatEntry;
 import fonnymunkey.simplehats.util.HatEntry.HatSeason;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemConvertible;
@@ -15,7 +14,6 @@ import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Rarity;
 import net.minecraft.util.TypedActionResult;
-import net.minecraft.util.UseAction;
 import net.minecraft.util.collection.DataPool;
 import net.minecraft.util.math.intprovider.ConstantIntProvider;
 import net.minecraft.util.math.intprovider.IntProvider;
@@ -49,47 +47,23 @@ public class BagItem extends Item {
         this.rarity = Rarity.EPIC;
     }
 
-    @Override
-    public int getMaxUseTime(ItemStack itemStack) {
-        return 24;
-    }
-
-    @Override
-    public UseAction getUseAction(ItemStack itemStack) {
-        return UseAction.NONE;
-    }
-
-    public static SoundEvent getUnwrapSound() { return SoundEvents.ITEM_ARMOR_EQUIP_LEATHER; }
     public static SoundEvent getUnwrapFinishSound() { return SoundEvents.ITEM_ARMOR_EQUIP_GENERIC; }
 
     @Override
-    public void usageTick(World world, LivingEntity player, ItemStack stack, int count) {
-        if(player.getItemUseTimeLeft() % 4 == 0 && player.getItemUseTimeLeft() <= player.getItemUseTime() - 7 && player.getItemUseTimeLeft() >= 7) {
-            player.playSound(getUnwrapSound(), 0.5F + 0.5F * (float)player.getRandom().nextInt(2), (player.getRandom().nextFloat() - player.getRandom().nextFloat()) * 0.2F + 1.0F);
-        }
-    }
-
-    @Override
     public TypedActionResult<ItemStack> use(World level, PlayerEntity player, Hand hand) {
-        ItemStack itemstack = player.getStackInHand(hand);
-        player.setCurrentHand(hand);
-        return TypedActionResult.success(itemstack, level.isClient());
-    }
-
-    @Override
-    public ItemStack finishUsing(ItemStack itemStack, World level, LivingEntity player) {
-        player.playSound(getUnwrapFinishSound(), 1.0F, 1.0F + (player.getRandom().nextFloat() - player.getRandom().nextFloat()) * 0.4F);
+        ItemStack itemStack = player.getStackInHand(hand);
+        player.playSound(getUnwrapFinishSound(), 1.0F, 1.0F + (level.getRandom().nextFloat() - level.getRandom().nextFloat()) * 0.4F);
         itemStack.decrement(1);
 
         if(!level.isClient()) {
             if(!this.seasonal && HatSeason.getSeason() != HatSeason.NONE) {
-                if(level.random.nextFloat()*100.0F < SimpleHats.config.common.seasonalBagChance) {
+                if(level.getRandom().nextFloat()*100.0F < SimpleHats.config.common.seasonalBagChance) {
                     player.dropItem(getSeasonalBag());
                 }
             }
             player.dropItem(this.getBagResult(level));
         }
-        return itemStack;
+        return TypedActionResult.success(itemStack, level.isClient());
     }
 
     private static Item getSeasonalBag() {
