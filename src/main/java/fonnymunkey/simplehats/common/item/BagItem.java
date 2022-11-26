@@ -13,7 +13,6 @@ import net.minecraft.util.valueproviders.IntProvider;
 import net.minecraft.util.valueproviders.WeightedListInt;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.ItemLike;
@@ -46,47 +45,23 @@ public class BagItem extends Item {
         this.rarity = Rarity.EPIC;
     }
 
-    @Override
-    public int getUseDuration(ItemStack itemStack) {
-        return 24;
-    }
-
-    @Override
-    public UseAnim getUseAnimation(ItemStack itemStack) {
-        return UseAnim.NONE;
-    }
-
-    public static SoundEvent getUnwrapSound() { return SoundEvents.ARMOR_EQUIP_LEATHER; }
     public static SoundEvent getUnwrapFinishSound() { return SoundEvents.ARMOR_EQUIP_GENERIC; }
 
     @Override
-    public void onUsingTick(ItemStack stack, LivingEntity player, int count) {
-        if(player.getUseItemRemainingTicks() % 4 == 0 && player.getUseItemRemainingTicks() <= player.getUseItem().getUseDuration() - 7 && player.getUseItemRemainingTicks() >= 7) {
-            player.playSound(getUnwrapSound(), 0.5F + 0.5F * (float)player.getRandom().nextInt(2), (player.getRandom().nextFloat() - player.getRandom().nextFloat()) * 0.2F + 1.0F);
-        }
-    }
-
-    @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
-        ItemStack itemstack = player.getItemInHand(hand);
-        player.startUsingItem(hand);
-        return InteractionResultHolder.sidedSuccess(itemstack, level.isClientSide());
-    }
-
-    @Override
-    public ItemStack finishUsingItem(ItemStack itemStack, Level level, LivingEntity player) {
-        player.playSound(getUnwrapFinishSound(), 1.0F, 1.0F + (player.getRandom().nextFloat() - player.getRandom().nextFloat()) * 0.4F);
+        ItemStack itemStack = player.getItemInHand(hand);
+        player.playSound(getUnwrapFinishSound(), 1.0F, 1.0F + (level.getRandom().nextFloat() - level.getRandom().nextFloat()) * 0.4F);
         itemStack.shrink(1);
 
         if(!level.isClientSide) {
             if(!this.seasonal && HatSeason.getSeason() != HatSeason.NONE) {
-                if(level.random.nextFloat() < ModConfig.COMMON.seasonalBagChance.get()) {
+                if(level.getRandom().nextFloat() < ModConfig.COMMON.seasonalBagChance.get()) {
                     player.spawnAtLocation(getSeasonalBag());
                 }
             }
             player.spawnAtLocation(this.getBagResult(level));
         }
-        return itemStack;
+        return InteractionResultHolder.sidedSuccess(itemStack, level.isClientSide());
     }
 
     private static Item getSeasonalBag() {
