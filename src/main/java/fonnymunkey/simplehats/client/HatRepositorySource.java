@@ -1,7 +1,9 @@
+/*
 package fonnymunkey.simplehats.client;
 
 import fonnymunkey.simplehats.SimpleHats;
 import net.minecraft.resource.*;
+import net.minecraft.text.Text;
 import org.apache.logging.log4j.Level;
 
 import java.io.File;
@@ -24,13 +26,15 @@ public class HatRepositorySource implements ResourcePackProvider {
     }
 
     @Override
-    public void register(Consumer<ResourcePackProfile> consumer, ResourcePackProfile.Factory constructor) {
+    public void register(Consumer<ResourcePackProfile> consumer) {
         for(File path : Objects.requireNonNull(directory.listFiles())) {
             if(path.getName().endsWith(".zip")) {
-                final ResourcePackProfile pack = ResourcePackProfile.of("resources/" + path.getName(), true, () -> new ZipResourcePack(path), constructor, ResourcePackProfile.InsertionPosition.TOP, ResourcePackSource.PACK_SOURCE_BUILTIN);
+                final ResourcePackProfile pack = ResourcePackProfile.create("resources/" + path.getName(), Text.literal("SimpleHats"), true, () -> new ZipResourcePack("SimpleHats", path, true), ResourceType.CLIENT_RESOURCES, ResourcePackProfile.InsertionPosition.TOP, ResourcePackSource.BUILTIN);
                 if(pack!=null) consumer.accept(pack);
                 else SimpleHats.logger.log(Level.WARN, "Failed to load config resourcepack");
             }
         }
     }
 }
+
+ */

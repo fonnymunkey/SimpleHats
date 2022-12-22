@@ -33,15 +33,15 @@ public class BagItem extends Item {
 
     public BagItem(Rarity rarity) {
         super(new Item.Settings()
-                .rarity(rarity)
-                .group(SimpleHats.HAT_TAB));
+                .rarity(rarity));
+                //.group(SimpleHats.HAT_TAB));
         this.rarity = rarity;
     }
 
     public BagItem(HatEntry.HatSeason hatSeason) {
         super(new Item.Settings()
-                .rarity(Rarity.EPIC)
-                .group(SimpleHats.HAT_TAB));
+                .rarity(Rarity.EPIC));
+                //.group(SimpleHats.HAT_TAB));
         this.hatSeason = hatSeason;
         this.seasonal = true;
         this.rarity = Rarity.EPIC;

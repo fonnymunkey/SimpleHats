@@ -1,3 +1,4 @@
+/*
 package fonnymunkey.simplehats.mixin.core;
 
 import fonnymunkey.simplehats.SimpleHats;
@@ -31,3 +32,4 @@ public class MixinModResourcePackCreator {
         }
     }
 }
+ */

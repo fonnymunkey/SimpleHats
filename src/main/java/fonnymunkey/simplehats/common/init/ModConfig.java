@@ -21,8 +21,8 @@ public class ModConfig extends PartitioningSerializer.GlobalData {
     public static class Common implements ConfigData {
         @ConfigEntry.Gui.Tooltip
         public boolean keepHatOnDeath = true;
-        @ConfigEntry.Gui.Tooltip
-        public boolean allowUpdates = true;
+        //@ConfigEntry.Gui.Tooltip
+        //public boolean allowUpdates = true;
         @ConfigEntry.Gui.Tooltip
         @ConfigEntry.BoundedDiscrete(min = 0, max = 100)
         public int seasonalBagChance = 20;

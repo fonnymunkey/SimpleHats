@@ -6,10 +6,8 @@ import dev.emi.trinkets.api.TrinketItem;
 import dev.emi.trinkets.api.client.TrinketRenderer;
 import fonnymunkey.simplehats.SimpleHats;
 import fonnymunkey.simplehats.common.entity.HatDisplay;
-import fonnymunkey.simplehats.common.init.ModRegistry;
 import fonnymunkey.simplehats.util.HatEntry;
 import fonnymunkey.simplehats.util.HatEntry.HatParticleSettings;
-import fonnymunkey.simplehats.util.UUIDHandler;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
@@ -27,9 +25,8 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
 import net.minecraft.text.Text;
-import net.minecraft.util.math.Vec3f;
+import net.minecraft.util.math.RotationAxis;
 import net.minecraft.world.World;
 
 import java.util.List;
@@ -43,7 +40,7 @@ public class HatItem extends TrinketItem implements TrinketRenderer {
     public HatItem(HatEntry entry) {
         super(new Item.Settings()
                 .maxCount(1)
-                .group(SimpleHats.HAT_TAB)
+                //.group(SimpleHats.HAT_TAB)
                 .rarity(entry.getHatRarity())
                 .fireproof());
         this.hatEntry = entry;
@@ -56,10 +53,12 @@ public class HatItem extends TrinketItem implements TrinketRenderer {
     @Override
     public void onEquip(ItemStack stack, SlotReference slot, LivingEntity entity) {
         if(entity.world.isClient()) return;
+        /*
         if(stack.getItem() == ModRegistry.HATSPECIAL && entity instanceof PlayerEntity player) {
             NbtCompound tag = stack.getOrCreateNbt();
             tag.putInt("CustomModelData", UUIDHandler.getUUIDMap().getOrDefault(player.getUuidAsString(), 0));
         }
+        */
     }
     @Override
     public void appendTooltip(ItemStack itemStack, World level, List<Text> tooltip, TooltipContext flag) {
@@ -95,8 +94,8 @@ public class HatItem extends TrinketItem implements TrinketRenderer {
                 if(entity.isInSneakingPose()) matrixStack.translate(0.0F, 0.0F, 0.015F);
             }
             matrixStack.scale(0.66F, 0.66F, 0.66F);
-            matrixStack.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(180.0F));
-            matrixStack.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(180.0F));
+            matrixStack.multiply(RotationAxis.POSITIVE_X.rotationDegrees(180.0F));
+            matrixStack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(180.0F));
             if(hatModel == null) hatModel = renderer.getModel(stack, entity.world, entity, 0);
             if(stack.getNbt() != null && stack.getNbt().getInt("CustomModelData") != 0) renderer.renderItem(stack, ModelTransformation.Mode.HEAD, false, matrixStack, renderTypeBuffer, light, OverlayTexture.DEFAULT_UV, Objects.requireNonNullElse(hatModel.getOverrides().apply(hatModel, stack, (ClientWorld)entity.world, entity, 0), hatModel));
             else renderer.renderItem(stack, ModelTransformation.Mode.HEAD, false, matrixStack, renderTypeBuffer, light, OverlayTexture.DEFAULT_UV, hatModel);

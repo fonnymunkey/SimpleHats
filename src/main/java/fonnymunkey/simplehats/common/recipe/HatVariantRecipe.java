@@ -8,14 +8,13 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.recipe.RecipeSerializer;
 import net.minecraft.recipe.SpecialCraftingRecipe;
+import net.minecraft.recipe.book.CraftingRecipeCategory;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.World;
 
-import javax.annotation.Nullable;
-
 public class HatVariantRecipe extends SpecialCraftingRecipe {
-    public HatVariantRecipe(Identifier location) {
-        super(location);
+    public HatVariantRecipe(Identifier location, CraftingRecipeCategory category) {
+        super(location, category);
     }
 
     @Override
@@ -42,7 +41,6 @@ public class HatVariantRecipe extends SpecialCraftingRecipe {
         return ItemStack.EMPTY;
     }
 
-    @Nullable
     private static ItemStack processInventory(CraftingInventory craftingInventory) {
         int totalItems = 0;
         ItemStack hatItem = null;

@@ -4,9 +4,9 @@ import com.google.gson.annotations.SerializedName;
 import fonnymunkey.simplehats.SimpleHats;
 import net.minecraft.particle.DefaultParticleType;
 import net.minecraft.particle.ParticleTypes;
+import net.minecraft.registry.Registries;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Rarity;
-import net.minecraft.util.registry.Registry;
 import org.apache.logging.log4j.Level;
 
 import java.util.Date;
@@ -158,7 +158,7 @@ public class HatEntry {
         }
 
         private void parseParticleString() {
-            this.particleTypeParsed = (DefaultParticleType) Registry.PARTICLE_TYPE.get(new Identifier(this.particleTypeString));
+            this.particleTypeParsed = (DefaultParticleType) Registries.PARTICLE_TYPE.get(new Identifier(this.particleTypeString));
             if(this.particleTypeParsed == null) {
                 SimpleHats.logger.log(Level.ERROR, "Particle type \"" + this.particleTypeString + "\" failed to parse, setting default.");
                 this.particleTypeParsed = ParticleTypes.HEART;

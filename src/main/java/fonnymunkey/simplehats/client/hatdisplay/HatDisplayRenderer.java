@@ -8,8 +8,7 @@ import net.minecraft.client.render.entity.model.EntityModelLayer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3f;
-
+import net.minecraft.util.math.RotationAxis;
 public class HatDisplayRenderer extends LivingEntityRenderer<HatDisplay, HatDisplayModel<HatDisplay>> {
     public static final Identifier HATDISPLAY_TEXTURE = new Identifier(SimpleHats.modId, "textures/entity/hatdisplay.png");
     public static final EntityModelLayer HATDISPLAY_LOCATION = new EntityModelLayer(HATDISPLAY_TEXTURE, "main");
@@ -24,9 +23,9 @@ public class HatDisplayRenderer extends LivingEntityRenderer<HatDisplay, HatDisp
     }
 
     protected void setupTransforms(HatDisplay entityLiving, MatrixStack matrixStack, float ageInTicks, float rotationYaw, float partialTicks) {
-        matrixStack.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(180.0F - rotationYaw));
+        matrixStack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(180.0F - rotationYaw));
         float f = (float)(entityLiving.world.getTime() - entityLiving.lastHit) + partialTicks;
-        if(f < 5.0F) matrixStack.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(MathHelper.sin(f / 1.5F * (float)Math.PI) * 3.0F));
+        if(f < 5.0F) matrixStack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(MathHelper.sin(f / 1.5F * (float)Math.PI) * 3.0F));
     }
 
     protected boolean hasLabel(HatDisplay entity) {

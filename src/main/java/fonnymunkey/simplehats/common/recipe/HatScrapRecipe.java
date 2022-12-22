@@ -8,13 +8,14 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.ShearsItem;
 import net.minecraft.recipe.RecipeSerializer;
 import net.minecraft.recipe.SpecialCraftingRecipe;
+import net.minecraft.recipe.book.CraftingRecipeCategory;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.world.World;
 
 public class HatScrapRecipe extends SpecialCraftingRecipe {
-    public HatScrapRecipe(Identifier location) {
-        super(location);
+    public HatScrapRecipe(Identifier location, CraftingRecipeCategory category) {
+        super(location, category);
     }
 
     @Override

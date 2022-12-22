@@ -16,9 +16,10 @@ import net.minecraft.item.Item;
 import net.minecraft.loot.LootTables;
 import net.minecraft.recipe.RecipeSerializer;
 import net.minecraft.recipe.SpecialRecipeSerializer;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Rarity;
-import net.minecraft.util.registry.Registry;
 import org.apache.logging.log4j.Level;
 
 import java.util.ArrayList;
@@ -32,29 +33,29 @@ public class ModRegistry {
     ////
     //Items
     ////
-    public static final BagItem HATBAG_COMMON = Registry.register(Registry.ITEM, new Identifier(SimpleHats.modId, "hatbag_common"), new BagItem(Rarity.COMMON));
-    public static final BagItem HATBAG_UNCOMMON = Registry.register(Registry.ITEM, new Identifier(SimpleHats.modId, "hatbag_uncommon"), new BagItem(Rarity.UNCOMMON));
-    public static final BagItem HATBAG_RARE = Registry.register(Registry.ITEM, new Identifier(SimpleHats.modId, "hatbag_rare"), new BagItem(Rarity.RARE));
-    public static final BagItem HATBAG_EPIC = Registry.register(Registry.ITEM, new Identifier(SimpleHats.modId, "hatbag_epic"), new BagItem(Rarity.EPIC));
-    public static final BagItem HATBAG_EASTER = Registry.register(Registry.ITEM, new Identifier(SimpleHats.modId, "hatbag_easter"), new BagItem(HatSeason.EASTER));
-    public static final BagItem HATBAG_SUMMER = Registry.register(Registry.ITEM, new Identifier(SimpleHats.modId, "hatbag_summer"), new BagItem(HatSeason.SUMMER));
-    public static final BagItem HATBAG_HALLOWEEN = Registry.register(Registry.ITEM, new Identifier(SimpleHats.modId, "hatbag_halloween"), new BagItem(HatSeason.HALLOWEEN));
-    public static final BagItem HATBAG_FESTIVE = Registry.register(Registry.ITEM, new Identifier(SimpleHats.modId, "hatbag_festive"), new BagItem(HatSeason.FESTIVE));
-    public static final Item HATSCRAPS_COMMON = Registry.register(Registry.ITEM, new Identifier(SimpleHats.modId, "hatscraps_common"), new Item(new Item.Settings().rarity(Rarity.COMMON).group(SimpleHats.HAT_TAB)));
-    public static final Item HATSCRAPS_UNCOMMON = Registry.register(Registry.ITEM, new Identifier(SimpleHats.modId, "hatscraps_uncommon"), new Item(new Item.Settings().rarity(Rarity.UNCOMMON).group(SimpleHats.HAT_TAB)));
-    public static final Item HATSCRAPS_RARE = Registry.register(Registry.ITEM, new Identifier(SimpleHats.modId, "hatscraps_rare"), new Item(new Item.Settings().rarity(Rarity.RARE).group(SimpleHats.HAT_TAB)));
-    public static final Item HATSCRAPS_EASTER = Registry.register(Registry.ITEM, new Identifier(SimpleHats.modId, "hatscraps_easter"), new Item(new Item.Settings().rarity(Rarity.EPIC).group(SimpleHats.HAT_TAB)));
-    public static final Item HATSCRAPS_SUMMER = Registry.register(Registry.ITEM, new Identifier(SimpleHats.modId, "hatscraps_summer"), new Item(new Item.Settings().rarity(Rarity.EPIC).group(SimpleHats.HAT_TAB)));
-    public static final Item HATSCRAPS_HALLOWEEN = Registry.register(Registry.ITEM, new Identifier(SimpleHats.modId, "hatscraps_halloween"), new Item(new Item.Settings().rarity(Rarity.EPIC).group(SimpleHats.HAT_TAB)));
-    public static final Item HATSCRAPS_FESTIVE = Registry.register(Registry.ITEM, new Identifier(SimpleHats.modId, "hatscraps_festive"), new Item(new Item.Settings().rarity(Rarity.EPIC).group(SimpleHats.HAT_TAB)));
-    public static final Item HATICON = Registry.register(Registry.ITEM, new Identifier(SimpleHats.modId, "haticon"), new Item(new Item.Settings().group(SimpleHats.HAT_TAB)));
-    public static final HatDisplayItem HATDISPLAYITEM = Registry.register(Registry.ITEM, new Identifier(SimpleHats.modId, "hatdisplay"), new HatDisplayItem(new Item.Settings().group(SimpleHats.HAT_TAB)));
-    public static final HatItem HATSPECIAL = Registry.register(Registry.ITEM, new Identifier(SimpleHats.modId, "special"), new HatItem(new HatEntry("special", Rarity.EPIC, 0)));
+    public static final BagItem HATBAG_COMMON = Registry.register(Registries.ITEM, new Identifier(SimpleHats.modId, "hatbag_common"), new BagItem(Rarity.COMMON));
+    public static final BagItem HATBAG_UNCOMMON = Registry.register(Registries.ITEM, new Identifier(SimpleHats.modId, "hatbag_uncommon"), new BagItem(Rarity.UNCOMMON));
+    public static final BagItem HATBAG_RARE = Registry.register(Registries.ITEM, new Identifier(SimpleHats.modId, "hatbag_rare"), new BagItem(Rarity.RARE));
+    public static final BagItem HATBAG_EPIC = Registry.register(Registries.ITEM, new Identifier(SimpleHats.modId, "hatbag_epic"), new BagItem(Rarity.EPIC));
+    public static final BagItem HATBAG_EASTER = Registry.register(Registries.ITEM, new Identifier(SimpleHats.modId, "hatbag_easter"), new BagItem(HatSeason.EASTER));
+    public static final BagItem HATBAG_SUMMER = Registry.register(Registries.ITEM, new Identifier(SimpleHats.modId, "hatbag_summer"), new BagItem(HatSeason.SUMMER));
+    public static final BagItem HATBAG_HALLOWEEN = Registry.register(Registries.ITEM, new Identifier(SimpleHats.modId, "hatbag_halloween"), new BagItem(HatSeason.HALLOWEEN));
+    public static final BagItem HATBAG_FESTIVE = Registry.register(Registries.ITEM, new Identifier(SimpleHats.modId, "hatbag_festive"), new BagItem(HatSeason.FESTIVE));
+    public static final Item HATSCRAPS_COMMON = Registry.register(Registries.ITEM, new Identifier(SimpleHats.modId, "hatscraps_common"), new Item(new Item.Settings().rarity(Rarity.COMMON)));//.group(SimpleHats.HAT_TAB)));
+    public static final Item HATSCRAPS_UNCOMMON = Registry.register(Registries.ITEM, new Identifier(SimpleHats.modId, "hatscraps_uncommon"), new Item(new Item.Settings().rarity(Rarity.UNCOMMON)));//.group(SimpleHats.HAT_TAB)));
+    public static final Item HATSCRAPS_RARE = Registry.register(Registries.ITEM, new Identifier(SimpleHats.modId, "hatscraps_rare"), new Item(new Item.Settings().rarity(Rarity.RARE)));//.group(SimpleHats.HAT_TAB)));
+    public static final Item HATSCRAPS_EASTER = Registry.register(Registries.ITEM, new Identifier(SimpleHats.modId, "hatscraps_easter"), new Item(new Item.Settings().rarity(Rarity.EPIC)));//.group(SimpleHats.HAT_TAB)));
+    public static final Item HATSCRAPS_SUMMER = Registry.register(Registries.ITEM, new Identifier(SimpleHats.modId, "hatscraps_summer"), new Item(new Item.Settings().rarity(Rarity.EPIC)));//.group(SimpleHats.HAT_TAB)));
+    public static final Item HATSCRAPS_HALLOWEEN = Registry.register(Registries.ITEM, new Identifier(SimpleHats.modId, "hatscraps_halloween"), new Item(new Item.Settings().rarity(Rarity.EPIC)));//.group(SimpleHats.HAT_TAB)));
+    public static final Item HATSCRAPS_FESTIVE = Registry.register(Registries.ITEM, new Identifier(SimpleHats.modId, "hatscraps_festive"), new Item(new Item.Settings().rarity(Rarity.EPIC)));//.group(SimpleHats.HAT_TAB)));
+    public static final Item HATICON = Registry.register(Registries.ITEM, new Identifier(SimpleHats.modId, "haticon"), new Item(new Item.Settings()));//.group(SimpleHats.HAT_TAB)));
+    public static final HatDisplayItem HATDISPLAYITEM = Registry.register(Registries.ITEM, new Identifier(SimpleHats.modId, "hatdisplay"), new HatDisplayItem(new Item.Settings()));//.group(SimpleHats.HAT_TAB)));
+    public static final HatItem HATSPECIAL = Registry.register(Registries.ITEM, new Identifier(SimpleHats.modId, "special"), new HatItem(new HatEntry("special", Rarity.EPIC, 0)));
 
     public static void registerHats() {
         for(HatEntry entry : HatJson.getHatList()) {
             HatItem hat = entry.getHatDyeSettings().getUseDye() ? new HatItemDyeable(entry) : new HatItem(entry);
-            hat = Registry.register(Registry.ITEM, new Identifier(SimpleHats.modId, entry.getHatName()), hat);
+            hat = Registry.register(Registries.ITEM, new Identifier(SimpleHats.modId, entry.getHatName()), hat);
             ModRegistry.hatList.add(hat);
         }
         SimpleHats.logger.log(Level.INFO, "Generated " + ModRegistry.hatList.size() + " hat items from hat entries.");
@@ -63,12 +64,12 @@ public class ModRegistry {
     ////
     //Entity Registry
     ////
-    public static final EntityType<HatDisplay> HATDISPLAYENTITY = Registry.register(Registry.ENTITY_TYPE, new Identifier(SimpleHats.modId, "hatdisplay"), EntityType.Builder.<HatDisplay>create(HatDisplay::new, SpawnGroup.MISC).setDimensions(0.75F, 0.8125F).maxTrackingRange(10).build("hatdisplay"));
+    public static final EntityType<HatDisplay> HATDISPLAYENTITY = Registry.register(Registries.ENTITY_TYPE, new Identifier(SimpleHats.modId, "hatdisplay"), EntityType.Builder.<HatDisplay>create(HatDisplay::new, SpawnGroup.MISC).setDimensions(0.75F, 0.8125F).maxTrackingRange(10).build("hatdisplay"));
     ////
     //Recipe Registry
     ////
-    public static final RecipeSerializer<?> HATSCRAP_SERIALIZER = Registry.register(Registry.RECIPE_SERIALIZER, new Identifier(SimpleHats.modId, "custom_hatscraps"), new SpecialRecipeSerializer<>(HatScrapRecipe::new));
-    public static final RecipeSerializer<?> HATVARIANTS_SERIALIZER = Registry.register(Registry.RECIPE_SERIALIZER, new Identifier(SimpleHats.modId, "custom_hatvariants"), new SpecialRecipeSerializer<>(HatVariantRecipe::new));
+    public static final RecipeSerializer<?> HATSCRAP_SERIALIZER = Registry.register(Registries.RECIPE_SERIALIZER, new Identifier(SimpleHats.modId, "custom_hatscraps"), new SpecialRecipeSerializer<>(HatScrapRecipe::new));
+    public static final RecipeSerializer<?> HATVARIANTS_SERIALIZER = Registry.register(Registries.RECIPE_SERIALIZER, new Identifier(SimpleHats.modId, "custom_hatvariants"), new SpecialRecipeSerializer<>(HatVariantRecipe::new));
 
     ////
     //Loot registry

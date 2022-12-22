@@ -6,7 +6,6 @@ import fonnymunkey.simplehats.client.hatdisplay.HatDisplayModel;
 import fonnymunkey.simplehats.client.hatdisplay.HatDisplayRenderer;
 import fonnymunkey.simplehats.common.init.ModRegistry;
 import fonnymunkey.simplehats.common.item.HatItemDyeable;
-import fonnymunkey.simplehats.util.UUIDHandler;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -32,9 +31,11 @@ public class SimpleHatsClient implements ClientModInitializer {
         }
         TrinketRendererRegistry.registerRenderer((Item)ModRegistry.HATSPECIAL, (TrinketRenderer)ModRegistry.HATSPECIAL);
 
+        /*
         if(SimpleHats.config.common.allowUpdates) {
             UUIDHandler.checkResourceUpdates();
         }
+        */
 
         EntityRendererRegistry.register(ModRegistry.HATDISPLAYENTITY, HatDisplayRenderer::new);
         EntityModelLayerRegistry.registerModelLayer(HatDisplayRenderer.HATDISPLAY_LOCATION, HatDisplayModel::getTexturedModelData);

@@ -2,6 +2,7 @@ package fonnymunkey.simplehats.common.item;
 
 import fonnymunkey.simplehats.common.entity.HatDisplay;
 import fonnymunkey.simplehats.common.init.ModRegistry;
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnReason;
 import net.minecraft.item.*;
 import net.minecraft.server.world.ServerWorld;
@@ -11,6 +12,8 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.math.*;
 import net.minecraft.world.World;
 import net.minecraft.world.event.GameEvent;
+
+import java.util.function.Consumer;
 
 public class HatDisplayItem extends Item {
 
@@ -32,7 +35,8 @@ public class HatDisplayItem extends Item {
             Box aabb = ModRegistry.HATDISPLAYENTITY.getDimensions().getBoxAt(vec3.getX(), vec3.getY(), vec3.getZ());
             if(level.isSpaceEmpty(null, aabb) && level.getOtherEntities(null, aabb).isEmpty()) {
                 if(level instanceof ServerWorld serverLevel) {
-                    HatDisplay hatDisplay = ModRegistry.HATDISPLAYENTITY.create(serverLevel, itemStack.getNbt(), null, context.getPlayer(), pos, SpawnReason.SPAWN_EGG, true, true);
+                    Consumer<HatDisplay> consumer = EntityType.nbtCopier(entity -> {}, serverLevel, itemStack, context.getPlayer());
+                    HatDisplay hatDisplay = ModRegistry.HATDISPLAYENTITY.create(serverLevel, itemStack.getNbt(), consumer, pos, SpawnReason.SPAWN_EGG, true, true);
                     if(hatDisplay == null) return ActionResult.FAIL;
 
                     float f = 0;
