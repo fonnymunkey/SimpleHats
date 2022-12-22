@@ -9,6 +9,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -18,6 +19,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+
+import java.util.function.Consumer;
 
 public class HatDisplayItem extends Item {
 
@@ -39,7 +42,8 @@ public class HatDisplayItem extends Item {
             AABB aabb = ModRegistry.HATDISPLAYENTITY.get().getDimensions().makeBoundingBox(vec3.x(), vec3.y(), vec3.z());
             if(level.noCollision(null, aabb) && level.getEntities(null, aabb).isEmpty()) {
                 if(level instanceof ServerLevel serverLevel) {
-                    HatDisplay hatDisplay = ModRegistry.HATDISPLAYENTITY.get().create(serverLevel, itemStack.getTag(), null, context.getPlayer(), pos, MobSpawnType.SPAWN_EGG, true, true);
+                    Consumer<HatDisplay> consumer = EntityType.appendCustomEntityStackConfig((entity) -> {}, serverLevel, itemStack, context.getPlayer());
+                    HatDisplay hatDisplay = ModRegistry.HATDISPLAYENTITY.get().create(serverLevel, itemStack.getTag(), consumer, pos, MobSpawnType.SPAWN_EGG, true, true);
                     if(hatDisplay == null) return InteractionResult.FAIL;
 
                     float f = 0;

@@ -2,11 +2,11 @@ package fonnymunkey.simplehats.util;
 
 import com.google.gson.annotations.SerializedName;
 import fonnymunkey.simplehats.SimpleHats;
-import net.minecraft.core.Registry;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Rarity;
+import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.logging.log4j.Level;
 
 import java.util.Date;
@@ -158,7 +158,7 @@ public class HatEntry {
         }
 
         private void parseParticleString() {
-            this.particleTypeParsed = (SimpleParticleType) Registry.PARTICLE_TYPE.get(new ResourceLocation(this.particleTypeString));
+            this.particleTypeParsed = (SimpleParticleType) ForgeRegistries.PARTICLE_TYPES.getValue(new ResourceLocation(this.particleTypeString));
             if(this.particleTypeParsed == null) {
                 SimpleHats.logger.log(Level.ERROR, "Particle type \"" + this.particleTypeString + "\" failed to parse, setting default.");
                 this.particleTypeParsed = ParticleTypes.HEART;

@@ -1,3 +1,4 @@
+/*
 package fonnymunkey.simplehats.util;
 
 import com.google.common.io.Files;
@@ -68,3 +69,5 @@ public class UUIDHandler {
         return uuidMap;
     }
 }
+
+ */

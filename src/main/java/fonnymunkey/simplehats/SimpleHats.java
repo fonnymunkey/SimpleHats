@@ -3,11 +3,8 @@ package fonnymunkey.simplehats;
 import fonnymunkey.simplehats.common.init.HatJson;
 import fonnymunkey.simplehats.common.init.ModConfig;
 import fonnymunkey.simplehats.common.init.ModRegistry;
-import fonnymunkey.simplehats.util.UUIDHandler;
 import net.minecraft.world.item.Item;
-import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.InterModComms;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
@@ -35,11 +32,12 @@ public class SimpleHats {
         eventBus.addListener(this::clientSetup);
 
         HatJson.registerHatJson();
+        /*
         if(ModConfig.manualAllowUpdateCheck()) {//Resources don't load properly if loaded after configs are actually loaded, so manually do it early
             UUIDHandler.setupUUIDMap();
             DistExecutor.safeRunWhenOn(Dist.CLIENT, () -> UUIDHandler::checkResourceUpdates);//Only need to download resources on client
         }
-
+        */
         ModRegistry.ITEM_REG.register(eventBus);
         ModRegistry.ENTITY_REG.register(eventBus);
         ModRegistry.RECIPE_REG.register(eventBus);

@@ -7,18 +7,13 @@ import fonnymunkey.simplehats.common.init.ModRegistry;
 import fonnymunkey.simplehats.common.item.HatItem;
 import fonnymunkey.simplehats.common.item.HatItemDyeable;
 import fonnymunkey.simplehats.util.HatEntry;
-import fonnymunkey.simplehats.util.UUIDHandler;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegisterEvent;
 import org.apache.logging.log4j.Level;
-import top.theillusivec4.curios.api.event.CurioEquipEvent;
 
 public class EventHandler {
 
@@ -42,6 +37,7 @@ public class EventHandler {
         }
     }
 
+    /*
     @Mod.EventBusSubscriber(modid = SimpleHats.modId, bus = Mod.EventBusSubscriber.Bus.FORGE)
     public static class EventHandlerForge {
         @SubscribeEvent
@@ -54,4 +50,5 @@ public class EventHandler {
             }
         }
     }
+     */
 }

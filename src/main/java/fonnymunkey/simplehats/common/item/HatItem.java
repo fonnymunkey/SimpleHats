@@ -1,11 +1,10 @@
 package fonnymunkey.simplehats.common.item;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 import fonnymunkey.simplehats.SimpleHats;
 import fonnymunkey.simplehats.common.entity.HatDisplay;
 import fonnymunkey.simplehats.common.init.ModConfig;
-import fonnymunkey.simplehats.common.init.ModRegistry;
 import fonnymunkey.simplehats.util.HatEntry;
 import fonnymunkey.simplehats.util.HatEntry.HatParticleSettings;
 import net.minecraft.client.CameraType;
@@ -13,7 +12,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.PlayerModel;
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.entity.ItemRenderer;
@@ -22,6 +20,7 @@ import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
@@ -50,7 +49,7 @@ public class HatItem extends Item implements ICurioItem, ICurioRenderer {
     public HatItem(HatEntry entry) {
         super(new Item.Properties()
                 .stacksTo(1)
-                .tab(ModRegistry.HAT_TAB)
+                //.tab(ModRegistry.HAT_TAB)
                 .rarity(entry.getHatRarity())
                 .fireResistant());
         this.hatEntry = entry;
@@ -108,9 +107,9 @@ public class HatItem extends Item implements ICurioItem, ICurioRenderer {
                 if(slotContext.entity().isCrouching()) matrixStack.translate(0.0F, 0.0F, 0.015F); //Translate after to fix wierd scaling
             }
             matrixStack.scale(0.66F, 0.66F, 0.66F);
-            matrixStack.mulPose(Vector3f.XP.rotationDegrees(180.0F));
-            matrixStack.mulPose(Vector3f.YP.rotationDegrees(180.0F));
-            if(hatModel == null) hatModel = renderer.getItemModelShaper().getModelManager().getModel(new ModelResourceLocation(SimpleHats.modId + ":" + this.hatEntry.getHatName() + "#inventory"));
+            matrixStack.mulPose(Axis.XP.rotationDegrees(180.0F));
+            matrixStack.mulPose(Axis.YP.rotationDegrees(180.0F));
+            if(hatModel == null) hatModel = renderer.getItemModelShaper().getModelManager().getModel(new ModelResourceLocation(new ResourceLocation(SimpleHats.modId, this.hatEntry.getHatName()), "inventory"));
             if(stack.getTag() != null && stack.getTag().getInt("CustomModelData") != 0) renderer.render(stack, ItemTransforms.TransformType.HEAD, false, matrixStack, renderTypeBuffer, light, OverlayTexture.NO_OVERLAY, Objects.requireNonNullElse(hatModel.getOverrides().resolve(hatModel, stack, (ClientLevel)slotContext.entity().level, slotContext.entity(), 0), hatModel));
             else renderer.render(stack, ItemTransforms.TransformType.HEAD, false, matrixStack, renderTypeBuffer, light, OverlayTexture.NO_OVERLAY, hatModel);
             matrixStack.popPose();
@@ -147,15 +146,15 @@ public class HatItem extends Item implements ICurioItem, ICurioRenderer {
     private static void translateToHead(PoseStack poseStack, RenderLayerParent renderLayerParent, LivingEntity entity, float headYaw, float headPitch) {
         if(entity.isVisuallySwimming() || entity.isFallFlying()) {
             if(renderLayerParent instanceof PlayerModel layerModel) {
-                poseStack.mulPose(Vector3f.ZP.rotationDegrees(layerModel.head.zRot));
+                poseStack.mulPose(Axis.ZP.rotationDegrees(layerModel.head.zRot));
             }
-            poseStack.mulPose(Vector3f.YP.rotationDegrees(headYaw));
-            poseStack.mulPose(Vector3f.XP.rotationDegrees(-45.0F));
+            poseStack.mulPose(Axis.YP.rotationDegrees(headYaw));
+            poseStack.mulPose(Axis.XP.rotationDegrees(-45.0F));
         }
         else {
             if(entity.isCrouching()) poseStack.translate(0.0F, 0.25F, 0.0F);
-            poseStack.mulPose(Vector3f.YP.rotationDegrees(headYaw));
-            poseStack.mulPose(Vector3f.XP.rotationDegrees(headPitch));
+            poseStack.mulPose(Axis.YP.rotationDegrees(headYaw));
+            poseStack.mulPose(Axis.XP.rotationDegrees(headPitch));
         }
         poseStack.translate(0.0F, -0.25F - ModConfig.CLIENT.hatYOffset.get(), 0.01F);
     }

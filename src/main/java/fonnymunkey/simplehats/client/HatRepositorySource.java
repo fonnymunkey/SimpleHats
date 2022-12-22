@@ -1,3 +1,4 @@
+/*
 package fonnymunkey.simplehats.client;
 
 import fonnymunkey.simplehats.SimpleHats;
@@ -36,3 +37,4 @@ public class HatRepositorySource implements RepositorySource {
         }
     }
 }
+ */

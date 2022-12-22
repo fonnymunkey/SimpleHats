@@ -1,13 +1,6 @@
 package fonnymunkey.simplehats.common.init;
 
-import com.google.common.io.Files;
-import fonnymunkey.simplehats.SimpleHats;
 import net.minecraftforge.common.ForgeConfigSpec;
-import net.minecraftforge.fml.loading.FMLPaths;
-import org.apache.logging.log4j.Level;
-
-import java.io.File;
-import java.nio.charset.Charset;
 
 public class ModConfig {
     private static final ForgeConfigSpec.Builder COMMON_BUILDER = new ForgeConfigSpec.Builder();
@@ -19,7 +12,7 @@ public class ModConfig {
 
     public static class Common {
         public final ForgeConfigSpec.BooleanValue keepHatOnDeath;
-        public final ForgeConfigSpec.BooleanValue allowUpdates;
+        //public final ForgeConfigSpec.BooleanValue allowUpdates;
         public final ForgeConfigSpec.DoubleValue seasonalBagChance;
         public final ForgeConfigSpec.BooleanValue allowHatInHelmetSlot;
 
@@ -30,9 +23,11 @@ public class ModConfig {
                     .comment("Keep equipped hat on death.")
                     .define("keepHatOnDeath", true);
 
+            /*
             allowUpdates = builder
                     .comment("Allow automatic updating of player-specific hats.")
                     .define("allowUpdates", true);
+             */
 
             seasonalBagChance = builder
                     .comment("Chance for a seasonal bag to drop when using a bag during a seasonal event. (0 effectively disables seasons)")
@@ -65,6 +60,7 @@ public class ModConfig {
         }
     }
 
+    /*
     public static boolean manualAllowUpdateCheck() {
         try {
             File file = new File(FMLPaths.CONFIGDIR.get().toFile(), SimpleHats.modId + "-common.toml");
@@ -82,4 +78,5 @@ public class ModConfig {
             return true;
         }
     }
+    */
 }

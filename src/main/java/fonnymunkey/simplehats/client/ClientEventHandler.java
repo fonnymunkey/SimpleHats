@@ -40,11 +40,13 @@ public class ClientEventHandler {
             event.registerLayerDefinition(HatDisplayRenderer.HATDISPLAY_LOCATION, HatDisplayModel::createBodyLayer);
         }
 
+        /*
         @SubscribeEvent
         public static void addPackFinder(AddPackFindersEvent event) {
             if(event.getPackType() == PackType.CLIENT_RESOURCES) {
                 event.addRepositorySource(new HatRepositorySource(FMLPaths.CONFIGDIR.get()));
             }
         }
+         */
     }
 }

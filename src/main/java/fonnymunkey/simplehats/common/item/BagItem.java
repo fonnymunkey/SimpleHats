@@ -31,15 +31,15 @@ public class BagItem extends Item {
 
     public BagItem(Rarity rarity) {
         super(new Properties()
-                .rarity(rarity)
-                .tab(ModRegistry.HAT_TAB));
+                .rarity(rarity));
+                //.tab(ModRegistry.HAT_TAB));
         this.rarity = rarity;
     }
 
     public BagItem(HatEntry.HatSeason hatSeason) {
         super(new Properties()
-                .rarity(Rarity.EPIC)
-                .tab(ModRegistry.HAT_TAB));
+                .rarity(Rarity.EPIC));
+                //.tab(ModRegistry.HAT_TAB));
         this.hatSeason = hatSeason;
         this.seasonal = true;
         this.rarity = Rarity.EPIC;

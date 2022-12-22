@@ -8,13 +8,14 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ShearsItem;
+import net.minecraft.world.item.crafting.CraftingBookCategory;
 import net.minecraft.world.item.crafting.CustomRecipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.Level;
 
 public class HatScrapRecipe extends CustomRecipe {
-    public HatScrapRecipe(ResourceLocation location) {
-        super(location);
+    public HatScrapRecipe(ResourceLocation location, CraftingBookCategory category) {
+        super(location, category);
     }
 
     @Override
