@@ -7,10 +7,14 @@ import fonnymunkey.simplehats.common.init.ModRegistry;
 import fonnymunkey.simplehats.common.item.HatItem;
 import fonnymunkey.simplehats.common.item.HatItemDyeable;
 import fonnymunkey.simplehats.util.HatEntry;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.event.CreativeModeTabEvent;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegisterEvent;
 import org.apache.logging.log4j.Level;
@@ -34,6 +38,37 @@ public class EventHandler {
                 }
                 SimpleHats.logger.log(Level.INFO, "Generated " + ModRegistry.hatList.size() + " hat items from hat entries.");
             }
+        }
+
+        @SubscribeEvent
+        public static void registerCreativeTab(CreativeModeTabEvent.Register event) {
+            ModRegistry.HAT_TAB = event.registerCreativeModeTab(new ResourceLocation(SimpleHats.modId, SimpleHats.modId), builder -> builder
+                    .icon(() -> new ItemStack(ModRegistry.HATICON.get()))
+                    .title(Component.translatable("itemGroup.simplehats"))
+                    .displayItems((features, output, operator) -> {
+                        output.accept(ModRegistry.HATBAG_COMMON.get());
+                        output.accept(ModRegistry.HATBAG_UNCOMMON.get());
+                        output.accept(ModRegistry.HATBAG_RARE.get());
+                        output.accept(ModRegistry.HATBAG_EPIC.get());
+                        output.accept(ModRegistry.HATBAG_EASTER.get());
+                        output.accept(ModRegistry.HATBAG_SUMMER.get());
+                        output.accept(ModRegistry.HATBAG_HALLOWEEN.get());
+                        output.accept(ModRegistry.HATBAG_FESTIVE.get());
+                        output.accept(ModRegistry.HATSCRAPS_COMMON.get());
+                        output.accept(ModRegistry.HATSCRAPS_UNCOMMON.get());
+                        output.accept(ModRegistry.HATSCRAPS_RARE.get());
+                        output.accept(ModRegistry.HATSCRAPS_EASTER.get());
+                        output.accept(ModRegistry.HATSCRAPS_SUMMER.get());
+                        output.accept(ModRegistry.HATSCRAPS_HALLOWEEN.get());
+                        output.accept(ModRegistry.HATSCRAPS_FESTIVE.get());
+                        output.accept(ModRegistry.HATICON.get());
+                        output.accept(ModRegistry.HATDISPLAYITEM.get());
+
+                        for (HatItem hat : ModRegistry.hatList) {
+                            output.accept(hat);
+                        }
+                    })
+            );
         }
     }
 

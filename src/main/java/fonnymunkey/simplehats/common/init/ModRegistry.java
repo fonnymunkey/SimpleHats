@@ -14,6 +14,7 @@ import fonnymunkey.simplehats.util.HatEntry;
 import fonnymunkey.simplehats.util.HatEntry.HatSeason;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
+import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.crafting.RecipeSerializer;
@@ -27,15 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ModRegistry {
-    /*
-    public static final CreativeModeTab HAT_TAB = new CreativeModeTab(SimpleHats.modId) {
-        @Override
-        @OnlyIn(Dist.CLIENT)
-        public ItemStack makeIcon() {
-            return new ItemStack(HATICON.get());
-        }
-    };
-     */
+    public static CreativeModeTab HAT_TAB;
 
     public static List<HatItem> hatList = new ArrayList<HatItem>();
 

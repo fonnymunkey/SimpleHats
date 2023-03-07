@@ -1,4 +1,3 @@
-/*
 package fonnymunkey.simplehats.compat;
 
 import fonnymunkey.simplehats.SimpleHats;
@@ -15,6 +14,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.CraftingBookCategory;
 import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.ShapelessRecipe;
@@ -82,6 +82,7 @@ public class JEIPlugin implements IModPlugin {
             recipes.add(new ShapelessRecipe(
                     location,
                     RecipeTypes.CRAFTING.getUid().getPath(),
+                    CraftingBookCategory.MISC,
                     new ItemStack(entry.getKey()),
                     NonNullList.of(
                             Ingredient.EMPTY,
@@ -108,7 +109,7 @@ public class JEIPlugin implements IModPlugin {
                     ItemStack output = stack1;
 
                     ResourceLocation location = new ResourceLocation(SimpleHats.modId, "hatvariant_" + hat.getHatEntry().getHatName() + "_" + i);
-                    recipes.add(new ShapelessRecipe(location, RecipeTypes.CRAFTING.getUid().getPath(), output, input));
+                    recipes.add(new ShapelessRecipe(location, RecipeTypes.CRAFTING.getUid().getPath(), CraftingBookCategory.MISC, output, input));
                 }
             }
         }
@@ -124,6 +125,7 @@ public class JEIPlugin implements IModPlugin {
                 recipes.add(new ShapelessRecipe(
                         location,
                         RecipeTypes.CRAFTING.getUid().getPath(),
+                        CraftingBookCategory.MISC,
                         new ItemStack(hat),
                         NonNullList.of(
                                 Ingredient.EMPTY,
@@ -134,5 +136,3 @@ public class JEIPlugin implements IModPlugin {
         return recipes;
     }
 }
-
- */
