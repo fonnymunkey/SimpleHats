@@ -3,6 +3,7 @@ package fonnymunkey.simplehats.common.recipe;
 import fonnymunkey.simplehats.SimpleHats;
 import fonnymunkey.simplehats.common.init.ModRegistry;
 import fonnymunkey.simplehats.common.item.HatItem;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.CraftingContainer;
@@ -30,7 +31,7 @@ public class HatVariantRecipe extends CustomRecipe {
     }
 
     @Override
-    public ItemStack assemble(CraftingContainer craftingInventory) {
+    public ItemStack assemble(CraftingContainer craftingInventory, RegistryAccess reg) {
         ItemStack hat = processInventory(craftingInventory);
         if(hat != null) {
             ItemStack hat1 = hat.copy();

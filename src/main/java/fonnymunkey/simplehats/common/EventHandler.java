@@ -14,7 +14,6 @@ import net.minecraftforge.event.CreativeModeTabEvent;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegisterEvent;
 import org.apache.logging.log4j.Level;
@@ -45,7 +44,7 @@ public class EventHandler {
             ModRegistry.HAT_TAB = event.registerCreativeModeTab(new ResourceLocation(SimpleHats.modId, SimpleHats.modId), builder -> builder
                     .icon(() -> new ItemStack(ModRegistry.HATICON.get()))
                     .title(Component.translatable("itemGroup.simplehats"))
-                    .displayItems((features, output, operator) -> {
+                    .displayItems((param, output) -> {
                         output.accept(ModRegistry.HATBAG_COMMON.get());
                         output.accept(ModRegistry.HATBAG_UNCOMMON.get());
                         output.accept(ModRegistry.HATBAG_RARE.get());

@@ -13,7 +13,6 @@ import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.PlayerModel;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.texture.OverlayTexture;
@@ -26,6 +25,7 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
@@ -110,8 +110,8 @@ public class HatItem extends Item implements ICurioItem, ICurioRenderer {
             matrixStack.mulPose(Axis.XP.rotationDegrees(180.0F));
             matrixStack.mulPose(Axis.YP.rotationDegrees(180.0F));
             if(hatModel == null) hatModel = renderer.getItemModelShaper().getModelManager().getModel(new ModelResourceLocation(new ResourceLocation(SimpleHats.modId, this.hatEntry.getHatName()), "inventory"));
-            if(stack.getTag() != null && stack.getTag().getInt("CustomModelData") != 0) renderer.render(stack, ItemTransforms.TransformType.HEAD, false, matrixStack, renderTypeBuffer, light, OverlayTexture.NO_OVERLAY, Objects.requireNonNullElse(hatModel.getOverrides().resolve(hatModel, stack, (ClientLevel)slotContext.entity().level, slotContext.entity(), 0), hatModel));
-            else renderer.render(stack, ItemTransforms.TransformType.HEAD, false, matrixStack, renderTypeBuffer, light, OverlayTexture.NO_OVERLAY, hatModel);
+            if(stack.getTag() != null && stack.getTag().getInt("CustomModelData") != 0) renderer.render(stack, ItemDisplayContext.HEAD, false, matrixStack, renderTypeBuffer, light, OverlayTexture.NO_OVERLAY, Objects.requireNonNullElse(hatModel.getOverrides().resolve(hatModel, stack, (ClientLevel)slotContext.entity().level, slotContext.entity(), 0), hatModel));
+            else renderer.render(stack, ItemDisplayContext.HEAD, false, matrixStack, renderTypeBuffer, light, OverlayTexture.NO_OVERLAY, hatModel);
             matrixStack.popPose();
         }
         if(slotContext.entity() instanceof Player) {

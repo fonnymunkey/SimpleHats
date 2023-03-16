@@ -14,13 +14,13 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.item.ItemStack;
@@ -158,17 +158,17 @@ public class HatDisplay extends LivingEntity {
 
     public boolean hurt(DamageSource source, float amount) {
         if(!this.level.isClientSide && !this.isRemoved()) {
-            if(DamageSource.OUT_OF_WORLD.equals(source)) {
+            if(source.is(DamageTypeTags.BYPASSES_INVULNERABILITY)) {
                 this.kill();
                 return false;
             }
             else if(!this.isInvulnerableTo(source)) {
-                if(source.isExplosion()) {
+                if(source.is(DamageTypeTags.IS_EXPLOSION)) {
                     this.brokenByAnything(source);
                     this.kill();
                     return false;
                 }
-                else if(DamageSource.IN_FIRE.equals(source)) {
+                else if(source.is(DamageTypeTags.IGNITES_ARMOR_STANDS)) {
                     if(this.isOnFire()) {
                         this.causeDamage(source, 0.15F);
                     }
@@ -177,7 +177,7 @@ public class HatDisplay extends LivingEntity {
                     }
                     return false;
                 }
-                else if(DamageSource.ON_FIRE.equals(source) && this.getHealth() > 0.5F) {
+                else if(source.is(DamageTypeTags.BURNS_ARMOR_STANDS) && this.getHealth() > 0.5F) {
                     this.causeDamage(source, 4.0F);
                     return false;
                 }

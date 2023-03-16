@@ -26,7 +26,7 @@ java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
 minecraft {
     //mappings channel: 'official', version: '1.19'
-	mappings channel: 'parchment', version: '2022.12.18-1.19.3'
+	mappings channel: 'parchment', version: '1.19.3-2023.03.12-1.19.4'
 
     runs {
         client {
@@ -108,9 +108,12 @@ dependencies {
     compileOnly fg.deobf("top.theillusivec4.curios:curios-forge:${minecraft_version}-${curio_version}")
     runtimeOnly fg.deobf("top.theillusivec4.curios:curios-forge:${minecraft_version}-${curio_version}")
 
-    compileOnly fg.deobf("mezz.jei:jei-${minecraft_version}-common-api:${jei_version}")
-    compileOnly fg.deobf("mezz.jei:jei-${minecraft_version}-forge-api:${jei_version}")
-    runtimeOnly fg.deobf("mezz.jei:jei-${minecraft_version}-forge:${jei_version}")
+    //compileOnly fg.deobf("mezz.jei:jei-${minecraft_version}-common-api:${jei_version}")
+    //compileOnly fg.deobf("mezz.jei:jei-${minecraft_version}-forge-api:${jei_version}")
+    //runtimeOnly fg.deobf("mezz.jei:jei-${minecraft_version}-forge:${jei_version}")
+    compileOnly fg.deobf("mezz.jei:jei-1.19.3-common-api:${jei_version}")
+    compileOnly fg.deobf("mezz.jei:jei-1.19.3-forge-api:${jei_version}")
+    runtimeOnly fg.deobf("mezz.jei:jei-1.19.3-forge:${jei_version}")
 }
 
 sourceSets.main.resources { srcDir 'src/generated/resources' }
