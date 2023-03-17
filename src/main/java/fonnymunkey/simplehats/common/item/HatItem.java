@@ -18,7 +18,7 @@ import net.minecraft.client.render.entity.model.EntityModel;
 import net.minecraft.client.render.entity.model.PlayerEntityModel;
 import net.minecraft.client.render.item.ItemRenderer;
 import net.minecraft.client.render.model.BakedModel;
-import net.minecraft.client.render.model.json.ModelTransformation;
+import net.minecraft.client.render.model.json.ModelTransformationMode;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.LivingEntity;
@@ -97,8 +97,8 @@ public class HatItem extends TrinketItem implements TrinketRenderer {
             matrixStack.multiply(RotationAxis.POSITIVE_X.rotationDegrees(180.0F));
             matrixStack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(180.0F));
             if(hatModel == null) hatModel = renderer.getModel(stack, entity.world, entity, 0);
-            if(stack.getNbt() != null && stack.getNbt().getInt("CustomModelData") != 0) renderer.renderItem(stack, ModelTransformation.Mode.HEAD, false, matrixStack, renderTypeBuffer, light, OverlayTexture.DEFAULT_UV, Objects.requireNonNullElse(hatModel.getOverrides().apply(hatModel, stack, (ClientWorld)entity.world, entity, 0), hatModel));
-            else renderer.renderItem(stack, ModelTransformation.Mode.HEAD, false, matrixStack, renderTypeBuffer, light, OverlayTexture.DEFAULT_UV, hatModel);
+            if(stack.getNbt() != null && stack.getNbt().getInt("CustomModelData") != 0) renderer.renderItem(stack, ModelTransformationMode.HEAD, false, matrixStack, renderTypeBuffer, light, OverlayTexture.DEFAULT_UV, Objects.requireNonNullElse(hatModel.getOverrides().apply(hatModel, stack, (ClientWorld)entity.world, entity, 0), hatModel));
+            else renderer.renderItem(stack, ModelTransformationMode.HEAD, false, matrixStack, renderTypeBuffer, light, OverlayTexture.DEFAULT_UV, hatModel);
             matrixStack.pop();
         }
         if(entity instanceof PlayerEntity) {

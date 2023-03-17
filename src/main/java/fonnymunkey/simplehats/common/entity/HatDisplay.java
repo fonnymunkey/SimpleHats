@@ -6,8 +6,6 @@ import fonnymunkey.simplehats.common.item.HatItem;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.*;
-import net.minecraft.entity.attribute.DefaultAttributeContainer;
-import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
@@ -20,6 +18,7 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtList;
 import net.minecraft.particle.BlockStateParticleEffect;
 import net.minecraft.particle.ParticleTypes;
+import net.minecraft.registry.tag.DamageTypeTags;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
@@ -174,17 +173,17 @@ public class HatDisplay extends LivingEntity {
     @Override
     public boolean damage(DamageSource source, float amount) {
         if(!this.world.isClient() && !this.isRemoved()) {
-            if(DamageSource.OUT_OF_WORLD.equals(source)) {
+            if(source.isIn(DamageTypeTags.BYPASSES_INVULNERABILITY)) {
                 this.kill();
                 return false;
             }
             else if(!this.isInvulnerableTo(source)) {
-                if(source.isExplosive()) {
+                if(source.isIn(DamageTypeTags.IS_EXPLOSION)) {
                     this.onBreak(source);
                     this.kill();
                     return false;
                 }
-                else if(DamageSource.IN_FIRE.equals(source)) {
+                else if(source.isIn(DamageTypeTags.IGNITES_ARMOR_STANDS)) {
                     if(this.isOnFire()) {
                         this.updateHealth(source, 0.15F);
                     }
@@ -193,7 +192,7 @@ public class HatDisplay extends LivingEntity {
                     }
                     return false;
                 }
-                else if(DamageSource.ON_FIRE.equals(source) && this.getHealth() > 0.5F) {
+                else if(source.isIn(DamageTypeTags.BURNS_ARMOR_STANDS) && this.getHealth() > 0.5F) {
                     this.updateHealth(source, 4.0F);
                     return false;
                 }

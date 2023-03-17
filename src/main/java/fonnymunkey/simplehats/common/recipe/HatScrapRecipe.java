@@ -9,6 +9,7 @@ import net.minecraft.item.ShearsItem;
 import net.minecraft.recipe.RecipeSerializer;
 import net.minecraft.recipe.SpecialCraftingRecipe;
 import net.minecraft.recipe.book.CraftingRecipeCategory;
+import net.minecraft.registry.DynamicRegistryManager;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.world.World;
@@ -30,7 +31,7 @@ public class HatScrapRecipe extends SpecialCraftingRecipe {
     }
 
     @Override
-    public ItemStack craft(CraftingInventory craftingInventory) {
+    public ItemStack craft(CraftingInventory craftingInventory, DynamicRegistryManager reg) {
         int[] list  = processInventory(craftingInventory);
         if(list[0] != -1 && list[1] != -1) {
             return switch(((HatItem)craftingInventory.getStack(list[0]).getItem()).getHatEntry().getHatSeason()) {
