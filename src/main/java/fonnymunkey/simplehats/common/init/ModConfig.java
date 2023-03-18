@@ -36,6 +36,19 @@ public class ModConfig extends PartitioningSerializer.GlobalData {
         @ConfigEntry.Gui.Tooltip
         public boolean allowHatInHelmetSlot = false;
 
+        @ConfigEntry.Gui.Tooltip
+        public int hatWeightCommon = 20;
+        @ConfigEntry.Gui.Tooltip
+        public int hatWeightUncommon = 15;
+        @ConfigEntry.Gui.Tooltip
+        public int hatWeightRare = 10;
+        @ConfigEntry.Gui.Tooltip
+        public int hatWeightEpic = 10;
+        @ConfigEntry.Gui.Tooltip
+        public int hatWeightNoneChest = 400;
+        @ConfigEntry.Gui.Tooltip
+        public int hatWeightNoneMob = 400;
+
         private Common() {}
     }
 
