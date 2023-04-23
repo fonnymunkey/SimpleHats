@@ -48,21 +48,21 @@ public class SimpleHats implements ModInitializer {
         LootTableEvents.MODIFY.register((resourceManager, lootManager, id, tableBuilder, source) -> {
             if(SimpleHats.config.common.enableChestLoot && ModRegistry.LOOT_HATINJECT_CHEST.contains(id)) {
                 LootPool.Builder pool = LootPool.builder()
-                        .with(ItemEntry.builder(ModRegistry.HATBAG_COMMON).weight(20))
-                        .with(ItemEntry.builder(ModRegistry.HATBAG_UNCOMMON).weight(15))
-                        .with(ItemEntry.builder(ModRegistry.HATBAG_RARE).weight(10))
-                        .with(ItemEntry.builder(ModRegistry.HATBAG_EPIC).weight(5))
-                        .with(ItemEntry.builder(ItemStack.EMPTY.getItem()).weight(150))
+                        .with(ItemEntry.builder(ModRegistry.HATBAG_COMMON).weight(SimpleHats.config.common.chestCommonWeight))
+                        .with(ItemEntry.builder(ModRegistry.HATBAG_UNCOMMON).weight(SimpleHats.config.common.chestUncommonWeight))
+                        .with(ItemEntry.builder(ModRegistry.HATBAG_RARE).weight(SimpleHats.config.common.chestRareWeight))
+                        .with(ItemEntry.builder(ModRegistry.HATBAG_EPIC).weight(SimpleHats.config.common.chestEpicWeight))
+                        .with(ItemEntry.builder(ItemStack.EMPTY.getItem()).weight(SimpleHats.config.common.chestNoneWeight))
                         .rolls(UniformLootNumberProvider.create(1.0F, 2.0F));
                 tableBuilder.pool(pool);
             }
             else if(SimpleHats.config.common.enableMobLoot && ModRegistry.LOOT_HATINJECT_ENTITY.contains(id)) {
                 LootPool.Builder pool = LootPool.builder()
-                        .with(ItemEntry.builder(ModRegistry.HATBAG_COMMON).weight(20))
-                        .with(ItemEntry.builder(ModRegistry.HATBAG_UNCOMMON).weight(15))
-                        .with(ItemEntry.builder(ModRegistry.HATBAG_RARE).weight(10))
-                        .with(ItemEntry.builder(ModRegistry.HATBAG_EPIC).weight(5))
-                        .with(ItemEntry.builder(ItemStack.EMPTY.getItem()).weight(200))
+                        .with(ItemEntry.builder(ModRegistry.HATBAG_COMMON).weight(SimpleHats.config.common.entityCommonWeight))
+                        .with(ItemEntry.builder(ModRegistry.HATBAG_UNCOMMON).weight(SimpleHats.config.common.entityUncommonWeight))
+                        .with(ItemEntry.builder(ModRegistry.HATBAG_RARE).weight(SimpleHats.config.common.entityRareWeight))
+                        .with(ItemEntry.builder(ModRegistry.HATBAG_EPIC).weight(SimpleHats.config.common.entityEpicWeight))
+                        .with(ItemEntry.builder(ItemStack.EMPTY.getItem()).weight(SimpleHats.config.common.entityNoneWeight))
                         .rolls(ConstantLootNumberProvider.create(1.0F))
                         .conditionally(KilledByPlayerLootCondition.builder());
                 tableBuilder.pool(pool);

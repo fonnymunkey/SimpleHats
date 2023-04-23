@@ -36,6 +36,38 @@ public class ModConfig extends PartitioningSerializer.GlobalData {
         @ConfigEntry.Gui.Tooltip
         public boolean allowHatInHelmetSlot = false;
 
+        @ConfigEntry.Gui.Tooltip
+        @ConfigEntry.BoundedDiscrete(min = 1, max = 500)
+        public int chestNoneWeight = 150;
+        @ConfigEntry.Gui.Tooltip
+        @ConfigEntry.BoundedDiscrete(min = 0, max = 500)
+        public int chestCommonWeight = 20;
+        @ConfigEntry.Gui.Tooltip
+        @ConfigEntry.BoundedDiscrete(min = 0, max = 500)
+        public int chestUncommonWeight = 15;
+        @ConfigEntry.Gui.Tooltip
+        @ConfigEntry.BoundedDiscrete(min = 0, max = 500)
+        public int chestRareWeight = 10;
+        @ConfigEntry.Gui.Tooltip
+        @ConfigEntry.BoundedDiscrete(min = 0, max = 500)
+        public int chestEpicWeight = 5;
+
+        @ConfigEntry.Gui.Tooltip
+        @ConfigEntry.BoundedDiscrete(min = 1, max = 500)
+        public int entityNoneWeight = 200;
+        @ConfigEntry.Gui.Tooltip
+        @ConfigEntry.BoundedDiscrete(min = 0, max = 500)
+        public int entityCommonWeight = 20;
+        @ConfigEntry.Gui.Tooltip
+        @ConfigEntry.BoundedDiscrete(min = 0, max = 500)
+        public int entityUncommonWeight = 15;
+        @ConfigEntry.Gui.Tooltip
+        @ConfigEntry.BoundedDiscrete(min = 0, max = 500)
+        public int entityRareWeight = 10;
+        @ConfigEntry.Gui.Tooltip
+        @ConfigEntry.BoundedDiscrete(min = 0, max = 500)
+        public int entityEpicWeight = 5;
+
         private Common() {}
     }
 
