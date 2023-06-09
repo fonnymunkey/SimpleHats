@@ -20,6 +20,11 @@ import net.minecraft.loot.condition.KilledByPlayerLootCondition;
 import net.minecraft.loot.entry.ItemEntry;
 import net.minecraft.loot.provider.number.ConstantLootNumberProvider;
 import net.minecraft.loot.provider.number.UniformLootNumberProvider;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.Registry;
+import net.minecraft.registry.RegistryKey;
+import net.minecraft.registry.RegistryKeys;
+import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -29,9 +34,7 @@ public class SimpleHats implements ModInitializer {
     public static Logger logger = LogManager.getLogger();
     public static ModConfig config;
 
-    public static ItemGroup HAT_TAB = FabricItemGroup.builder(new Identifier(modId, "hat_group"))
-            .icon(() -> new ItemStack(ModRegistry.HATICON))
-            .build();
+    public static RegistryKey<ItemGroup> HAT_TAB = RegistryKey.of(RegistryKeys.ITEM_GROUP, new Identifier(modId, "hat_group"));
 
     @Override
     public void onInitialize() {
@@ -46,6 +49,34 @@ public class SimpleHats implements ModInitializer {
 
         ModRegistry.registerHats();
 
+        Registry.register(Registries.ITEM_GROUP, HAT_TAB, FabricItemGroup.builder()
+                .icon(() -> new ItemStack(ModRegistry.HATICON))
+                .displayName(Text.translatable("itemGroup.simplehats.hat_group"))
+                .entries((context, entries) -> {
+                    entries.add(ModRegistry.HATBAG_COMMON);
+                    entries.add(ModRegistry.HATBAG_UNCOMMON);
+                    entries.add(ModRegistry.HATBAG_RARE);
+                    entries.add(ModRegistry.HATBAG_EPIC);
+                    entries.add(ModRegistry.HATBAG_EASTER);
+                    entries.add(ModRegistry.HATBAG_SUMMER);
+                    entries.add(ModRegistry.HATBAG_HALLOWEEN);
+                    entries.add(ModRegistry.HATBAG_FESTIVE);
+                    entries.add(ModRegistry.HATSCRAPS_COMMON);
+                    entries.add(ModRegistry.HATSCRAPS_UNCOMMON);
+                    entries.add(ModRegistry.HATSCRAPS_RARE);
+                    entries.add(ModRegistry.HATSCRAPS_EASTER);
+                    entries.add(ModRegistry.HATSCRAPS_SUMMER);
+                    entries.add(ModRegistry.HATSCRAPS_HALLOWEEN);
+                    entries.add(ModRegistry.HATSCRAPS_FESTIVE);
+                    entries.add(ModRegistry.HATICON);
+                    entries.add(ModRegistry.HATDISPLAYITEM);
+
+                    for(HatItem hat : ModRegistry.hatList) {
+                        entries.add(hat);
+                    }
+                })
+                .build());
+/*
         ItemGroupEvents.modifyEntriesEvent(HAT_TAB).register(content -> {
             content.add(ModRegistry.HATBAG_COMMON);
             content.add(ModRegistry.HATBAG_UNCOMMON);
@@ -69,6 +100,8 @@ public class SimpleHats implements ModInitializer {
                 content.add(hat);
             }
         });
+
+ */
 
         FabricDefaultAttributeRegistry.register(ModRegistry.HATDISPLAYENTITY, HatDisplay.createLivingAttributes());
 

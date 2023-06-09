@@ -127,7 +127,7 @@ public class HatDisplay extends LivingEntity {
             if(player.isSpectator()) {
                 return ActionResult.SUCCESS;
             }
-            else if(player.world.isClient()) {
+            else if(player.getWorld().isClient()) {
                 return ActionResult.CONSUME;
             }
             else {
@@ -172,7 +172,7 @@ public class HatDisplay extends LivingEntity {
 
     @Override
     public boolean damage(DamageSource source, float amount) {
-        if(!this.world.isClient() && !this.isRemoved()) {
+        if(!this.getWorld().isClient() && !this.isRemoved()) {
             if(source.isIn(DamageTypeTags.BYPASSES_INVULNERABILITY)) {
                 this.kill();
                 return false;
@@ -213,9 +213,9 @@ public class HatDisplay extends LivingEntity {
                         return flag1;
                     }
                     else {
-                        long i = this.world.getTime();
+                        long i = this.getWorld().getTime();
                         if(i - this.lastHit > 5L && !flag) {
-                            this.world.sendEntityStatus(this, (byte)32);
+                            this.getWorld().sendEntityStatus(this, (byte)32);
                             this.emitGameEvent(GameEvent.ENTITY_DAMAGE, source.getAttacker());
                             this.lastHit = i;
                         }
@@ -240,9 +240,9 @@ public class HatDisplay extends LivingEntity {
     @Override
     public void handleStatus(byte id) {
         if(id == 32) {
-            if(this.world.isClient()) {
-                this.world.playSound(this.getX(), this.getY(), this.getZ(), SoundEvents.ENTITY_ARMOR_STAND_HIT, this.getSoundCategory(), 0.3F, 1.0F, false);
-                this.lastHit = this.world.getTime();
+            if(this.getWorld().isClient()) {
+                this.getWorld().playSound(this.getX(), this.getY(), this.getZ(), SoundEvents.ENTITY_ARMOR_STAND_HIT, this.getSoundCategory(), 0.3F, 1.0F, false);
+                this.lastHit = this.getWorld().getTime();
             }
         }
         else {
@@ -251,8 +251,8 @@ public class HatDisplay extends LivingEntity {
     }
 
     private void spawnBreakParticles() {
-        if(this.world instanceof ServerWorld) {
-            ((ServerWorld)this.world).spawnParticles(new BlockStateParticleEffect(ParticleTypes.BLOCK, Blocks.OAK_PLANKS.getDefaultState()), this.getX(), this.getBodyY(0.66D), this.getZ(), 10, (double)(this.getWidth() / 4.0F), (double)(this.getHeight() / 4.0F), (double)(this.getWidth() / 4.0F), 0.05D);
+        if(this.getWorld() instanceof ServerWorld) {
+            ((ServerWorld)this.getWorld()).spawnParticles(new BlockStateParticleEffect(ParticleTypes.BLOCK, Blocks.OAK_PLANKS.getDefaultState()), this.getX(), this.getBodyY(0.66D), this.getZ(), 10, (double)(this.getWidth() / 4.0F), (double)(this.getHeight() / 4.0F), (double)(this.getWidth() / 4.0F), 0.05D);
         }
     }
 
@@ -269,7 +269,7 @@ public class HatDisplay extends LivingEntity {
     }
 
     private void breakAndDropItem(DamageSource source) {
-        Block.dropStack(this.world, this.getBlockPos(), new ItemStack(ModRegistry.HATDISPLAYITEM));
+        Block.dropStack(this.getWorld(), this.getBlockPos(), new ItemStack(ModRegistry.HATDISPLAYITEM));
         this.onBreak(source);
     }
 
@@ -279,13 +279,13 @@ public class HatDisplay extends LivingEntity {
 
         ItemStack itemStack = this.hatItemSlots.get(0);
         if(!itemStack.isEmpty()) {
-            Block.dropStack(this.world, this.getBlockPos().up(), itemStack);
+            Block.dropStack(this.getWorld(), this.getBlockPos().up(), itemStack);
             this.hatItemSlots.set(0, ItemStack.EMPTY);
         }
     }
 
     private void playBreakSound() {
-        this.world.playSound(null, this.getX(), this.getY(), this.getZ(), SoundEvents.ENTITY_ARMOR_STAND_BREAK, this.getSoundCategory(), 1.0F, 1.0F);
+        this.getWorld().playSound(null, this.getX(), this.getY(), this.getZ(), SoundEvents.ENTITY_ARMOR_STAND_BREAK, this.getSoundCategory(), 1.0F, 1.0F);
     }
 
     @Override
@@ -319,7 +319,7 @@ public class HatDisplay extends LivingEntity {
 
     @Override
     public boolean handleAttack(Entity entity) {
-        return entity instanceof PlayerEntity && !this.world.canPlayerModifyAt((PlayerEntity)entity, this.getBlockPos());
+        return entity instanceof PlayerEntity && !this.getWorld().canPlayerModifyAt((PlayerEntity)entity, this.getBlockPos());
     }
 
     @Override

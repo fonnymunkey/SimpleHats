@@ -24,7 +24,7 @@ public class HatDisplayRenderer extends LivingEntityRenderer<HatDisplay, HatDisp
 
     protected void setupTransforms(HatDisplay entityLiving, MatrixStack matrixStack, float ageInTicks, float rotationYaw, float partialTicks) {
         matrixStack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(180.0F - rotationYaw));
-        float f = (float)(entityLiving.world.getTime() - entityLiving.lastHit) + partialTicks;
+        float f = (float)(entityLiving.getWorld().getTime() - entityLiving.lastHit) + partialTicks;
         if(f < 5.0F) matrixStack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(MathHelper.sin(f / 1.5F * (float)Math.PI) * 3.0F));
     }
 

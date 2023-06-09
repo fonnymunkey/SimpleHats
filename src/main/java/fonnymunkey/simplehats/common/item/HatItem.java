@@ -52,7 +52,7 @@ public class HatItem extends TrinketItem implements TrinketRenderer {
 
     @Override
     public void onEquip(ItemStack stack, SlotReference slot, LivingEntity entity) {
-        if(entity.world.isClient()) return;
+        if(entity.getWorld().isClient()) return;
         /*
         if(stack.getItem() == ModRegistry.HATSPECIAL && entity instanceof PlayerEntity player) {
             NbtCompound tag = stack.getOrCreateNbt();
@@ -96,8 +96,8 @@ public class HatItem extends TrinketItem implements TrinketRenderer {
             matrixStack.scale(0.66F, 0.66F, 0.66F);
             matrixStack.multiply(RotationAxis.POSITIVE_X.rotationDegrees(180.0F));
             matrixStack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(180.0F));
-            if(hatModel == null) hatModel = renderer.getModel(stack, entity.world, entity, 0);
-            if(stack.getNbt() != null && stack.getNbt().getInt("CustomModelData") != 0) renderer.renderItem(stack, ModelTransformationMode.HEAD, false, matrixStack, renderTypeBuffer, light, OverlayTexture.DEFAULT_UV, Objects.requireNonNullElse(hatModel.getOverrides().apply(hatModel, stack, (ClientWorld)entity.world, entity, 0), hatModel));
+            if(hatModel == null) hatModel = renderer.getModel(stack, entity.getWorld(), entity, 0);
+            if(stack.getNbt() != null && stack.getNbt().getInt("CustomModelData") != 0) renderer.renderItem(stack, ModelTransformationMode.HEAD, false, matrixStack, renderTypeBuffer, light, OverlayTexture.DEFAULT_UV, Objects.requireNonNullElse(hatModel.getOverrides().apply(hatModel, stack, (ClientWorld)entity.getWorld(), entity, 0), hatModel));
             else renderer.renderItem(stack, ModelTransformationMode.HEAD, false, matrixStack, renderTypeBuffer, light, OverlayTexture.DEFAULT_UV, hatModel);
             matrixStack.pop();
         }
@@ -112,7 +112,7 @@ public class HatItem extends TrinketItem implements TrinketRenderer {
                             case TRAILING_FEET -> entity.getY()+0.25;
                             case TRAILING_FULL -> entity.getRandomBodyY();
                         };
-                entity.world.addParticle(particleSettings.getParticleType(), entity.getX() + entity.getRandom().nextFloat() - 0.5, y, entity.getZ() + entity.getRandom().nextFloat() - 0.5, d0, d1,d2);
+                entity.getWorld().addParticle(particleSettings.getParticleType(), entity.getX() + entity.getRandom().nextFloat() - 0.5, y, entity.getZ() + entity.getRandom().nextFloat() - 0.5, d0, d1,d2);
             }
         }
     }

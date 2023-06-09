@@ -4,6 +4,7 @@ import fonnymunkey.simplehats.SimpleHats;
 import fonnymunkey.simplehats.common.init.ModRegistry;
 import fonnymunkey.simplehats.common.item.HatItem;
 import net.minecraft.inventory.CraftingInventory;
+import net.minecraft.inventory.RecipeInputInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.recipe.RecipeSerializer;
@@ -24,12 +25,12 @@ public class HatVariantRecipe extends SpecialCraftingRecipe {
     }
 
     @Override
-    public boolean matches(CraftingInventory craftingInventory, World level) {
+    public boolean matches(RecipeInputInventory craftingInventory, World level) {
         return processInventory(craftingInventory) != null;
     }
 
     @Override
-    public ItemStack craft(CraftingInventory craftingInventory, DynamicRegistryManager reg) {
+    public ItemStack craft(RecipeInputInventory craftingInventory, DynamicRegistryManager reg) {
         ItemStack hat = processInventory(craftingInventory);
         if(hat != null) {
             ItemStack hat1 = hat.copy();
@@ -42,7 +43,7 @@ public class HatVariantRecipe extends SpecialCraftingRecipe {
         return ItemStack.EMPTY;
     }
 
-    private static ItemStack processInventory(CraftingInventory craftingInventory) {
+    private static ItemStack processInventory(RecipeInputInventory craftingInventory) {
         int totalItems = 0;
         ItemStack hatItem = null;
         for(int i =0; i < craftingInventory.size(); i++) {

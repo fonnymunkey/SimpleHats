@@ -4,6 +4,7 @@ import fonnymunkey.simplehats.SimpleHats;
 import fonnymunkey.simplehats.common.init.ModRegistry;
 import fonnymunkey.simplehats.common.item.HatItem;
 import net.minecraft.inventory.CraftingInventory;
+import net.minecraft.inventory.RecipeInputInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ShearsItem;
 import net.minecraft.recipe.RecipeSerializer;
@@ -25,13 +26,13 @@ public class HatScrapRecipe extends SpecialCraftingRecipe {
     }
 
     @Override
-    public boolean matches(CraftingInventory craftingInventory, World level) {
+    public boolean matches(RecipeInputInventory craftingInventory, World level) {
         int[] list = processInventory(craftingInventory);
         return list[0] != -1 && list[1] != -1;
     }
 
     @Override
-    public ItemStack craft(CraftingInventory craftingInventory, DynamicRegistryManager reg) {
+    public ItemStack craft(RecipeInputInventory craftingInventory, DynamicRegistryManager reg) {
         int[] list  = processInventory(craftingInventory);
         if(list[0] != -1 && list[1] != -1) {
             return switch(((HatItem)craftingInventory.getStack(list[0]).getItem()).getHatEntry().getHatSeason()) {
@@ -50,7 +51,7 @@ public class HatScrapRecipe extends SpecialCraftingRecipe {
     }
 
     @Override
-    public DefaultedList<ItemStack> getRemainder(CraftingInventory craftingInventory) {
+    public DefaultedList<ItemStack> getRemainder(RecipeInputInventory craftingInventory) {
         DefaultedList<ItemStack> remainList = DefaultedList.ofSize(craftingInventory.size(), ItemStack.EMPTY);
 
         for(int i = 0; i < craftingInventory.size(); ++i) {
@@ -70,7 +71,7 @@ public class HatScrapRecipe extends SpecialCraftingRecipe {
         return remainList;
     }
 
-    private static int[] processInventory(CraftingInventory craftingInventory) {
+    private static int[] processInventory(RecipeInputInventory craftingInventory) {
         int totalItems = 0;
         int[] list = new int[]{-1, -1};
         for(int i =0; i < craftingInventory.size(); i++) {
