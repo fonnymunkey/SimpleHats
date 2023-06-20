@@ -12,10 +12,13 @@ import fonnymunkey.simplehats.common.recipe.HatScrapRecipe;
 import fonnymunkey.simplehats.common.recipe.HatVariantRecipe;
 import fonnymunkey.simplehats.util.HatEntry;
 import fonnymunkey.simplehats.util.HatEntry.HatSeason;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.SimpleCraftingRecipeSerializer;
@@ -28,9 +31,36 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ModRegistry {
-    public static CreativeModeTab HAT_TAB;
 
     public static List<HatItem> hatList = new ArrayList<HatItem>();
+
+    ////
+    //Creative Tab
+    ////
+    public static final DeferredRegister<CreativeModeTab> TAB_REG = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, SimpleHats.modId);
+    public static final RegistryObject<CreativeModeTab> HAT_TAB = TAB_REG.register(SimpleHats.modId, () -> CreativeModeTab.builder()
+            .icon(() -> new ItemStack(ModRegistry.HATICON.get()))
+            .title(Component.translatable("itemGroup.simplehats"))
+            .displayItems((param, output) -> {
+                output.accept(ModRegistry.HATBAG_COMMON.get());
+                output.accept(ModRegistry.HATBAG_UNCOMMON.get());
+                output.accept(ModRegistry.HATBAG_RARE.get());
+                output.accept(ModRegistry.HATBAG_EPIC.get());
+                output.accept(ModRegistry.HATBAG_EASTER.get());
+                output.accept(ModRegistry.HATBAG_SUMMER.get());
+                output.accept(ModRegistry.HATBAG_HALLOWEEN.get());
+                output.accept(ModRegistry.HATBAG_FESTIVE.get());
+                output.accept(ModRegistry.HATSCRAPS_COMMON.get());
+                output.accept(ModRegistry.HATSCRAPS_UNCOMMON.get());
+                output.accept(ModRegistry.HATSCRAPS_RARE.get());
+                output.accept(ModRegistry.HATSCRAPS_EASTER.get());
+                output.accept(ModRegistry.HATSCRAPS_SUMMER.get());
+                output.accept(ModRegistry.HATSCRAPS_HALLOWEEN.get());
+                output.accept(ModRegistry.HATSCRAPS_FESTIVE.get());
+                output.accept(ModRegistry.HATICON.get());
+                output.accept(ModRegistry.HATDISPLAYITEM.get());
+            })
+            .build());
 
     ////
     //Item Registry

@@ -39,6 +39,7 @@ public class SimpleHats {
         }
         */
         ModRegistry.ITEM_REG.register(eventBus);
+        ModRegistry.TAB_REG.register(eventBus);
         ModRegistry.ENTITY_REG.register(eventBus);
         ModRegistry.RECIPE_REG.register(eventBus);
         ModRegistry.LOOT_REG.register(eventBus);

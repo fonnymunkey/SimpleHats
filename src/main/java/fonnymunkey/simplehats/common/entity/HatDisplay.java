@@ -113,7 +113,7 @@ public class HatDisplay extends LivingEntity {
             if(player.isSpectator()) {
                 return InteractionResult.SUCCESS;
             }
-            else if(player.level.isClientSide) {
+            else if(player.level().isClientSide) {
                 return InteractionResult.CONSUME;
             }
             else {
@@ -157,7 +157,7 @@ public class HatDisplay extends LivingEntity {
     }
 
     public boolean hurt(DamageSource source, float amount) {
-        if(!this.level.isClientSide && !this.isRemoved()) {
+        if(!this.level().isClientSide && !this.isRemoved()) {
             if(source.is(DamageTypeTags.BYPASSES_INVULNERABILITY)) {
                 this.kill();
                 return false;
@@ -198,9 +198,9 @@ public class HatDisplay extends LivingEntity {
                         return flag1;
                     }
                     else {
-                        long i = this.level.getGameTime();
+                        long i = this.level().getGameTime();
                         if(i - this.lastHit > 5L && !flag) {
-                            this.level.broadcastEntityEvent(this, (byte)32);
+                            this.level().broadcastEntityEvent(this, (byte)32);
                             this.gameEvent(GameEvent.ENTITY_DAMAGE, source.getEntity());
                             this.lastHit = i;
                         }
@@ -224,9 +224,9 @@ public class HatDisplay extends LivingEntity {
 
     public void handleEntityEvent(byte id) {
         if(id == 32) {
-            if(this.level.isClientSide) {
-                this.level.playLocalSound(this.getX(), this.getY(), this.getZ(), SoundEvents.ARMOR_STAND_HIT, this.getSoundSource(), 0.3F, 1.0F, false);
-                this.lastHit = this.level.getGameTime();
+            if(this.level().isClientSide) {
+                this.level().playLocalSound(this.getX(), this.getY(), this.getZ(), SoundEvents.ARMOR_STAND_HIT, this.getSoundSource(), 0.3F, 1.0F, false);
+                this.lastHit = this.level().getGameTime();
             }
         }
         else {
@@ -235,8 +235,8 @@ public class HatDisplay extends LivingEntity {
     }
 
     private void showBreakingParticles() {
-        if(this.level instanceof ServerLevel) {
-            ((ServerLevel)this.level).sendParticles(new BlockParticleOption(ParticleTypes.BLOCK, Blocks.OAK_PLANKS.defaultBlockState()), this.getX(), this.getY(0.66D), this.getZ(), 10, (double)(this.getBbWidth() / 4.0F), (double)(this.getBbHeight() / 4.0F), (double)(this.getBbWidth() / 4.0F), 0.05D);
+        if(this.level() instanceof ServerLevel) {
+            ((ServerLevel)this.level()).sendParticles(new BlockParticleOption(ParticleTypes.BLOCK, Blocks.OAK_PLANKS.defaultBlockState()), this.getX(), this.getY(0.66D), this.getZ(), 10, (double)(this.getBbWidth() / 4.0F), (double)(this.getBbHeight() / 4.0F), (double)(this.getBbWidth() / 4.0F), 0.05D);
         }
     }
 
@@ -253,7 +253,7 @@ public class HatDisplay extends LivingEntity {
     }
 
     private void brokenByPlayer(DamageSource source) {
-        Block.popResource(this.level, this.blockPosition(), new ItemStack(ModRegistry.HATDISPLAYITEM.get()));
+        Block.popResource(this.level(), this.blockPosition(), new ItemStack(ModRegistry.HATDISPLAYITEM.get()));
         this.brokenByAnything(source);
     }
 
@@ -263,13 +263,13 @@ public class HatDisplay extends LivingEntity {
 
         ItemStack itemStack = this.hatItemSlots.get(0);
         if(!itemStack.isEmpty()) {
-            Block.popResource(this.level, this.blockPosition().above(), itemStack);
+            Block.popResource(this.level(), this.blockPosition().above(), itemStack);
             this.hatItemSlots.set(0, ItemStack.EMPTY);
         }
     }
 
     private void playBrokenSound() {
-        this.level.playSound(null, this.getX(), this.getY(), this.getZ(), SoundEvents.ARMOR_STAND_BREAK, this.getSoundSource(), 1.0F, 1.0F);
+        this.level().playSound(null, this.getX(), this.getY(), this.getZ(), SoundEvents.ARMOR_STAND_BREAK, this.getSoundSource(), 1.0F, 1.0F);
     }
 
     protected float tickHeadTurn(float f1, float f2) {
@@ -297,7 +297,7 @@ public class HatDisplay extends LivingEntity {
     }
 
     public boolean skipAttackInteraction(Entity entity) {
-        return entity instanceof Player && !this.level.mayInteract((Player)entity, this.blockPosition());
+        return entity instanceof Player && !this.level().mayInteract((Player)entity, this.blockPosition());
     }
 
     public LivingEntity.Fallsounds getFallSounds() {

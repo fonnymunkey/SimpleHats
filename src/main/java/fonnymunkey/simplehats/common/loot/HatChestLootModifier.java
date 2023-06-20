@@ -25,7 +25,8 @@ public class HatChestLootModifier extends LootModifier {
 
     @Override
     public ObjectArrayList<ItemStack> doApply(ObjectArrayList<ItemStack> loot, LootContext context) {
-        context.getLootTable(INJECTABLE_LOOT_CHEST).getRandomItems(context, loot::add);
+        context.getLevel().getServer().getLootData().getLootTable(INJECTABLE_LOOT_CHEST).getRandomItems(context, loot::add);
+        //context.getLootTable(INJECTABLE_LOOT_CHEST).getRandomItems(context, loot::add);
         return loot;
     }
 

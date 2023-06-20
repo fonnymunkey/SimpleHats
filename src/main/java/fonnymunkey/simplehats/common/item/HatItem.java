@@ -110,7 +110,7 @@ public class HatItem extends Item implements ICurioItem, ICurioRenderer {
             matrixStack.mulPose(Axis.XP.rotationDegrees(180.0F));
             matrixStack.mulPose(Axis.YP.rotationDegrees(180.0F));
             if(hatModel == null) hatModel = renderer.getItemModelShaper().getModelManager().getModel(new ModelResourceLocation(new ResourceLocation(SimpleHats.modId, this.hatEntry.getHatName()), "inventory"));
-            if(stack.getTag() != null && stack.getTag().getInt("CustomModelData") != 0) renderer.render(stack, ItemDisplayContext.HEAD, false, matrixStack, renderTypeBuffer, light, OverlayTexture.NO_OVERLAY, Objects.requireNonNullElse(hatModel.getOverrides().resolve(hatModel, stack, (ClientLevel)slotContext.entity().level, slotContext.entity(), 0), hatModel));
+            if(stack.getTag() != null && stack.getTag().getInt("CustomModelData") != 0) renderer.render(stack, ItemDisplayContext.HEAD, false, matrixStack, renderTypeBuffer, light, OverlayTexture.NO_OVERLAY, Objects.requireNonNullElse(hatModel.getOverrides().resolve(hatModel, stack, (ClientLevel)slotContext.entity().level(), slotContext.entity(), 0), hatModel));
             else renderer.render(stack, ItemDisplayContext.HEAD, false, matrixStack, renderTypeBuffer, light, OverlayTexture.NO_OVERLAY, hatModel);
             matrixStack.popPose();
         }
@@ -125,7 +125,7 @@ public class HatItem extends Item implements ICurioItem, ICurioRenderer {
                             case TRAILING_FEET -> slotContext.entity().getY()+0.25;
                             case TRAILING_FULL -> slotContext.entity().getRandomY();
                         };
-                slotContext.entity().level.addParticle(particleSettings.getParticleType(), slotContext.entity().getRandomX(0.5D), y, slotContext.entity().getRandomZ(0.5D), d0, d1,d2);
+                slotContext.entity().level().addParticle(particleSettings.getParticleType(), slotContext.entity().getRandomX(0.5D), y, slotContext.entity().getRandomZ(0.5D), d0, d1,d2);
             }
         }
     }

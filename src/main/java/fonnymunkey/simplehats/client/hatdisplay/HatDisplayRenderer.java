@@ -25,7 +25,7 @@ public class HatDisplayRenderer extends LivingEntityRenderer<HatDisplay, HatDisp
 
     protected void setupRotations(HatDisplay entityLiving, PoseStack matrixStack, float ageInTicks, float rotationYaw, float partialTicks) {
         matrixStack.mulPose(Axis.YP.rotationDegrees(180.0F - rotationYaw));
-        float f = (float)(entityLiving.level.getGameTime() - entityLiving.lastHit) + partialTicks;
+        float f = (float)(entityLiving.level().getGameTime() - entityLiving.lastHit) + partialTicks;
         if(f < 5.0F) matrixStack.mulPose(Axis.YP.rotationDegrees(Mth.sin(f / 1.5F * (float)Math.PI) * 3.0F));
     }
 
