@@ -22,7 +22,7 @@ public class MixinHumanoidArmorLayer {
     @Inject(method = "renderArmorPiece", at = @At("HEAD"), cancellable = true)
     public void simplehats_renderArmorPiece(PoseStack pose, MultiBufferSource buffer, LivingEntity entity, EquipmentSlot slot, int light, HumanoidModel<LivingEntity> model, CallbackInfo ci) {
         if(entity instanceof Player player && slot.equals(EquipmentSlot.HEAD)) {
-            CuriosApi.getCuriosHelper().getCuriosHandler(player)
+            CuriosApi.getCuriosInventory(player)
                     .ifPresent(handler -> handler.getCurios()
                     .forEach((id, stacksHandler) -> {
                         IDynamicStackHandler stackHandler = stacksHandler.getStacks();

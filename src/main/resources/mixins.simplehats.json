@@ -4,7 +4,7 @@
   "compatibilityLevel": "JAVA_17",
   "refmap": "mixins.simplehats.refmap.json",
   "mixins": [
-    "MixinCuriosHelper"
+    "MixinCuriosImplMixinHooks"
   ],
   "minVersion": "0.8",
   "client": [
