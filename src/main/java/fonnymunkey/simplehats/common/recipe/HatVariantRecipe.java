@@ -1,11 +1,9 @@
 package fonnymunkey.simplehats.common.recipe;
 
-import fonnymunkey.simplehats.SimpleHats;
 import fonnymunkey.simplehats.common.init.ModRegistry;
 import fonnymunkey.simplehats.common.item.HatItem;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CraftingBookCategory;
@@ -16,13 +14,13 @@ import net.minecraft.world.level.Level;
 import javax.annotation.Nullable;
 
 public class HatVariantRecipe extends CustomRecipe {
-    public HatVariantRecipe(ResourceLocation location, CraftingBookCategory category) {
-        super(location, category);
+    public HatVariantRecipe(CraftingBookCategory category) {
+        super(category);
     }
 
     @Override
-    public ResourceLocation getId() {
-        return new ResourceLocation(SimpleHats.modId, "hatvariants");
+    public String getGroup() {
+        return "simplehats:hatvariant";
     }
 
     @Override

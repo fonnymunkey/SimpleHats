@@ -25,7 +25,7 @@ public class ClientEventHandler {
             for(HatItem hat : ModRegistry.hatList) {
                 if(hat instanceof HatItemDyeable hatDye) {
                     event.register((stack, color) -> ((HatItemDyeable)stack.getItem()).getColor(stack), hatDye);
-                    CauldronInteraction.WATER.put(hatDye, CauldronInteraction.DYED_ITEM);
+                    CauldronInteraction.WATER.f_303346_().put(hatDye, CauldronInteraction.DYED_ITEM);
                 }
             }
         }

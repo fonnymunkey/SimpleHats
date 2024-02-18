@@ -1,11 +1,9 @@
 package fonnymunkey.simplehats.common.recipe;
 
-import fonnymunkey.simplehats.SimpleHats;
 import fonnymunkey.simplehats.common.init.ModRegistry;
 import fonnymunkey.simplehats.common.item.HatItem;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.RegistryAccess;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ShearsItem;
@@ -15,13 +13,13 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.Level;
 
 public class HatScrapRecipe extends CustomRecipe {
-    public HatScrapRecipe(ResourceLocation location, CraftingBookCategory category) {
-        super(location, category);
+    public HatScrapRecipe(CraftingBookCategory category) {
+        super(category);
     }
 
     @Override
-    public ResourceLocation getId() {
-        return new ResourceLocation(SimpleHats.modId, "hatscraps");
+    public String getGroup() {
+        return "simplehats:scrapping";
     }
 
     @Override

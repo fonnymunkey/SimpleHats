@@ -14,13 +14,10 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.crafting.CraftingBookCategory;
-import net.minecraft.world.item.crafting.CraftingRecipe;
-import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.crafting.ShapelessRecipe;
+import net.minecraft.world.item.crafting.*;
 import net.minecraftforge.common.Tags;
-import net.minecraftforge.common.crafting.CompoundIngredient;
-import net.minecraftforge.common.crafting.PartialNBTIngredient;
+import net.minecraftforge.common.crafting.ingredients.CompoundIngredient;
+import net.minecraftforge.common.crafting.ingredients.PartialNBTIngredient;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,7 +33,7 @@ public class JEIPlugin implements IModPlugin {
 
     @Override
     public void registerRecipes(IRecipeRegistration registration) {
-        List<CraftingRecipe> list = createHatScrapRecipe();
+        List<RecipeHolder<CraftingRecipe>> list = createHatScrapRecipe();
         list.addAll(createHatVariantRecipe());
         list.addAll(createHatDyeRecipe());
         if(!list.isEmpty()) {
@@ -44,8 +41,8 @@ public class JEIPlugin implements IModPlugin {
         }
     }
 
-    private static List<CraftingRecipe> createHatScrapRecipe() {
-        List<CraftingRecipe> recipes = new ArrayList<>();
+    private static List<RecipeHolder<CraftingRecipe>> createHatScrapRecipe() {
+        List<RecipeHolder<CraftingRecipe>> recipes = new ArrayList<>();
 
         List<Ingredient> easterList = new ArrayList<>(),
                 summerList = new ArrayList<>(),
@@ -78,22 +75,21 @@ public class JEIPlugin implements IModPlugin {
                 ModRegistry.HATSCRAPS_RARE.get(), rareList);
         for(Map.Entry<Item, List<Ingredient>> entry : map.entrySet()) {
             if(entry.getValue().isEmpty()) continue;
-            ResourceLocation location = new ResourceLocation(SimpleHats.modId, entry.getKey().getDescriptionId() + "_scrapping");
-            recipes.add(new ShapelessRecipe(
-                    location,
-                    RecipeTypes.CRAFTING.getUid().getPath(),
+            String location = "simplehats:" + entry.getKey().getDescriptionId() + "_scrapping";
+            recipes.add(new RecipeHolder<>(new ResourceLocation(location), new ShapelessRecipe(
+                    "simplehats:scrapping",
                     CraftingBookCategory.MISC,
                     new ItemStack(entry.getKey()),
                     NonNullList.of(
                             Ingredient.EMPTY,
                             Ingredient.of(Items.SHEARS),
-                            CompoundIngredient.of(entry.getValue().toArray(new Ingredient[0])))));
+                            CompoundIngredient.of(entry.getValue().toArray(new Ingredient[0]))))));
         }
         return recipes;
     }
 
-    private static List<CraftingRecipe> createHatVariantRecipe() {
-        List<CraftingRecipe> recipes = new ArrayList<>();
+    private static List<RecipeHolder<CraftingRecipe>> createHatVariantRecipe() {
+        List<RecipeHolder<CraftingRecipe>> recipes = new ArrayList<>();
 
         for(HatItem hat : ModRegistry.hatList) {
             if(hat.getHatEntry().getHatVariantRange()>0) {
@@ -108,29 +104,28 @@ public class JEIPlugin implements IModPlugin {
                     stack1.setTag(tag1);
                     ItemStack output = stack1;
 
-                    ResourceLocation location = new ResourceLocation(SimpleHats.modId, "hatvariant_" + hat.getHatEntry().getHatName() + "_" + i);
-                    recipes.add(new ShapelessRecipe(location, RecipeTypes.CRAFTING.getUid().getPath(), CraftingBookCategory.MISC, output, input));
+                    String location = "simplehats:hatvariant_" + hat.getHatEntry().getHatName() + "_" + i;
+                    recipes.add(new RecipeHolder<>(new ResourceLocation(location), new ShapelessRecipe("simplehats:hatvariant", CraftingBookCategory.MISC, output, input)));
                 }
             }
         }
         return recipes;
     }
 
-    private static List<CraftingRecipe> createHatDyeRecipe() {
-        List<CraftingRecipe> recipes = new ArrayList<>();
+    private static List<RecipeHolder<CraftingRecipe>> createHatDyeRecipe() {
+        List<RecipeHolder<CraftingRecipe>> recipes = new ArrayList<>();
 
         for(HatItem hat : ModRegistry.hatList) {
             if(hat instanceof HatItemDyeable hatDyeable) {
-                ResourceLocation location = new ResourceLocation(SimpleHats.modId, "hatdyeing_" + hat.getHatEntry().getHatName());
-                recipes.add(new ShapelessRecipe(
-                        location,
-                        RecipeTypes.CRAFTING.getUid().getPath(),
+                String location = "simplehats:hatdyeing_" + hat.getHatEntry().getHatName();
+                recipes.add(new RecipeHolder<>(new ResourceLocation(location), new ShapelessRecipe(
+                        "simplehats:hatdyeing",
                         CraftingBookCategory.MISC,
                         new ItemStack(hat),
                         NonNullList.of(
                                 Ingredient.EMPTY,
                                 Ingredient.of(Tags.Items.DYES),
-                                Ingredient.of(hat))));
+                                Ingredient.of(hat)))));
             }
         }
         return recipes;
