@@ -1,9 +1,7 @@
 package fonnymunkey.simplehats.common.recipe;
 
-import fonnymunkey.simplehats.SimpleHats;
 import fonnymunkey.simplehats.common.init.ModRegistry;
 import fonnymunkey.simplehats.common.item.HatItem;
-import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.inventory.RecipeInputInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ShearsItem;
@@ -11,18 +9,17 @@ import net.minecraft.recipe.RecipeSerializer;
 import net.minecraft.recipe.SpecialCraftingRecipe;
 import net.minecraft.recipe.book.CraftingRecipeCategory;
 import net.minecraft.registry.DynamicRegistryManager;
-import net.minecraft.util.Identifier;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.world.World;
 
 public class HatScrapRecipe extends SpecialCraftingRecipe {
-    public HatScrapRecipe(Identifier location, CraftingRecipeCategory category) {
-        super(location, category);
+    public HatScrapRecipe(CraftingRecipeCategory category) {
+        super(category);
     }
 
     @Override
-    public Identifier getId() {
-        return new Identifier(SimpleHats.modId, "hatscraps");
+    public String getGroup() {
+        return "simplehats:hatscraps";
     }
 
     @Override

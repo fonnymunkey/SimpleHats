@@ -23,7 +23,7 @@ public class SimpleHatsClient implements ClientModInitializer {
         for(Item hat : ModRegistry.hatList) {
             if(hat instanceof HatItemDyeable hatDye) {
                 ColorProviderRegistry.ITEM.register((stack, color) -> ((HatItemDyeable)stack.getItem()).getColor(stack), hatDye);
-                CauldronBehavior.WATER_CAULDRON_BEHAVIOR.put(hatDye, CauldronBehavior.CLEAN_DYEABLE_ITEM);
+                CauldronBehavior.WATER_CAULDRON_BEHAVIOR.map().put(hatDye, CauldronBehavior.CLEAN_DYEABLE_ITEM);
             }
             if(hat instanceof TrinketRenderer renderer) {
                 TrinketRendererRegistry.registerRenderer(hat, renderer);

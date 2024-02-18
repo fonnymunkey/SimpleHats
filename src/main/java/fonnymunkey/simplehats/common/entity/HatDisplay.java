@@ -296,8 +296,8 @@ public class HatDisplay extends LivingEntity {
     }
 
     @Override
-    public double getHeightOffset() {
-        return 0.1D;
+    protected float getUnscaledRidingOffset(Entity vehicle) {
+        return 0.1F;
     }
 
     @Override
