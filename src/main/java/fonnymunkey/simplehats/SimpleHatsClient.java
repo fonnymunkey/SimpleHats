@@ -12,7 +12,6 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
-import net.minecraft.block.cauldron.CauldronBehavior;
 import net.minecraft.item.Item;
 
 @Environment(EnvType.CLIENT)
@@ -23,7 +22,6 @@ public class SimpleHatsClient implements ClientModInitializer {
         for(Item hat : ModRegistry.hatList) {
             if(hat instanceof HatItemDyeable hatDye) {
                 ColorProviderRegistry.ITEM.register((stack, color) -> ((HatItemDyeable)stack.getItem()).getColor(stack), hatDye);
-                CauldronBehavior.WATER_CAULDRON_BEHAVIOR.map().put(hatDye, CauldronBehavior.CLEAN_DYEABLE_ITEM);
             }
             if(hat instanceof TrinketRenderer renderer) {
                 TrinketRendererRegistry.registerRenderer(hat, renderer);
