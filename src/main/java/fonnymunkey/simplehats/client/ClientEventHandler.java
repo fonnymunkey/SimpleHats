@@ -6,15 +6,11 @@ import fonnymunkey.simplehats.client.hatdisplay.HatDisplayRenderer;
 import fonnymunkey.simplehats.common.init.ModRegistry;
 import fonnymunkey.simplehats.common.item.HatItem;
 import fonnymunkey.simplehats.common.item.HatItemDyeable;
-import net.minecraft.core.cauldron.CauldronInteraction;
-import net.minecraft.server.packs.PackType;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.RegisterColorHandlersEvent;
-import net.minecraftforge.event.AddPackFindersEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.loading.FMLPaths;
 
 public class ClientEventHandler {
 
@@ -25,7 +21,6 @@ public class ClientEventHandler {
             for(HatItem hat : ModRegistry.hatList) {
                 if(hat instanceof HatItemDyeable hatDye) {
                     event.register((stack, color) -> ((HatItemDyeable)stack.getItem()).getColor(stack), hatDye);
-                    CauldronInteraction.WATER.put(hatDye, CauldronInteraction.DYED_ITEM);
                 }
             }
         }
