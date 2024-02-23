@@ -8,6 +8,7 @@ import fonnymunkey.simplehats.common.item.HatItem;
 import fonnymunkey.simplehats.common.item.HatItemDyeable;
 import fonnymunkey.simplehats.util.HatEntry;
 import fonnymunkey.simplehats.util.UUIDHandler;
+import net.minecraft.core.cauldron.CauldronInteraction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -34,6 +35,8 @@ public class EventHandler {
                 HatItem hat = entry.getHatDyeSettings().getUseDye() ? new HatItemDyeable(entry) : new HatItem(entry);
                 event.getRegistry().register(hat);
                 ModRegistry.hatList.add(hat);
+
+                if(hat instanceof HatItemDyeable) CauldronInteraction.WATER.put((HatItemDyeable)hat, CauldronInteraction.DYED_ITEM);
             }
             SimpleHats.logger.log(Level.INFO, "Generated " + ModRegistry.hatList.size() + " hat items from hat entries.");
         }
