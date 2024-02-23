@@ -10,6 +10,7 @@ import fonnymunkey.simplehats.common.recipe.HatScrapRecipe;
 import fonnymunkey.simplehats.common.recipe.HatVariantRecipe;
 import fonnymunkey.simplehats.util.HatEntry;
 import fonnymunkey.simplehats.util.HatEntry.HatSeason;
+import net.minecraft.block.cauldron.CauldronBehavior;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnGroup;
 import net.minecraft.item.Item;
@@ -57,6 +58,8 @@ public class ModRegistry {
             HatItem hat = entry.getHatDyeSettings().getUseDye() ? new HatItemDyeable(entry) : new HatItem(entry);
             hat = Registry.register(Registries.ITEM, new Identifier(SimpleHats.modId, entry.getHatName()), hat);
             ModRegistry.hatList.add(hat);
+
+            if(hat instanceof HatItemDyeable) CauldronBehavior.WATER_CAULDRON_BEHAVIOR.put((HatItemDyeable)hat, CauldronBehavior.CLEAN_DYEABLE_ITEM);
         }
         SimpleHats.logger.log(Level.INFO, "Generated " + ModRegistry.hatList.size() + " hat items from hat entries.");
     }
