@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public class MixinLivingEntity {
 
     @Inject(method = "getPreferredEquipmentSlot", at = @At("TAIL"), cancellable = true)
-    private static void simplehats_getPreferredEquipmentSlot(ItemStack stack, CallbackInfoReturnable<EquipmentSlot> cir) {
+    private void simplehats_getPreferredEquipmentSlot(ItemStack stack, CallbackInfoReturnable<EquipmentSlot> cir) {
         if(stack.getItem() instanceof HatItem && SimpleHats.config.common.allowHatInHelmetSlot) {
             cir.setReturnValue(EquipmentSlot.HEAD);
         }

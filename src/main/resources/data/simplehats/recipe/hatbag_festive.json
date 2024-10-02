@@ -6,10 +6,10 @@
   ],
   "key": {
     "S": {
-      "item": "simplehats:hatscraps_rare"
+      "item": "simplehats:hatscraps_festive"
     }
   },
   "result": {
-    "item": "simplehats:hatbag_rare"
+    "id": "simplehats:hatbag_festive"
   }
 }

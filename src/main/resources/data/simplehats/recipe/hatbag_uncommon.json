@@ -6,10 +6,10 @@
   ],
   "key": {
     "S": {
-      "item": "simplehats:hatscraps_summer"
+      "item": "simplehats:hatscraps_uncommon"
     }
   },
   "result": {
-    "item": "simplehats:hatbag_summer"
+    "id": "simplehats:hatbag_uncommon"
   }
 }

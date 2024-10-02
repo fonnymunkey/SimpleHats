@@ -4,7 +4,10 @@ import fonnymunkey.simplehats.common.entity.HatDisplay;
 import fonnymunkey.simplehats.common.init.ModRegistry;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnReason;
-import net.minecraft.item.*;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemPlacementContext;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.ItemUsageContext;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
@@ -36,7 +39,7 @@ public class HatDisplayItem extends Item {
             if(level.isSpaceEmpty(null, aabb) && level.getOtherEntities(null, aabb).isEmpty()) {
                 if(level instanceof ServerWorld serverLevel) {
                     Consumer<HatDisplay> consumer = EntityType.nbtCopier(entity -> {}, serverLevel, itemStack, context.getPlayer());
-                    HatDisplay hatDisplay = ModRegistry.HATDISPLAYENTITY.create(serverLevel, itemStack.getNbt(), consumer, pos, SpawnReason.SPAWN_EGG, true, true);
+                    HatDisplay hatDisplay = ModRegistry.HATDISPLAYENTITY.create(serverLevel, consumer, pos, SpawnReason.SPAWN_EGG, true, true);
                     if(hatDisplay == null) return ActionResult.FAIL;
 
                     float f = 0;

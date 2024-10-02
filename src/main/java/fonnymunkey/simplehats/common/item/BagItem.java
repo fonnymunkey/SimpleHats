@@ -47,7 +47,7 @@ public class BagItem extends Item {
         this.rarity = Rarity.EPIC;
     }
 
-    public static SoundEvent getUnwrapFinishSound() { return SoundEvents.ITEM_ARMOR_EQUIP_GENERIC; }
+    public static SoundEvent getUnwrapFinishSound() { return SoundEvents.ITEM_ARMOR_EQUIP_GENERIC.value(); }
 
     @Override
     public TypedActionResult<ItemStack> use(World level, PlayerEntity player, Hand hand) {

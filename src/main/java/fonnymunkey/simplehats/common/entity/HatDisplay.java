@@ -15,7 +15,9 @@ import net.minecraft.entity.projectile.PersistentProjectileEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtList;
+import net.minecraft.nbt.NbtOps;
 import net.minecraft.particle.BlockStateParticleEffect;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.registry.tag.DamageTypeTags;
@@ -93,8 +95,7 @@ public class HatDisplay extends LivingEntity {
         NbtList listTag = new NbtList();
 
         ItemStack itemStack = this.hatItemSlots.get(0);
-        NbtCompound compoundTag = new NbtCompound();
-        if(!itemStack.isEmpty()) itemStack.writeNbt(compoundTag);
+        NbtElement compoundTag = ItemStack.CODEC.encodeStart(NbtOps.INSTANCE, itemStack).mapOrElse(e -> e, $ -> new NbtCompound());
         listTag.add(compoundTag);
 
         compound.put("HatItem", listTag);
@@ -105,7 +106,7 @@ public class HatDisplay extends LivingEntity {
         super.readCustomDataFromNbt(compound);
         if(compound.contains("HatItem", 9)) {
             NbtList listTag = compound.getList("HatItem", 10);
-            this.hatItemSlots.set(0, ItemStack.fromNbt(listTag.getCompound(0)));
+            this.hatItemSlots.set(0, ItemStack.fromNbt(this.getRegistryManager(), listTag.getFirst()).orElse(ItemStack.EMPTY));
         }
     }
 
@@ -275,7 +276,7 @@ public class HatDisplay extends LivingEntity {
 
     private void onBreak(DamageSource source) {
         this.playBreakSound();
-        this.drop(source);
+        this.drop((ServerWorld) this.getWorld(), source);
 
         ItemStack itemStack = this.hatItemSlots.get(0);
         if(!itemStack.isEmpty()) {
@@ -296,8 +297,8 @@ public class HatDisplay extends LivingEntity {
     }
 
     @Override
-    protected float getUnscaledRidingOffset(Entity vehicle) {
-        return 0.1F;
+    public Vec3d getVehicleAttachmentPos(Entity vehicle) {
+        return new Vec3d(0.0, 0.1, 0.0);
     }
 
     @Override
@@ -351,7 +352,7 @@ public class HatDisplay extends LivingEntity {
     }
 
     @Override
-    public EntityDimensions getDimensions(EntityPose pose) {
+    public EntityDimensions getBaseDimensions(EntityPose pose) {
         return this.getType().getDimensions();
     }
 
@@ -370,8 +371,8 @@ public class HatDisplay extends LivingEntity {
     }
 
     @Override
-    protected void initDataTracker() {
-        super.initDataTracker();
-        this.dataTracker.startTracking(DATA_CLIENT_FLAGS, (byte)0);
+    protected void initDataTracker(DataTracker.Builder builder) {
+        super.initDataTracker(builder);
+        builder.add(DATA_CLIENT_FLAGS, (byte)0);
     }
 }

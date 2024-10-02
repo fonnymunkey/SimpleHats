@@ -2,8 +2,8 @@ package fonnymunkey.simplehats.util;
 
 import com.google.gson.annotations.SerializedName;
 import fonnymunkey.simplehats.SimpleHats;
-import net.minecraft.particle.DefaultParticleType;
 import net.minecraft.particle.ParticleTypes;
+import net.minecraft.particle.SimpleParticleType;
 import net.minecraft.registry.Registries;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Rarity;
@@ -132,7 +132,7 @@ public class HatEntry {
         @SerializedName("movement")
         private HatParticleMovement particleMovement;
 
-        private transient DefaultParticleType particleTypeParsed = ParticleTypes.HEART;
+        private transient SimpleParticleType particleTypeParsed = ParticleTypes.HEART;
 
         public HatParticleSettings(boolean useParticle, String particleTypeString, float particleFrequency, HatParticleMovement particleMovement) {
             this.useParticle = useParticle;
@@ -144,7 +144,7 @@ public class HatEntry {
 
         public boolean getUseParticles() { return this.useParticle; }
 
-        public DefaultParticleType getParticleType() { return this.particleTypeParsed; }
+        public SimpleParticleType getParticleType() { return this.particleTypeParsed; }
 
         public float getParticleFrequency() { return this.particleFrequency; }
 
@@ -158,7 +158,12 @@ public class HatEntry {
         }
 
         private void parseParticleString() {
-            this.particleTypeParsed = (DefaultParticleType) Registries.PARTICLE_TYPE.get(new Identifier(this.particleTypeString));
+            var particleType = Registries.PARTICLE_TYPE.get(Identifier.tryParse(this.particleTypeString));
+
+            if (particleType instanceof SimpleParticleType simpleParticleType) {
+                this.particleTypeParsed = simpleParticleType;
+            }
+
             if(this.particleTypeParsed == null) {
                 SimpleHats.logger.log(Level.ERROR, "Particle type \"" + this.particleTypeString + "\" failed to parse, setting default.");
                 this.particleTypeParsed = ParticleTypes.HEART;

@@ -10,7 +10,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RotationAxis;
 public class HatDisplayRenderer extends LivingEntityRenderer<HatDisplay, HatDisplayModel<HatDisplay>> {
-    public static final Identifier HATDISPLAY_TEXTURE = new Identifier(SimpleHats.modId, "textures/entity/hatdisplay.png");
+    public static final Identifier HATDISPLAY_TEXTURE = Identifier.of(SimpleHats.modId, "textures/entity/hatdisplay.png");
     public static final EntityModelLayer HATDISPLAY_LOCATION = new EntityModelLayer(HATDISPLAY_TEXTURE, "main");
 
     public HatDisplayRenderer(EntityRendererFactory.Context context) {
@@ -22,7 +22,8 @@ public class HatDisplayRenderer extends LivingEntityRenderer<HatDisplay, HatDisp
         return HATDISPLAY_TEXTURE;
     }
 
-    protected void setupTransforms(HatDisplay entityLiving, MatrixStack matrixStack, float ageInTicks, float rotationYaw, float partialTicks) {
+    @Override
+    protected void setupTransforms(HatDisplay entityLiving, MatrixStack matrixStack, float animationProgress, float rotationYaw, float partialTicks, float scale) {
         matrixStack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(180.0F - rotationYaw));
         float f = (float)(entityLiving.getWorld().getTime() - entityLiving.lastHit) + partialTicks;
         if(f < 5.0F) matrixStack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(MathHelper.sin(f / 1.5F * (float)Math.PI) * 3.0F));

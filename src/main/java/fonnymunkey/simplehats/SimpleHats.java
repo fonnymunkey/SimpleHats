@@ -10,7 +10,7 @@ import me.shedaniel.autoconfig.serializer.PartitioningSerializer;
 import me.shedaniel.autoconfig.serializer.Toml4jConfigSerializer;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
-import net.fabricmc.fabric.api.loot.v2.LootTableEvents;
+import net.fabricmc.fabric.api.loot.v3.LootTableEvents;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
@@ -35,9 +35,9 @@ public class SimpleHats implements ModInitializer {
     public static Logger logger = LogManager.getLogger();
     public static ModConfig config;
 
-    public static RegistryKey<ItemGroup> HAT_TAB = RegistryKey.of(RegistryKeys.ITEM_GROUP, new Identifier(modId, "hat_group"));
+    public static RegistryKey<ItemGroup> HAT_TAB = RegistryKey.of(RegistryKeys.ITEM_GROUP, Identifier.of(modId, "hat_group"));
 
-    public static final TagKey<Item> ALL_HATS = TagKey.of(RegistryKeys.ITEM, new Identifier(modId, "all_hats"));
+    public static final TagKey<Item> ALL_HATS = TagKey.of(RegistryKeys.ITEM, Identifier.of(modId, "all_hats"));
 
     @Override
     public void onInitialize() {
@@ -108,7 +108,7 @@ public class SimpleHats implements ModInitializer {
 
         FabricDefaultAttributeRegistry.register(ModRegistry.HATDISPLAYENTITY, HatDisplay.createLivingAttributes());
 
-        LootTableEvents.MODIFY.register((resourceManager, lootManager, id, tableBuilder, source) -> {
+        LootTableEvents.MODIFY.register((id, tableBuilder, source, registryLookup) -> {
             if(SimpleHats.config.common.enableChestLoot && ModRegistry.LOOT_HATINJECT_CHEST.contains(id)) {
                 LootPool.Builder pool = LootPool.builder()
                         .with(ItemEntry.builder(ModRegistry.HATBAG_COMMON).weight(SimpleHats.config.common.chestCommonWeight))

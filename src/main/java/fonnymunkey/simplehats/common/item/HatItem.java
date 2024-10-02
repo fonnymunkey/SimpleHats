@@ -6,16 +6,16 @@ import dev.emi.trinkets.api.TrinketItem;
 import dev.emi.trinkets.api.client.TrinketRenderer;
 import fonnymunkey.simplehats.SimpleHats;
 import fonnymunkey.simplehats.util.HatEntry;
-import net.minecraft.client.item.TooltipContext;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.model.EntityModel;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.component.DataComponentTypes;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.tooltip.TooltipType;
 import net.minecraft.text.Text;
-import net.minecraft.world.World;
 
 import java.util.List;
 
@@ -47,10 +47,10 @@ public class HatItem extends TrinketItem implements TrinketRenderer {
         */
     }
     @Override
-    public void appendTooltip(ItemStack itemStack, World level, List<Text> tooltip, TooltipContext flag) {
+    public void appendTooltip(ItemStack itemStack, TooltipContext context, List<Text> tooltip, TooltipType type) {
         if(((HatItem)itemStack.getItem()).getHatEntry().getHatVariantRange()>0) tooltip.add(Text.translatable("tooltip.simplehats.variant"));
         if(((HatItem)itemStack.getItem()).getHatEntry().getHatName().equalsIgnoreCase("special")) {
-            if(itemStack.getNbt()!=null && itemStack.getNbt().getInt("CustomModelData") > 0) {
+            if(itemStack.contains(DataComponentTypes.CUSTOM_MODEL_DATA)) {
                 tooltip.add(Text.translatable("tooltip.simplehats.special_true"));
             }
             else {
