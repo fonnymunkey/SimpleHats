@@ -58,6 +58,7 @@ public class ModRegistry {
     public static final HatItem HATSPECIAL = Registry.register(Registries.ITEM, Identifier.of(SimpleHats.modId, "special"), new HatItem(new HatEntry("special", Rarity.EPIC, 0)));
 
     public static void registerHats() {
+        ModRegistry.hatList.add(HATSPECIAL);
         for(HatEntry entry : HatJson.getHatList()) {
             HatItem hat = entry.getHatDyeSettings().getUseDye() ? new HatItemDyeable(entry) : new HatItem(entry);
             hat = Registry.register(Registries.ITEM, Identifier.of(SimpleHats.modId, entry.getHatName()), hat);

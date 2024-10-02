@@ -2,8 +2,7 @@ package fonnymunkey.simplehats.util;
 
 import com.google.gson.annotations.SerializedName;
 import fonnymunkey.simplehats.SimpleHats;
-import net.minecraft.particle.ParticleTypes;
-import net.minecraft.particle.SimpleParticleType;
+import net.minecraft.particle.*;
 import net.minecraft.registry.Registries;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Rarity;
@@ -132,7 +131,7 @@ public class HatEntry {
         @SerializedName("movement")
         private HatParticleMovement particleMovement;
 
-        private transient SimpleParticleType particleTypeParsed = ParticleTypes.HEART;
+        private transient ParticleType<?> particleTypeParsed = ParticleTypes.HEART;
 
         public HatParticleSettings(boolean useParticle, String particleTypeString, float particleFrequency, HatParticleMovement particleMovement) {
             this.useParticle = useParticle;
@@ -144,7 +143,7 @@ public class HatEntry {
 
         public boolean getUseParticles() { return this.useParticle; }
 
-        public SimpleParticleType getParticleType() { return this.particleTypeParsed; }
+        public ParticleType<?> getParticleType() { return this.particleTypeParsed; }
 
         public float getParticleFrequency() { return this.particleFrequency; }
 
@@ -158,11 +157,7 @@ public class HatEntry {
         }
 
         private void parseParticleString() {
-            var particleType = Registries.PARTICLE_TYPE.get(Identifier.tryParse(this.particleTypeString));
-
-            if (particleType instanceof SimpleParticleType simpleParticleType) {
-                this.particleTypeParsed = simpleParticleType;
-            }
+            this.particleTypeParsed = Registries.PARTICLE_TYPE.get(Identifier.tryParse(this.particleTypeString));
 
             if(this.particleTypeParsed == null) {
                 SimpleHats.logger.log(Level.ERROR, "Particle type \"" + this.particleTypeString + "\" failed to parse, setting default.");

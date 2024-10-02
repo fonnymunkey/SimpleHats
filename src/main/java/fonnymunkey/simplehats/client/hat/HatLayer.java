@@ -18,6 +18,10 @@ import net.minecraft.entity.mob.ZombieVillagerEntity;
 import net.minecraft.entity.passive.VillagerEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.particle.EntityEffectParticleEffect;
+import net.minecraft.particle.ParticleEffect;
+import net.minecraft.particle.ParticleType;
+import net.minecraft.particle.ParticleTypes;
 import net.minecraft.util.math.RotationAxis;
 
 public class HatLayer<T extends LivingEntity, M extends EntityModel<T> & ModelWithHead> extends FeatureRenderer<T, M> {
@@ -72,7 +76,13 @@ public class HatLayer<T extends LivingEntity, M extends EntityModel<T> & ModelWi
 							case TRAILING_FEET -> livingEntity.getY()+0.25;
 							case TRAILING_FULL -> livingEntity.getRandomBodyY();
 						};
-				livingEntity.getWorld().addParticle(particleSettings.getParticleType(), livingEntity.getX() + livingEntity.getRandom().nextFloat() - 0.5, y, livingEntity.getZ() + livingEntity.getRandom().nextFloat() - 0.5, d0, d1,d2);
+				ParticleType<?> particleType = particleSettings.getParticleType();
+				if(particleType instanceof ParticleEffect particleEffect) {
+					livingEntity.getWorld().addParticle(particleEffect, livingEntity.getX() + livingEntity.getRandom().nextFloat() - 0.5, y, livingEntity.getZ() + livingEntity.getRandom().nextFloat() - 0.5, d0, d1,d2);
+				}
+				else if(particleType == ParticleTypes.ENTITY_EFFECT) {
+					livingEntity.getWorld().addParticle(EntityEffectParticleEffect.create(ParticleTypes.ENTITY_EFFECT, livingEntity.getRandom().nextFloat(), livingEntity.getRandom().nextFloat(), livingEntity.getRandom().nextFloat()), livingEntity.getX() + livingEntity.getRandom().nextFloat() - 0.5, y, livingEntity.getZ() + livingEntity.getRandom().nextFloat() - 0.5, d0, d1,d2);
+				}
 			}
 		}
 	}
