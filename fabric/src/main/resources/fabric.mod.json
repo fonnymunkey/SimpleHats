@@ -1,0 +1,40 @@
+{
+    "schemaVersion": 1,
+    "id": "${mod_id}",
+    "version": "${version}",
+    "name": "${mod_name}",
+    "description": "${description}",
+    "authors": [
+        "${mod_author}"
+    ],
+    "contact": {
+        "homepage": "https://www.curseforge.com/minecraft/mc-mods/simplehats",
+        "sources": "https://github.com/fonnymunkey/SimpleHats"
+    },
+    "license": "${license}",
+    "icon": "logo.png",
+    "environment": "*",
+    "entrypoints": {
+        "main": [
+            "fonnymunkey.simplehats.SimpleHatsFabric"
+        ],
+        "client": [
+            "fonnymunkey.simplehats.client.SimpleHatsClient"
+        ]
+    },
+    "mixins": [
+        "${mod_id}.fabric.mixins.json"
+    ],
+    "depends": {
+        "fabricloader": ">=${fabric_loader_version}",
+        "fabric-api": "*",
+        "minecraft": "${minecraft_version}",
+        "java": ">=${java_version}",
+    	"accessories": ">=${accessories_version}",
+        "owo": ">=${owo_version}"
+    },
+    "suggests": {
+        "another-mod": "*"
+    }
+}
+  
