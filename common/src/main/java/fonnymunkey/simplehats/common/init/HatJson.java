@@ -180,6 +180,7 @@ public class HatJson {
             new HatEntry("rgbushanka", Rarity.EPIC, 5, 0),
             new HatEntry("rock", Rarity.UNCOMMON, 5, 0),
             new HatEntry("rubbernipple", Rarity.COMMON, 5, 0),
+            new HatEntry("samuraihat", Rarity.UNCOMMON, 5, 0),
             new HatEntry("sandcastle", Rarity.EPIC, 5, 0, HatEntry.HatSeason.SUMMER),
             new HatEntry("santaclaus", Rarity.RARE, 5, 1, HatEntry.HatSeason.FESTIVE),
             new HatEntry("sausage", Rarity.COMMON, 5, 0),
