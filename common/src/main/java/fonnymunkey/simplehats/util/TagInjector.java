@@ -2,12 +2,9 @@ package fonnymunkey.simplehats.util;
 
 import com.google.common.collect.ForwardingMap;
 import net.minecraft.core.Registry;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagEntry;
-import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import net.minecraft.tags.TagManager;
 
 import java.util.*;
 import java.util.function.Function;
@@ -19,17 +16,16 @@ import java.util.function.Function;
  */
 public final class TagInjector {
     
-    @ApiStatus.Internal
     public static final HashMap<TagLocation, Set<TagEntry>> ADDITIONS = new HashMap<>();
     
     private static final Map<TagLocation, Set<TagEntry>> ADDITIONS_VIEW = new ForwardingMap<>() {
         @Override
-        protected @NotNull Map<TagLocation, Set<TagEntry>> delegate() {
+        protected Map<TagLocation, Set<TagEntry>> delegate() {
             return Collections.unmodifiableMap(ADDITIONS);
         }
         
         @Override
-        public Set<TagEntry> get(@Nullable Object key) {
+        public Set<TagEntry> get(Object key) {
             return Collections.unmodifiableSet(this.delegate().get(key));
         }
     };
@@ -56,7 +52,7 @@ public final class TagInjector {
      * @param values     The values to insert
      */
     public static void injectRaw(Registry<?> registry, ResourceLocation tag, Function<ResourceLocation, TagEntry> entryMaker, Collection<ResourceLocation> values) {
-        ADDITIONS.computeIfAbsent(new TagLocation(Registries.tagsDirPath(registry.key()), tag), identifier -> new HashSet<>())
+        ADDITIONS.computeIfAbsent(new TagLocation(TagManager.getTagDir(registry.key()), tag), identifier -> new HashSet<>())
                  .addAll(values.stream().map(entryMaker).toList());
     }
     

@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "SLS",
+    "LLL"
+  ],
+  "key": {
+    "L": {
+      "item": "minecraft:leather"
+    },
+    "S": {
+      "item": "minecraft:string"
+    }
+  },
+  "result": {
+    "item": "simplehats:special"
+  }
+}

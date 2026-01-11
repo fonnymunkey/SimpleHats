@@ -32,9 +32,9 @@ public class HatDisplayModel<T extends Entity> extends EntityModel<HatDisplay> {
 
     @Override
     public void setupAnim(HatDisplay entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) { }
-
+    
     @Override
-    public void renderToBuffer(PoseStack poseStack, VertexConsumer vertexConsumer, int packedLight, int packedOverlay, int color) {
-        bb_main.render(poseStack, vertexConsumer, packedLight, packedOverlay, color);
+    public void renderToBuffer(PoseStack poseStack, VertexConsumer vertexConsumer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+        bb_main.render(poseStack, vertexConsumer, packedLight, packedOverlay, red, green, blue, alpha);
     }
 }

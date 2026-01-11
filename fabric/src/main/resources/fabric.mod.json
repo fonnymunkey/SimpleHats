@@ -20,6 +20,9 @@
         ],
         "client": [
             "fonnymunkey.simplehats.client.SimpleHatsClient"
+        ],
+        "modmenu": [
+            "fonnymunkey.simplehats.compat.ModMenuPlugin"
         ]
     },
     "mixins": [
@@ -30,8 +33,7 @@
         "fabric-api": "*",
         "minecraft": "${minecraft_version}",
         "java": ">=${java_version}",
-    	"accessories": ">=${accessories_version}",
-        "owo": ">=${owo_version}"
+    	"accessories": ">=${accessories_version}"
     },
     "suggests": {
         "another-mod": "*"

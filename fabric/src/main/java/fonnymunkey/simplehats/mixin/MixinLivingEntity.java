@@ -18,7 +18,7 @@ public abstract class MixinLivingEntity {
             at = @At("TAIL"),
             cancellable = true
     )
-    private void simplehats_getPreferredEquipmentSlot(ItemStack stack, CallbackInfoReturnable<EquipmentSlot> cir) {
+    private static void simplehats_getPreferredEquipmentSlot(ItemStack stack, CallbackInfoReturnable<EquipmentSlot> cir) {
         if(stack.getItem() instanceof HatItem && SimpleHatsConfigAbstract.allowHatInHelmetSlot()) {
             cir.setReturnValue(EquipmentSlot.HEAD);
         }

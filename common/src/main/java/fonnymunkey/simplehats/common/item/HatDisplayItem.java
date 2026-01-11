@@ -44,7 +44,7 @@ public class HatDisplayItem extends Item {
             if(level.noCollision(null, aabb) && level.getEntities(null, aabb).isEmpty()) {
                 if(level instanceof ServerLevel serverLevel) {
                     Consumer<HatDisplay> consumer = EntityType.appendCustomEntityStackConfig((entity) -> {}, serverLevel, itemStack, context.getPlayer());
-                    HatDisplay hatDisplay = SimpleHatsCommon.MOD_REGISTRY.getHatDisplayEntity().create(serverLevel, consumer, pos, MobSpawnType.SPAWN_EGG, true, true);
+                    HatDisplay hatDisplay = SimpleHatsCommon.MOD_REGISTRY.getHatDisplayEntity().create(serverLevel, itemStack.getTag(), consumer, pos, MobSpawnType.SPAWN_EGG, true, true);
                     if(hatDisplay == null) return InteractionResult.FAIL;
                     
                     float f = 0;

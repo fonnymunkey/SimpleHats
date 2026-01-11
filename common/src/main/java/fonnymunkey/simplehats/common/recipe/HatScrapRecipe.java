@@ -3,35 +3,36 @@ package fonnymunkey.simplehats.common.recipe;
 import fonnymunkey.simplehats.Constants;
 import fonnymunkey.simplehats.SimpleHatsCommon;
 import fonnymunkey.simplehats.common.item.HatItem;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.RegistryAccess;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ShearsItem;
 import net.minecraft.world.item.crafting.CraftingBookCategory;
-import net.minecraft.world.item.crafting.CraftingInput;
 import net.minecraft.world.item.crafting.CustomRecipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.Level;
 
 public class HatScrapRecipe extends CustomRecipe {
     
-    public HatScrapRecipe(CraftingBookCategory category) {
-        super(category);
+    public HatScrapRecipe(ResourceLocation location, CraftingBookCategory category) {
+        super(location, category);
     }
-
+    
     @Override
-    public String getGroup() {
-        return Constants.MOD_ID + ":hatscraps";
+    public ResourceLocation getId() {
+        return new ResourceLocation(Constants.MOD_ID, "hatscraps");
     }
-
+    
     @Override
-    public boolean matches(CraftingInput craftingInventory, Level level) {
+    public boolean matches(CraftingContainer craftingInventory, Level level) {
         int[] list = processInventory(craftingInventory);
         return list[0] != -1 && list[1] != -1;
     }
-
+    
     @Override
-    public ItemStack assemble(CraftingInput craftingInventory, HolderLookup.Provider lookup) {
+    public ItemStack assemble(CraftingContainer craftingInventory, RegistryAccess reg) {
         int[] list  = processInventory(craftingInventory);
         if(list[0] != -1 && list[1] != -1) {
             return switch(((HatItem)craftingInventory.getItem(list[0]).getItem()).getHatEntry().getHatSeason()) {
@@ -48,12 +49,12 @@ public class HatScrapRecipe extends CustomRecipe {
         }
         return ItemStack.EMPTY;
     }
-
+    
     @Override
-    public NonNullList<ItemStack> getRemainingItems(CraftingInput craftingInventory) {
-        NonNullList<ItemStack> remainList = NonNullList.withSize(craftingInventory.size(), ItemStack.EMPTY);
-
-        for(int i = 0; i < craftingInventory.size(); ++i) {
+    public NonNullList<ItemStack> getRemainingItems(CraftingContainer craftingInventory) {
+        NonNullList<ItemStack> remainList = NonNullList.withSize(craftingInventory.getContainerSize(), ItemStack.EMPTY);
+        
+        for(int i = 0; i < craftingInventory.getContainerSize(); ++i) {
             ItemStack slot = craftingInventory.getItem(i);
             if(!slot.isEmpty() && slot.getItem() instanceof ShearsItem) {
                 ItemStack slot1 = slot.copy();
@@ -69,11 +70,11 @@ public class HatScrapRecipe extends CustomRecipe {
         }
         return remainList;
     }
-
-    private static int[] processInventory(CraftingInput craftingInventory) {
+    
+    private static int[] processInventory(CraftingContainer craftingInventory) {
         int totalItems = 0;
         int[] list = new int[]{-1, -1};
-        for(int i =0; i < craftingInventory.size(); i++) {
+        for(int i =0; i < craftingInventory.getContainerSize(); i++) {
             ItemStack slot = craftingInventory.getItem(i);
             if(!slot.isEmpty()) {
                 totalItems++;

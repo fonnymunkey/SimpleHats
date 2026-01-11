@@ -9,7 +9,6 @@ import io.wispforest.accessories.api.client.AccessoryRenderer;
 import io.wispforest.accessories.api.slot.SlotReference;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
@@ -17,6 +16,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.level.Level;
 
 import java.util.List;
 
@@ -37,18 +37,18 @@ public class HatItem extends AccessoryItem implements AccessoryRenderer {
     }
 
     @Override
-    public void appendHoverText(ItemStack itemStack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
-        if(((HatItem)itemStack.getItem()).getHatEntry().getHatVariantRange()>0) tooltipComponents.add(Component.translatable("tooltip.simplehats.variant"));
+    public void appendHoverText(ItemStack itemStack, Level level, List<Component> tooltip, TooltipFlag flag) {
+        if(((HatItem)itemStack.getItem()).getHatEntry().getHatVariantRange()>0) tooltip.add(Component.translatable("tooltip.simplehats.variant"));
         if(((HatItem)itemStack.getItem()).getHatEntry().getHatName().equalsIgnoreCase("special")) {
-            if(itemStack.has(DataComponents.CUSTOM_MODEL_DATA)) {
-                tooltipComponents.add(Component.translatable("tooltip.simplehats.special_true"));
+            if(itemStack.getTag()!=null && itemStack.getTag().getInt("CustomModelData") > 0) {
+                tooltip.add(Component.translatable("tooltip.simplehats.special_true"));
             }
             else {
-                tooltipComponents.add(Component.translatable("tooltip.simplehats.special_false"));
+                tooltip.add(Component.translatable("tooltip.simplehats.special_false"));
             }
         }
     }
-
+    
     @Override
     public DropRule getDropRule(ItemStack stack, SlotReference slot, DamageSource source) {
         if(slot.entity() instanceof Player && SimpleHatsConfigAbstract.keepHatOnDeath()) return DropRule.KEEP;

@@ -8,8 +8,6 @@ import net.minecraft.core.particles.BlockParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.NbtOps;
-import net.minecraft.nbt.Tag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -24,6 +22,7 @@ import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
@@ -93,11 +92,12 @@ public class HatDisplay extends LivingEntity {
     public void addAdditionalSaveData(CompoundTag compound) {
         super.addAdditionalSaveData(compound);
         ListTag listTag = new ListTag();
-
+        
         ItemStack itemStack = this.hatItemSlots.get(0);
-        Tag compoundTag = ItemStack.CODEC.encodeStart(NbtOps.INSTANCE, itemStack).mapOrElse(e -> e, $ -> new CompoundTag());
+        CompoundTag compoundTag = new CompoundTag();
+        if(!itemStack.isEmpty()) itemStack.save(compoundTag);
         listTag.add(compoundTag);
-
+        
         compound.put("HatItem", listTag);
     }
 
@@ -106,7 +106,7 @@ public class HatDisplay extends LivingEntity {
         super.readAdditionalSaveData(compound);
         if(compound.contains("HatItem", 9)) {
             ListTag listTag = compound.getList("HatItem", 10);
-            this.hatItemSlots.set(0, ItemStack.parse(this.registryAccess(), listTag.getFirst()).orElse(ItemStack.EMPTY));
+            this.hatItemSlots.set(0, ItemStack.of(listTag.getCompound(0)));
         }
     }
 
@@ -150,7 +150,7 @@ public class HatDisplay extends LivingEntity {
     private boolean swapItem(Player player, ItemStack stack, InteractionHand hand) {
         ItemStack itemStack = this.getItemBySlot(null);
         if(!stack.isEmpty() && !(stack.getItem() instanceof HatItem)) return false;
-        if(player.hasInfiniteMaterials() && itemStack.isEmpty() && !stack.isEmpty()) {
+        if(player.getAbilities().instabuild && itemStack.isEmpty() && !stack.isEmpty()) {
             ItemStack itemStack2 = stack.copy();
             itemStack2.setCount(1);
             this.setItemSlot(null, itemStack2);
@@ -194,7 +194,7 @@ public class HatDisplay extends LivingEntity {
                             this.updateHealth(serverLevel, source, 0.15F);
                         }
                         else {
-                            this.igniteForSeconds(5);
+                            this.setSecondsOnFire(5);
                         }
                         return false;
                     }
@@ -203,8 +203,9 @@ public class HatDisplay extends LivingEntity {
                         return false;
                     }
                     else {
-                        boolean flag1 = source.is(DamageTypeTags.CAN_BREAK_ARMOR_STAND);
-                        boolean flag = source.is(DamageTypeTags.ALWAYS_KILLS_ARMOR_STANDS);
+                        boolean flag = source.getDirectEntity() instanceof AbstractArrow;
+                        boolean flag1 = flag && ((AbstractArrow)source.getDirectEntity()).getPierceLevel() > 0;
+                        boolean flag2 = "player".equals(source.getMsgId());
                         if (!flag1 && !flag) {
                             return false;
                         } else {
@@ -289,7 +290,7 @@ public class HatDisplay extends LivingEntity {
 
     private void onBreak(ServerLevel level, DamageSource source) {
         this.playBreakSound();
-        this.dropAllDeathLoot(level, source);
+        this.dropAllDeathLoot(source);
 
         ItemStack itemStack = this.hatItemSlots.get(0);
         if(!itemStack.isEmpty()) {
@@ -310,8 +311,8 @@ public class HatDisplay extends LivingEntity {
     }
     
     @Override
-    public Vec3 getVehicleAttachmentPoint(Entity vehicle) {
-        return new Vec3(0.0, 0.1, 0.0);
+    public double getMyRidingOffset() {
+        return 0.1D;
     }
 
     @Override
@@ -363,9 +364,9 @@ public class HatDisplay extends LivingEntity {
     public boolean attackable() {
         return false;
     }
-
+    
     @Override
-    public EntityDimensions getDefaultDimensions(Pose pose) {
+    public EntityDimensions getDimensions(Pose pose) {
         return this.getType().getDimensions();
     }
 
@@ -384,8 +385,8 @@ public class HatDisplay extends LivingEntity {
     }
 
     @Override
-    protected void defineSynchedData(SynchedEntityData.Builder builder) {
-        super.defineSynchedData(builder);
-        builder.define(DATA_CLIENT_FLAGS, (byte)0);
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        this.entityData.define(DATA_CLIENT_FLAGS, (byte)0);
     }
 }

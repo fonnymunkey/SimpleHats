@@ -1,0 +1,65 @@
+plugins {
+    id 'multiloader-loader'
+    id 'net.neoforged.moddev.legacyforge'
+}
+
+mixin {
+    add(sourceSets.main, "${mod_id}.refmap.json")
+
+    config("${mod_id}.forge.mixins.json")
+}
+
+legacyForge {
+    version = "${minecraft_version}-${forge_version}"
+
+    validateAccessTransformers = true
+
+    def at = project(':common').file('src/main/resources/META-INF/accesstransformer.cfg')
+    if (at.exists()) {
+        accessTransformers = ["src/main/resources/META-INF/accesstransformer.cfg"]
+    }
+    parchment {
+        minecraftVersion = parchment_minecraft
+        mappingsVersion = parchment_version
+    }
+    runs {
+        client {
+            client()
+        }
+        data {
+            data()
+            programArguments.addAll '--mod', project.mod_id, '--all', '--output', file('src/generated/resources/').getAbsolutePath(), '--existing', file('src/main/resources/').getAbsolutePath()
+        }
+        server {
+            server()
+        }
+    }
+
+    mods {
+        "${mod_id}" {
+            sourceSet sourceSets.main
+        }
+    }
+}
+
+sourceSets.main.resources.srcDir 'src/generated/resources'
+
+repositories {
+    maven { url = "https://maven.wispforest.io/releases" }
+    maven { url "https://maven.shedaniel.me/" }
+    maven { url "https://maven.su5ed.dev/releases" }
+}
+
+dependencies {
+    compileOnly project(":common")
+    annotationProcessor("org.spongepowered:mixin:0.8.5-SNAPSHOT:processor")
+    implementation("io.wispforest:accessories-neoforge:${accessories_version}")
+    modImplementation("me.shedaniel.cloth:cloth-config-forge:${cloth_version}")
+}
+
+jar {
+    finalizedBy('reobfJar')
+    manifest.attributes([
+            "MixinConfigs": "${mod_id}.forge.mixins.json"
+    ])
+}

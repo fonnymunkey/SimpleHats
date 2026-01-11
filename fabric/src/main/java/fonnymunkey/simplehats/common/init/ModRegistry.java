@@ -12,6 +12,7 @@ import fonnymunkey.simplehats.common.recipe.HatVariantRecipe;
 import fonnymunkey.simplehats.util.HatEntry;
 import fonnymunkey.simplehats.util.HatEntry.HatSeason;
 import fonnymunkey.simplehats.util.TagInjector;
+import io.wispforest.accessories.api.AccessoriesAPI;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.minecraft.core.Registry;
 import net.minecraft.core.cauldron.CauldronInteraction;
@@ -20,7 +21,6 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.ItemTags;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.item.CreativeModeTab;
@@ -94,10 +94,7 @@ public class ModRegistry implements IModRegistry {
             hat = Registry.register(BuiltInRegistries.ITEM, ResourceLocation.tryBuild(Constants.MOD_ID, entry.getHatName()), hat);
             SimpleHatsCommon.MOD_REGISTRY.getHatList().add(hat);
 
-            if(hat instanceof HatItemDyeable) {
-                CauldronInteraction.WATER.map().put((HatItemDyeable)hat, CauldronInteraction.DYED_ITEM);
-                TagInjector.inject(BuiltInRegistries.ITEM, ItemTags.DYEABLE.location(), hat);
-            }
+            if(hat instanceof HatItemDyeable) CauldronInteraction.WATER.put((HatItemDyeable)hat, CauldronInteraction.DYED_ITEM);
         }
         Constants.LOG.info("Generated " + SimpleHatsCommon.MOD_REGISTRY.getHatList().size() + " hat items from hat entries.");
 

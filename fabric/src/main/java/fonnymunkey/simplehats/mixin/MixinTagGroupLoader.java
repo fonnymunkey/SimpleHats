@@ -38,7 +38,7 @@ public abstract class MixinTagGroupLoader {
             if (!this.directory.equals(location.type())) return;
 
             var list = map.computeIfAbsent(location.tagId(), id -> new ArrayList<>());
-            entries.forEach(addition -> list.add(new TagLoader.EntryWithSource(addition, "owo")));
+            entries.forEach(addition -> list.add(new TagLoader.EntryWithSource(addition, "simplehats")));
         });
     }
 }

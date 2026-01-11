@@ -44,7 +44,7 @@ public class BagItem extends Item {
     }
 
     public static SoundEvent getUnwrapFinishSound() {
-        return SoundEvents.ARMOR_EQUIP_GENERIC.value();
+        return SoundEvents.ARMOR_EQUIP_GENERIC;
     }
 
     @Override

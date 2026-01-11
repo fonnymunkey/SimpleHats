@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "L",
+    "W"
+  ],
+  "key": {
+    "L": {
+      "tag": "minecraft:logs"
+    },
+    "W": {
+      "tag": "minecraft:wooden_slabs"
+    }
+  },
+  "result": {
+    "item": "simplehats:hatdisplay"
+  }
+}

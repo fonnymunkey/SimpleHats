@@ -16,10 +16,8 @@ import net.minecraft.client.model.HeadedModel;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
-import net.minecraft.core.particles.ColorParticleOption;
+import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
-import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.monster.ZombieVillager;
 import net.minecraft.world.entity.npc.Villager;
@@ -93,11 +91,8 @@ public class HatLayer<T extends LivingEntity, M extends EntityModel<T> & HeadedM
 							case TRAILING_FULL -> livingEntity.getRandomY();
 						};
 				ParticleType<?> particleType = particleSettings.getParticleType();
-				if(particleType instanceof SimpleParticleType particleEffect) {
+				if(particleType instanceof ParticleOptions particleEffect) {
 					livingEntity.level().addParticle(particleEffect, livingEntity.getX() + livingEntity.getRandom().nextFloat() - 0.5, y, livingEntity.getZ() + livingEntity.getRandom().nextFloat() - 0.5, d0, d1,d2);
-				}
-				else if(particleType == ParticleTypes.ENTITY_EFFECT) {
-					livingEntity.level().addParticle(ColorParticleOption.create(ParticleTypes.ENTITY_EFFECT, livingEntity.getRandom().nextFloat(), livingEntity.getRandom().nextFloat(), livingEntity.getRandom().nextFloat()), livingEntity.getX() + livingEntity.getRandom().nextFloat() - 0.5, y, livingEntity.getZ() + livingEntity.getRandom().nextFloat() - 0.5, d0, d1, d2);
 				}
 			}
 		}

@@ -5,7 +5,7 @@ import fonnymunkey.simplehats.common.init.ModRegistry;
 import fonnymunkey.simplehats.common.init.SimpleHatsConfigAbstract;
 import fonnymunkey.simplehats.loot.LootRegistry;
 import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.loot.v3.LootTableEvents;
+import net.fabricmc.fabric.api.loot.v2.LootTableEvents;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.storage.loot.LootPool;
@@ -24,7 +24,7 @@ public class SimpleHatsFabric implements ModInitializer {
         
         FabricDefaultAttributeRegistry.register(SimpleHatsCommon.MOD_REGISTRY.getHatDisplayEntity(), HatDisplay.createAttributes().build());
         
-        LootTableEvents.MODIFY.register((id, tableBuilder, source, registryLookup) -> {
+        LootTableEvents.MODIFY.register((resourceManager, lootManager, id, tableBuilder, source) -> {
             if(SimpleHatsConfigAbstract.enableChestLoot() && LootRegistry.LOOT_HATINJECT_CHEST.contains(id)) {
                 LootPool.Builder pool = LootPool.lootPool()
                                                 .with(LootItem.lootTableItem(SimpleHatsCommon.MOD_REGISTRY.getHatBagCommon()).setWeight(SimpleHatsConfigAbstract.chestCommonWeight()).build())
