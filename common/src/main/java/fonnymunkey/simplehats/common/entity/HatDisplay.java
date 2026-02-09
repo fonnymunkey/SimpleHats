@@ -177,70 +177,65 @@ public class HatDisplay extends LivingEntity {
 
     @Override
     public boolean hurt(DamageSource source, float amount) {
-        if(!this.isRemoved()) {
-            if(this.level() instanceof ServerLevel serverLevel) {
-                if(source.is(DamageTypeTags.BYPASSES_INVULNERABILITY)) {
+        if(!this.level().isClientSide && !this.isRemoved()) {
+            if(source.is(DamageTypeTags.BYPASSES_INVULNERABILITY)) {
+                this.kill();
+                return false;
+            }
+            else if(!this.isInvulnerableTo(source)) {
+                if(source.is(DamageTypeTags.IS_EXPLOSION)) {
+                    this.onBreak(source);
                     this.kill();
                     return false;
                 }
-                else if(!this.isInvulnerableTo(source)) {
-                    if(source.is(DamageTypeTags.IS_EXPLOSION)) {
-                        this.onBreak(serverLevel, source);
-                        this.kill();
-                        return false;
-                    }
-                    else if(source.is(DamageTypeTags.IGNITES_ARMOR_STANDS)) {
-                        if(this.isOnFire()) {
-                            this.updateHealth(serverLevel, source, 0.15F);
-                        }
-                        else {
-                            this.setSecondsOnFire(5);
-                        }
-                        return false;
-                    }
-                    else if(source.is(DamageTypeTags.BURNS_ARMOR_STANDS) && this.getHealth() > 0.5F) {
-                        this.updateHealth(serverLevel, source, 4.0F);
-                        return false;
+                else if(source.is(DamageTypeTags.IGNITES_ARMOR_STANDS)) {
+                    if(this.isOnFire()) {
+                        this.updateHealth(source, 0.15F);
                     }
                     else {
-                        boolean flag = source.getDirectEntity() instanceof AbstractArrow;
-                        boolean flag1 = flag && ((AbstractArrow)source.getDirectEntity()).getPierceLevel() > 0;
-                        boolean flag2 = "player".equals(source.getMsgId());
-                        if (!flag1 && !flag) {
-                            return false;
-                        } else {
-                            Entity var7 = source.getEntity();
-                            if (var7 instanceof Player) {
-                                Player player = (Player)var7;
-                                if (!player.getAbilities().mayBuild) {
-                                    return false;
-                                }
-                            }
-                            
-                            if (source.isCreativePlayer()) {
-                                this.playBreakSound();
-                                this.spawnBreakParticles();
-                                this.kill();
-                                return true;
-                            } else {
-                                long i = serverLevel.getGameTime();
-                                if (i - this.lastHit > 5L && !flag) {
-                                    serverLevel.broadcastEntityEvent(this, (byte)32);
-                                    this.gameEvent(GameEvent.ENTITY_DAMAGE, source.getEntity());
-                                    this.lastHit = i;
-                                } else {
-                                    this.breakAndDropItem(serverLevel, source);
-                                    this.spawnBreakParticles();
-                                    this.kill();
-                                }
-                                
-                                return true;
-                            }
-                        }
+                        this.setSecondsOnFire(5);
                     }
+                    return false;
+                }
+                else if(source.is(DamageTypeTags.BURNS_ARMOR_STANDS) && this.getHealth() > 0.5F) {
+                    this.updateHealth(source, 4.0F);
+                    return false;
                 }
                 else {
-                    return false;
+                    boolean flag = source.getDirectEntity() instanceof AbstractArrow;
+                    boolean flag1 = flag && ((AbstractArrow)source.getDirectEntity()).getPierceLevel() > 0;
+                    boolean flag2 = "player".equals(source.getMsgId());
+                    if (!flag2 && !flag) {
+                        return false;
+                    } else {
+                        Entity var7 = source.getEntity();
+                        if (var7 instanceof Player) {
+                            Player player = (Player)var7;
+                            if (!player.getAbilities().mayBuild) {
+                                return false;
+                            }
+                        }
+                        
+                        if (source.isCreativePlayer()) {
+                            this.playBreakSound();
+                            this.spawnBreakParticles();
+                            this.kill();
+                            return flag1;
+                        } else {
+                            long i = this.level().getGameTime();
+                            if (i - this.lastHit > 5L && !flag) {
+                                this.level().broadcastEntityEvent(this, (byte)32);
+                                this.gameEvent(GameEvent.ENTITY_DAMAGE, source.getEntity());
+                                this.lastHit = i;
+                            } else {
+                                this.breakAndDropItem(source);
+                                this.spawnBreakParticles();
+                                this.kill();
+                            }
+                            
+                            return true;
+                        }
+                    }
                 }
             }
             else {
@@ -271,10 +266,10 @@ public class HatDisplay extends LivingEntity {
         }
     }
 
-    private void updateHealth(ServerLevel level, DamageSource source, float dmg) {
+    private void updateHealth(DamageSource source, float dmg) {
         float f = this.getHealth() - dmg;
         if(f <= 0.5F) {
-            this.onBreak(level, source);
+            this.onBreak(source);
             this.kill();
         }
         else {
@@ -283,12 +278,12 @@ public class HatDisplay extends LivingEntity {
         }
     }
 
-    private void breakAndDropItem(ServerLevel level, DamageSource source) {
+    private void breakAndDropItem(DamageSource source) {
         Block.popResource(this.level(), this.blockPosition(), new ItemStack(SimpleHatsCommon.MOD_REGISTRY.getHatDisplayItem()));
-        this.onBreak(level, source);
+        this.onBreak(source);
     }
 
-    private void onBreak(ServerLevel level, DamageSource source) {
+    private void onBreak(DamageSource source) {
         this.playBreakSound();
         this.dropAllDeathLoot(source);
 
