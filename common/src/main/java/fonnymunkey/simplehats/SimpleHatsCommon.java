@@ -2,6 +2,7 @@ package fonnymunkey.simplehats;
 
 import fonnymunkey.simplehats.common.init.HatJson;
 import fonnymunkey.simplehats.common.init.IModRegistry;
+import fonnymunkey.simplehats.common.init.SimpleHatsConfig;
 import fonnymunkey.simplehats.platform.Services;
 
 import net.minecraft.core.registries.Registries;
