@@ -1,13 +1,13 @@
 package fonnymunkey.simplehats.platform;
 
+import java.io.File;
+
 import fonnymunkey.simplehats.common.init.IModRegistry;
 import fonnymunkey.simplehats.common.init.ModRegistry;
 import fonnymunkey.simplehats.platform.services.IPlatformHelper;
 import net.neoforged.fml.ModList;
 import net.neoforged.fml.loading.FMLLoader;
 import net.neoforged.fml.loading.FMLPaths;
-
-import java.io.File;
 
 public class NeoForgePlatformHelper implements IPlatformHelper {
 
@@ -23,7 +23,7 @@ public class NeoForgePlatformHelper implements IPlatformHelper {
 
     @Override
     public boolean isDevelopmentEnvironment() {
-        return !FMLLoader.isProduction();
+        return !FMLLoader.getCurrent().isProduction();
     }
     
     @Override

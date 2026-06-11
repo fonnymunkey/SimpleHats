@@ -1,0 +1,12 @@
+{
+    "model": {
+        "type": "minecraft:model",
+        "model": "simplehats:item/cowboy",
+        "tints": [
+            {
+                "type": "minecraft:dye",
+                "default": -1
+            }
+        ]
+    }
+}

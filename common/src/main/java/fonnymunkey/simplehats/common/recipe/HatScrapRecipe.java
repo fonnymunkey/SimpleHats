@@ -1,26 +1,31 @@
 package fonnymunkey.simplehats.common.recipe;
 
+import com.mojang.serialization.MapCodec;
 import fonnymunkey.simplehats.Constants;
 import fonnymunkey.simplehats.SimpleHatsCommon;
 import fonnymunkey.simplehats.common.item.HatItem;
-import net.minecraft.core.HolderLookup;
+
 import net.minecraft.core.NonNullList;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ShearsItem;
-import net.minecraft.world.item.crafting.CraftingBookCategory;
 import net.minecraft.world.item.crafting.CraftingInput;
 import net.minecraft.world.item.crafting.CustomRecipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.Level;
 
 public class HatScrapRecipe extends CustomRecipe {
+    public static final HatScrapRecipe INSTANCE = new HatScrapRecipe();
+    public static final MapCodec<HatScrapRecipe> CODEC = MapCodec.unit(INSTANCE);
+    public static final StreamCodec<RegistryFriendlyByteBuf, HatScrapRecipe> STREAM_CODEC = StreamCodec.unit(INSTANCE);
     
-    public HatScrapRecipe(CraftingBookCategory category) {
-        super(category);
+    private HatScrapRecipe() {
+        super();
     }
 
     @Override
-    public String getGroup() {
+    public String group() {
         return Constants.MOD_ID + ":hatscraps";
     }
 
@@ -31,7 +36,7 @@ public class HatScrapRecipe extends CustomRecipe {
     }
 
     @Override
-    public ItemStack assemble(CraftingInput craftingInventory, HolderLookup.Provider lookup) {
+    public ItemStack assemble(CraftingInput craftingInventory) {
         int[] list  = processInventory(craftingInventory);
         if(list[0] != -1 && list[1] != -1) {
             return switch(((HatItem)craftingInventory.getItem(list[0]).getItem()).getHatEntry().getHatSeason()) {
@@ -85,13 +90,13 @@ public class HatScrapRecipe extends CustomRecipe {
         return new int[]{-1, -1};
     }
 
-    @Override
-    public boolean canCraftInDimensions(int width, int height) {
-        return width*height >= 2;
-    }
+//    @Override
+//    public boolean canCraftInDimensions(int width, int height) {
+//        return width*height >= 2;
+//    }
 
     @Override
-    public RecipeSerializer<?> getSerializer() {
+    public RecipeSerializer<? extends CustomRecipe> getSerializer() {
         return SimpleHatsCommon.MOD_REGISTRY.getHatScrapSerializer();
     }
 }

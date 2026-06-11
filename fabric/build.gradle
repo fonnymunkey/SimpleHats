@@ -1,6 +1,6 @@
 plugins {
     id 'multiloader-loader'
-    id 'fabric-loom'
+    id 'net.fabricmc.fabric-loom'
 }
 
 repositories {
@@ -9,24 +9,20 @@ repositories {
 	
 dependencies {
     minecraft "com.mojang:minecraft:${minecraft_version}"
-    mappings loom.layered {
-        officialMojangMappings()
-        parchment("org.parchmentmc.data:parchment-${parchment_minecraft}:${parchment_version}@zip")
-    }
-    modImplementation "net.fabricmc:fabric-loader:${fabric_loader_version}"
-    modImplementation "net.fabricmc.fabric-api:fabric-api:${fabric_version}"
 
-    annotationProcessor modImplementation("io.wispforest:owo-lib:${owo_version}")
-	modImplementation("io.wispforest:accessories-fabric:${accessories_version}")
+    implementation "net.fabricmc:fabric-loader:${fabric_loader_version}"
+    implementation "net.fabricmc.fabric-api:fabric-api:${fabric_version}"
+
+    annotationProcessor implementation("io.wispforest:owo-lib:${owo_version}")
+	compileOnly("io.wispforest:accessories-fabric:${accessories_version}") // TODO: Accessories isn't updated yet
+
+    implementation("eu.pb4:trinkets:${trinkets_version}")
 }
 
 loom {
-    def aw = project(':common').file("src/main/resources/${mod_id}.accesswidener")
+    def aw = file("src/main/resources/${mod_id}.accesswidener")
     if (aw.exists()) {
         accessWidenerPath.set(aw)
-    }
-    mixin {
-        defaultRefmapName.set("${mod_id}.refmap.json")
     }
     runs {
         client {

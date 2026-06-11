@@ -1,0 +1,12 @@
+{
+    "model": {
+        "type": "minecraft:model",
+        "model": "simplehats:item/druid_antlers_rare",
+        "tints": [
+            {
+                "type": "minecraft:dye",
+                "default": -1
+            }
+        ]
+    }
+}
