@@ -1,7 +1,10 @@
 package fonnymunkey.simplehats.common.item;
 
+import java.util.function.Consumer;
+
 import fonnymunkey.simplehats.SimpleHatsCommon;
 import fonnymunkey.simplehats.common.entity.HatDisplay;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -9,8 +12,8 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -19,8 +22,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-
-import java.util.function.Consumer;
 
 public class HatDisplayItem extends Item {
 
@@ -44,20 +45,20 @@ public class HatDisplayItem extends Item {
             if(level.noCollision(null, aabb) && level.getEntities(null, aabb).isEmpty()) {
                 if(level instanceof ServerLevel serverLevel) {
                     Consumer<HatDisplay> consumer = EntityType.appendCustomEntityStackConfig((entity) -> {}, serverLevel, itemStack, context.getPlayer());
-                    HatDisplay hatDisplay = SimpleHatsCommon.MOD_REGISTRY.getHatDisplayEntity().create(serverLevel, consumer, pos, MobSpawnType.SPAWN_EGG, true, true);
+                    HatDisplay hatDisplay = SimpleHatsCommon.MOD_REGISTRY.getHatDisplayEntity().create(serverLevel, consumer, pos, EntitySpawnReason.SPAWN_ITEM_USE, true, true);
                     if(hatDisplay == null) return InteractionResult.FAIL;
                     
                     float f = 0;
                     if(context.getPlayer() != null && context.getPlayer().isCrouching()) f = (float)Mth.floor((Mth.wrapDegrees(context.getRotation() - 180.0F) + 22.5F) / 45.0F) * 45.0F;
                     else f = (int)Mth.wrapDegrees(context.getRotation() - 180.0F);
 
-                    hatDisplay.moveTo(hatDisplay.getX(), hatDisplay.getY(), hatDisplay.getZ(), f, 0.0F);
+                    hatDisplay.snapTo(hatDisplay.getX(), hatDisplay.getY(), hatDisplay.getZ(), f, 0.0F);
                     serverLevel.addFreshEntityWithPassengers(hatDisplay);
                     level.playSound(null, hatDisplay.getX(), hatDisplay.getY(), hatDisplay.getZ(), SoundEvents.ARMOR_STAND_PLACE, SoundSource.BLOCKS, 0.75F, 0.8F);
                     hatDisplay.gameEvent(GameEvent.ENTITY_PLACE, context.getPlayer());
                 }
                 itemStack.shrink(1);
-                return InteractionResult.sidedSuccess(level.isClientSide());
+                return InteractionResult.SUCCESS;
             }
             else {
                 return InteractionResult.FAIL;

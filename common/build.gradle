@@ -10,10 +10,6 @@ neoForge {
     if (at.exists()) {
         accessTransformers.from(at.absolutePath)
     }
-    parchment {
-        minecraftVersion = parchment_minecraft
-        mappingsVersion = parchment_version
-    }
 }
 
 repositories {
@@ -29,6 +25,8 @@ dependencies {
 
     api annotationProcessor("io.wispforest:owo-lib:${owo_version}")
     compileOnly("io.wispforest:accessories-common:${accessories_version}-mojmap")
+
+    implementation("eu.pb4:trinkets:${trinkets_version}")
 }
 
 configurations {

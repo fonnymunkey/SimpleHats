@@ -42,6 +42,14 @@ repositories {
         name = 'BlameJared'
         url = 'https://maven.blamejared.com'
     }
+    maven {
+        name = "Nucleoid"
+        url = "https://maven.nucleoid.xyz/releases"
+    }
+    maven {
+        name = "Jitpack"
+        url = "https://jitpack.io"
+    }
 }
 
 // Declare capabilities on the outgoing configurations.
@@ -101,6 +109,8 @@ processResources {
             'credits'                      : credits,
             'java_version'                 : java_version,
 			'accessories_version'		   : accessories_version,
+            'trinkets_version'		       : trinkets_version,
+            'curios_version'               : curios_version,
 			'owo_version'		           : owo_version,
             'owo_neoforge_version'		   : owo_neoforge_version
     ]

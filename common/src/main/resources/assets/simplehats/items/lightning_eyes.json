@@ -1,0 +1,12 @@
+{
+    "model": {
+        "type": "minecraft:model",
+        "model": "simplehats:item/lightning_eyes",
+        "tints": [
+            {
+                "type": "minecraft:dye",
+                "default": -1
+            }
+        ]
+    }
+}

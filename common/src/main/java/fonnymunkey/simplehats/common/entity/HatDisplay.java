@@ -3,13 +3,10 @@ package fonnymunkey.simplehats.common.entity;
 import fonnymunkey.simplehats.Constants;
 import fonnymunkey.simplehats.SimpleHatsCommon;
 import fonnymunkey.simplehats.common.item.HatItem;
+
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.particles.BlockParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.NbtOps;
-import net.minecraft.nbt.Tag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -20,7 +17,14 @@ import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityDimensions;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.HumanoidArm;
+import net.minecraft.world.entity.LightningBolt;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
@@ -30,6 +34,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.gameevent.GameEvent;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.Vec3;
 
 public class HatDisplay extends LivingEntity {
@@ -70,18 +76,8 @@ public class HatDisplay extends LivingEntity {
             Constants.LOG.error( "Attempted to place non-hat item \"" + stack.getItem().getName(stack) + "\" on hat display stand");
             return;
         }
-        this.verifyEquippedItem(stack);
-        this.onEquipItem(EquipmentSlot.HEAD, (ItemStack)this.hatItemSlots.set(0, stack), stack);
-    }
 
-    @Override
-    public boolean canTakeItem(ItemStack itemStack) {
-        return this.getItemBySlot(null).isEmpty();
-    }
-
-    @Override
-    public Iterable<ItemStack> getArmorSlots() {
-        return this.hatItemSlots;
+        this.onEquipItem(EquipmentSlot.HEAD, this.hatItemSlots.set(0, stack), stack);
     }
 
     @Override
@@ -90,24 +86,20 @@ public class HatDisplay extends LivingEntity {
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundTag compound) {
-        super.addAdditionalSaveData(compound);
-        ListTag listTag = new ListTag();
+    protected void addAdditionalSaveData(ValueOutput output) {
+        super.addAdditionalSaveData(output);
 
         ItemStack itemStack = this.hatItemSlots.get(0);
-        Tag compoundTag = ItemStack.CODEC.encodeStart(NbtOps.INSTANCE, itemStack).mapOrElse(e -> e, $ -> new CompoundTag());
-        listTag.add(compoundTag);
-
-        compound.put("HatItem", listTag);
+        output.list("HatItem", ItemStack.CODEC)
+            .add(itemStack);
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundTag compound) {
-        super.readAdditionalSaveData(compound);
-        if(compound.contains("HatItem", 9)) {
-            ListTag listTag = compound.getList("HatItem", 10);
-            this.hatItemSlots.set(0, ItemStack.parse(this.registryAccess(), listTag.getFirst()).orElse(ItemStack.EMPTY));
-        }
+    public void readAdditionalSaveData(ValueInput input) {
+        super.readAdditionalSaveData(input);
+        input.list("HatItem", ItemStack.CODEC).ifPresent(list -> {
+            this.hatItemSlots.set(0, list.stream().findFirst().orElse(ItemStack.EMPTY));
+        });
     }
 
     @Override
@@ -126,7 +118,7 @@ public class HatDisplay extends LivingEntity {
     }
 
     @Override
-    public InteractionResult interactAt(Player player, Vec3 vec3, InteractionHand hand) {
+    public InteractionResult interact(Player player, InteractionHand hand, Vec3 location) {
         ItemStack itemStack = player.getItemInHand(hand);
         if(!itemStack.is(Items.NAME_TAG)) {
             if(player.isSpectator()) {
@@ -176,17 +168,17 @@ public class HatDisplay extends LivingEntity {
     }
 
     @Override
-    public boolean hurt(DamageSource source, float amount) {
+    public boolean hurtServer(ServerLevel level, DamageSource source, float amount) {
         if(!this.isRemoved()) {
             if(this.level() instanceof ServerLevel serverLevel) {
                 if(source.is(DamageTypeTags.BYPASSES_INVULNERABILITY)) {
-                    this.kill();
+                    this.kill(level);
                     return false;
                 }
-                else if(!this.isInvulnerableTo(source)) {
+                else if(!this.isInvulnerableTo(level, source)) {
                     if(source.is(DamageTypeTags.IS_EXPLOSION)) {
                         this.onBreak(serverLevel, source);
-                        this.kill();
+                        this.kill(level);
                         return false;
                     }
                     else if(source.is(DamageTypeTags.IGNITES_ARMOR_STANDS)) {
@@ -219,7 +211,7 @@ public class HatDisplay extends LivingEntity {
                             if (source.isCreativePlayer()) {
                                 this.playBreakSound();
                                 this.spawnBreakParticles();
-                                this.kill();
+                                this.kill(level);
                                 return true;
                             } else {
                                 long i = serverLevel.getGameTime();
@@ -230,7 +222,7 @@ public class HatDisplay extends LivingEntity {
                                 } else {
                                     this.breakAndDropItem(serverLevel, source);
                                     this.spawnBreakParticles();
-                                    this.kill();
+                                    this.kill(level);
                                 }
                                 
                                 return true;
@@ -274,7 +266,7 @@ public class HatDisplay extends LivingEntity {
         float f = this.getHealth() - dmg;
         if(f <= 0.5F) {
             this.onBreak(level, source);
-            this.kill();
+            this.kill(level);
         }
         else {
             this.setHealth(f);
@@ -303,10 +295,9 @@ public class HatDisplay extends LivingEntity {
     }
 
     @Override
-    protected float tickHeadTurn(float f1, float f2) {
+    protected void tickHeadTurn(float yBodyRotT) {
         this.yBodyRotO = this.yRotO;
         this.yBodyRot = this.getYRot();
-        return 0.0F;
     }
     
     @Override
@@ -327,7 +318,7 @@ public class HatDisplay extends LivingEntity {
     }
 
     @Override
-    public void kill() {
+    public void kill(ServerLevel level) {
         this.remove(Entity.RemovalReason.KILLED);
     }
 
