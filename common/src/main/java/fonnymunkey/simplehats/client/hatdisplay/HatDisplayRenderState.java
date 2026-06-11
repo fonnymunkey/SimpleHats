@@ -5,5 +5,5 @@ import net.minecraft.client.renderer.item.ItemStackRenderState;
 
 public class HatDisplayRenderState extends LivingEntityRenderState {
     public ItemStackRenderState itemStackRenderState = new ItemStackRenderState();
-    public float hurtAnim; // ?
+    public float hurtAnim;
 }
