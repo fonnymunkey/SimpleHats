@@ -1,26 +1,16 @@
 package fonnymunkey.simplehats.common.item;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-import fonnymunkey.simplehats.common.init.SimpleHatsConfigAbstract;
+import fonnymunkey.simplehats.SimpleHatsCommon;
 import fonnymunkey.simplehats.util.HatEntry;
-import io.wispforest.accessories.api.AccessoryItem;
-import io.wispforest.accessories.api.DropRule;
-import io.wispforest.accessories.api.client.AccessoryRenderer;
-import io.wispforest.accessories.api.slot.SlotReference;
-import net.minecraft.client.model.EntityModel;
-import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 
 import java.util.List;
 
-public class HatItem extends AccessoryItem implements AccessoryRenderer {
+public class HatItem extends Item {
 
     private final HatEntry hatEntry;
 
@@ -30,6 +20,7 @@ public class HatItem extends AccessoryItem implements AccessoryRenderer {
                 .rarity(entry.getHatRarity())
                 .fireResistant());
         this.hatEntry = entry;
+        SimpleHatsCommon.HAT_SLOT_COMPAT.registerHat(this);
     }
 
     public HatEntry getHatEntry() {
@@ -47,21 +38,5 @@ public class HatItem extends AccessoryItem implements AccessoryRenderer {
                 tooltipComponents.add(Component.translatable("tooltip.simplehats.special_false"));
             }
         }
-    }
-
-    @Override
-    public DropRule getDropRule(ItemStack stack, SlotReference slot, DamageSource source) {
-        if(slot.entity() instanceof Player && SimpleHatsConfigAbstract.keepHatOnDeath()) return DropRule.KEEP;
-        else return DropRule.DEFAULT;
-    }
-    
-    @Override
-    public <M extends LivingEntity> void render(ItemStack stack, SlotReference reference, PoseStack matrices, EntityModel<M> model, MultiBufferSource multiBufferSource, int light, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
-        //Empty, for compatibility with Accessories
-    }
-    
-    @Override
-    public boolean canEquipFromUse(ItemStack stack) {
-        return true;
     }
 }

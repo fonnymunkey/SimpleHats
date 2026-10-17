@@ -2,6 +2,10 @@ package fonnymunkey.simplehats.platform;
 
 import fonnymunkey.simplehats.common.init.IModRegistry;
 import fonnymunkey.simplehats.common.init.ModRegistry;
+import fonnymunkey.simplehats.compat.IHatSlotCompat;
+import fonnymunkey.simplehats.compat.NoHatSlotCompat;
+import fonnymunkey.simplehats.compat.accessories.AccessoriesCompat;
+import fonnymunkey.simplehats.compat.trinkets.TrinketsCompat;
 import fonnymunkey.simplehats.platform.services.IPlatformHelper;
 import net.fabricmc.loader.api.FabricLoader;
 
@@ -32,5 +36,12 @@ public class FabricPlatformHelper implements IPlatformHelper {
     @Override
     public IModRegistry initModRegistry() {
         return new ModRegistry();
+    }
+    
+    @Override
+    public IHatSlotCompat initHatSlotCompat() {
+        if(this.isModLoaded("accessories")) return new AccessoriesCompat();
+        if(this.isModLoaded("trinkets")) return new TrinketsCompat();
+        return new NoHatSlotCompat();
     }
 }

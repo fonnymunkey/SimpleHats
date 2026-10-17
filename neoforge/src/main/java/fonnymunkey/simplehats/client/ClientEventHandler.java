@@ -5,9 +5,8 @@ import fonnymunkey.simplehats.SimpleHatsCommon;
 import fonnymunkey.simplehats.client.hat.HatLayer;
 import fonnymunkey.simplehats.client.hatdisplay.HatDisplayModel;
 import fonnymunkey.simplehats.client.hatdisplay.HatDisplayRenderer;
+import fonnymunkey.simplehats.common.item.HatItem;
 import fonnymunkey.simplehats.common.item.HatItemDyeable;
-import io.wispforest.accessories.api.client.AccessoriesRendererRegistry;
-import io.wispforest.accessories.api.client.AccessoryRenderer;
 import net.minecraft.client.renderer.entity.player.PlayerRenderer;
 import net.minecraft.client.resources.PlayerSkin;
 import net.minecraft.world.item.Item;
@@ -16,6 +15,9 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @EventBusSubscriber(modid = Constants.MOD_ID, bus = EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public class ClientEventHandler {
@@ -26,11 +28,10 @@ public class ClientEventHandler {
 			if(hat instanceof HatItemDyeable hatDye) {
 				event.register((stack, color) -> ((HatItemDyeable)stack.getItem()).getColor(stack), hatDye);
 			}
-			if(hat instanceof AccessoryRenderer) {
-				AccessoriesRendererRegistry.registerNoRenderer(hat);
-			}
 		}
-		AccessoriesRendererRegistry.registerNoRenderer(SimpleHatsCommon.MOD_REGISTRY.getHatSpecial());
+		List<HatItem> hats = new ArrayList<>(SimpleHatsCommon.MOD_REGISTRY.getHatList());
+		hats.add(SimpleHatsCommon.MOD_REGISTRY.getHatSpecial());
+		SimpleHatsCommon.HAT_SLOT_COMPAT.registerHatRenderers(hats);
 	}
 	
 	@SubscribeEvent

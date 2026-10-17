@@ -2,13 +2,10 @@ package fonnymunkey.simplehats.client.hat;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
+import fonnymunkey.simplehats.SimpleHatsCommon;
 import fonnymunkey.simplehats.common.init.SimpleHatsConfigAbstract;
 import fonnymunkey.simplehats.common.item.HatItem;
 import fonnymunkey.simplehats.util.HatEntry;
-import io.wispforest.accessories.api.AccessoriesCapability;
-import io.wispforest.accessories.api.AccessoriesContainer;
-import io.wispforest.accessories.api.EquipmentChecking;
-import io.wispforest.accessories.api.slot.SlotEntryReference;
 import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.EntityModel;
@@ -20,14 +17,13 @@ import net.minecraft.core.particles.ColorParticleOption;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.particles.SimpleParticleType;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.monster.ZombieVillager;
 import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
-
-import java.util.Optional;
 
 public class HatLayer<T extends LivingEntity, M extends EntityModel<T> & HeadedModel> extends RenderLayer<T, M> {
 	
@@ -40,24 +36,12 @@ public class HatLayer<T extends LivingEntity, M extends EntityModel<T> & HeadedM
 		//Hacky fix for first person render mods also rendering player layers over the camera
 		if(livingEntity == Minecraft.getInstance().cameraEntity && Minecraft.getInstance().options.getCameraType() == CameraType.FIRST_PERSON && SimpleHatsConfigAbstract.forceFirstPersonNoRender()) return;
 		
-		Optional.ofNullable(AccessoriesCapability.get(livingEntity)).ifPresent(component -> {
-			SlotEntryReference slotCos = component.getFirstEquipped(stack -> stack.getItem() instanceof HatItem, EquipmentChecking.COSMETICALLY_OVERRIDABLE);
-			SlotEntryReference slotNonCos = component.getFirstEquipped(stack -> stack.getItem() instanceof HatItem, EquipmentChecking.ACCESSORIES_ONLY);
-			boolean renderingCos = false;
-			if(slotCos != null) {
-				AccessoriesContainer container = slotCos.reference().slotContainer();
-				if(container != null && container.shouldRender(slotCos.reference().slot())) {
-					renderingCos = true;
-					render(slotCos.stack(), poseStack, buffer, packedLight, livingEntity, limbSwing, limbSwingAmount, partialTicks, age, netHeadYaw, headPitch);
-				}
-			}
-			if(slotNonCos != null && !renderingCos) {
-				AccessoriesContainer container = slotNonCos.reference().slotContainer();
-				if(container != null && container.shouldRender(slotNonCos.reference().slot())) {
-					render(slotNonCos.stack(), poseStack, buffer, packedLight, livingEntity, limbSwing, limbSwingAmount, partialTicks, age, netHeadYaw, headPitch);
-				}
-			}
-		});
+		ItemStack hat = SimpleHatsCommon.HAT_SLOT_COMPAT.getVisibleHat(livingEntity);
+		if(!hat.isEmpty()) render(hat, poseStack, buffer, packedLight, livingEntity, limbSwing, limbSwingAmount, partialTicks, age, netHeadYaw, headPitch);
+		else {
+			ItemStack helmet = livingEntity.getItemBySlot(EquipmentSlot.HEAD);
+			if(helmet.getItem() instanceof HatItem) spawnParticles(helmet, livingEntity);
+		}
 	}
 	
 	private void render(ItemStack itemStack, PoseStack poseStack, MultiBufferSource buffer, int packedLight, T livingEntity, float limbSwing, float limbSwingAmount, float partialTicks, float age, float netHeadYaw, float headPitch) {
@@ -81,6 +65,10 @@ public class HatLayer<T extends LivingEntity, M extends EntityModel<T> & HeadedM
 			
 			poseStack.popPose();
 		}
+		spawnParticles(itemStack, livingEntity);
+	}
+	
+	private void spawnParticles(ItemStack itemStack, T livingEntity) {
 		if(livingEntity instanceof Player) {
 			HatEntry.HatParticleSettings particleSettings = ((HatItem)itemStack.getItem()).getHatEntry().getHatParticleSettings();
 			if(particleSettings.getUseParticles() && !Minecraft.getInstance().isPaused() && livingEntity.getRandom().nextFloat() < (livingEntity.isInvisible() ? particleSettings.getParticleFrequency()/2 : particleSettings.getParticleFrequency())) {

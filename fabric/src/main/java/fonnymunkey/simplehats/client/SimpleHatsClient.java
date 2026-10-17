@@ -5,8 +5,6 @@ import fonnymunkey.simplehats.client.hat.HatLayer;
 import fonnymunkey.simplehats.client.hatdisplay.HatDisplayModel;
 import fonnymunkey.simplehats.client.hatdisplay.HatDisplayRenderer;
 import fonnymunkey.simplehats.common.item.HatItemDyeable;
-import io.wispforest.accessories.api.client.AccessoriesRendererRegistry;
-import io.wispforest.accessories.api.client.AccessoryRenderer;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -26,11 +24,8 @@ public class SimpleHatsClient implements ClientModInitializer {
             if(hat instanceof HatItemDyeable hatDye) {
                 ColorProviderRegistry.ITEM.register((stack, color) -> ((HatItemDyeable)stack.getItem()).getColor(stack), hatDye);
             }
-            if(hat instanceof AccessoryRenderer) {
-                AccessoriesRendererRegistry.registerNoRenderer(hat);
-            }
         }
-        AccessoriesRendererRegistry.registerNoRenderer(SimpleHatsCommon.MOD_REGISTRY.getHatSpecial());
+        SimpleHatsCommon.HAT_SLOT_COMPAT.registerHatRenderers(SimpleHatsCommon.MOD_REGISTRY.getHatList());
 
         EntityRendererRegistry.register(SimpleHatsCommon.MOD_REGISTRY.getHatDisplayEntity(), HatDisplayRenderer::new);
         EntityModelLayerRegistry.registerModelLayer(HatDisplayRenderer.HATDISPLAY_LOCATION, HatDisplayModel::getTexturedModelData);
