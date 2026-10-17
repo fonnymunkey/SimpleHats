@@ -1,5 +1,7 @@
 package fonnymunkey.simplehats.platform;
 
+import fonnymunkey.simplehats.common.init.FabricHatConfig;
+import fonnymunkey.simplehats.common.init.IHatConfig;
 import fonnymunkey.simplehats.common.init.IModRegistry;
 import fonnymunkey.simplehats.common.init.ModRegistry;
 import fonnymunkey.simplehats.platform.services.IPlatformHelper;
@@ -32,5 +34,10 @@ public class FabricPlatformHelper implements IPlatformHelper {
     @Override
     public IModRegistry initModRegistry() {
         return new ModRegistry();
+    }
+    
+    @Override
+    public IHatConfig initConfig() {
+        return new FabricHatConfig();
     }
 }

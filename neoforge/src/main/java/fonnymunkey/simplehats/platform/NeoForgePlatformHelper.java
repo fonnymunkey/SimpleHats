@@ -2,6 +2,8 @@ package fonnymunkey.simplehats.platform;
 
 import java.io.File;
 
+import fonnymunkey.simplehats.common.init.NeoForgeHatConfig;
+import fonnymunkey.simplehats.common.init.IHatConfig;
 import fonnymunkey.simplehats.common.init.IModRegistry;
 import fonnymunkey.simplehats.common.init.ModRegistry;
 import fonnymunkey.simplehats.platform.services.IPlatformHelper;
@@ -34,5 +36,10 @@ public class NeoForgePlatformHelper implements IPlatformHelper {
     @Override
     public IModRegistry initModRegistry() {
         return new ModRegistry();
+    }
+    
+    @Override
+    public IHatConfig initConfig() {
+        return new NeoForgeHatConfig();
     }
 }

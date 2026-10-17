@@ -1,6 +1,7 @@
 {
 	"parent": "simplehats:item/hatparent",
 	"textures": {
+		"particle": "simplehats:item/hats/sausage",
 		"0": "simplehats:item/hats/sausage"
 	},
 	"elements": [

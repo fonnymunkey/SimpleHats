@@ -2,6 +2,7 @@
 	"parent": "simplehats:item/hatparent",
 	"texture_size": [16, 16],
 	"textures": {
+		"particle": "simplehats:item/hats/peppino",
 		"1": "simplehats:item/hats/peppino"
 	},
 	"elements": [

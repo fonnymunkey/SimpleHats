@@ -4,12 +4,10 @@
   "package": "fonnymunkey.simplehats.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
-    "MixinLivingEntity",
     "MixinTagGroupLoader"
   ],
   "client": [
-    "MixinHumanoidArmorLayer",
-    "MixinLivingEntityRenderer"
+    "MixinHumanoidArmorLayer"
   ],
   "server": [],
   "injectors": {

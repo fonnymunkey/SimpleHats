@@ -5,12 +5,8 @@
     "W"
   ],
   "key": {
-    "L": {
-      "tag": "minecraft:logs"
-    },
-    "W": {
-      "tag": "minecraft:wooden_slabs"
-    }
+    "L": "#minecraft:logs",
+    "W": "#minecraft:wooden_slabs"
   },
   "result": {
     "id": "simplehats:hatdisplay"

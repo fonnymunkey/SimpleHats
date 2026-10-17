@@ -36,7 +36,6 @@ neoForge {
         }
 	}
 	dependencies {
-        annotationProcessor implementation("io.wispforest:owo-lib-neoforge:${owo_neoforge_version}")
         compileOnly("io.wispforest:accessories-neoforge:${accessories_version}")
 
         compileOnly("top.theillusivec4.curios:curios-neoforge:${curios_version}:api")

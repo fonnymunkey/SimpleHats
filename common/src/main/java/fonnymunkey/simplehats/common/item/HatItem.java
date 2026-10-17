@@ -2,10 +2,12 @@ package fonnymunkey.simplehats.common.item;
 
 import java.util.function.Consumer;
 
+import fonnymunkey.simplehats.common.init.SimpleHatsConfigAbstract;
 import fonnymunkey.simplehats.util.HatEntry;
 
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -16,11 +18,15 @@ public class HatItem extends Item {
     private final HatEntry hatEntry;
 
     public HatItem(Item.Properties properties, HatEntry entry) {
-        super(properties
+        super(applyHelmetSlot(properties
                 .stacksTo(1)
                 .rarity(entry.getHatRarity())
-                .fireResistant());
+                .fireResistant()));
         this.hatEntry = entry;
+    }
+
+    private static Item.Properties applyHelmetSlot(Item.Properties properties) {
+        return SimpleHatsConfigAbstract.allowHatInHelmetSlot() ? properties.equippableUnswappable(EquipmentSlot.HEAD) : properties;
     }
 
     public HatEntry getHatEntry() {

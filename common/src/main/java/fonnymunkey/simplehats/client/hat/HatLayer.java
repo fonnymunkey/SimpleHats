@@ -27,7 +27,9 @@ import net.minecraft.core.particles.ColorParticleOption;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.particles.SimpleParticleType;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 
@@ -57,25 +59,34 @@ public class HatLayer<S extends LivingEntityRenderState, M extends EntityModel<S
 		}
 
 		if (renderingHat) {
-			HatEntry.HatParticleSettings particleSettings = ((HatItem) renderState.hatStack.getItem()).getHatEntry().getHatParticleSettings();
-			if (particleSettings.getUseParticles() && !Minecraft.getInstance().isPaused() && entity.getRandom().nextFloat() < (entity.isInvisible() ? particleSettings.getParticleFrequency() / 2 : particleSettings.getParticleFrequency())) {
-				ParticleType<?> particleType = particleSettings.getParticleType();
-				ParticleEngine particleEngine = Minecraft.getInstance().particleEngine;
+			spawnParticles(entity, renderState.hatStack);
+		} else if (entity.getItemBySlot(EquipmentSlot.HEAD).getItem() instanceof HatItem) {
+			spawnParticles(entity, entity.getItemBySlot(EquipmentSlot.HEAD));
+		}
+	}
 
-				double d0 = entity.getRandom().nextGaussian() * 0.02D,
-					d1 = entity.getRandom().nextGaussian() * 0.02D,
-					d2 = entity.getRandom().nextGaussian() * 0.02D,
-					y = switch(particleSettings.getParticleMovement()) {
-						case TRAILING_HEAD -> entity.getY()+1.75;
-						case TRAILING_FEET -> entity.getY()+0.25;
-						case TRAILING_FULL -> entity.getRandomY();
-					};
+	private static void spawnParticles(LivingEntity entity, ItemStack hatStack) {
+		Minecraft minecraft = Minecraft.getInstance();
+		if (!(entity instanceof Player) || (entity == minecraft.getCameraEntity() && !minecraft.gameRenderer.getMainCamera().isDetached())) return;
 
-				if(particleType instanceof SimpleParticleType particleEffect) {
-					particleEngine.createParticle(particleEffect, entity.getX() + entity.getRandom().nextFloat() - 0.5, y, entity.getZ() + entity.getRandom().nextFloat() - 0.5, d0, d1, d2);
-				} else if (particleType == ParticleTypes.ENTITY_EFFECT) {
-					particleEngine.createParticle(ColorParticleOption.create(ParticleTypes.ENTITY_EFFECT, entity.getRandom().nextFloat(), entity.getRandom().nextFloat(), entity.getRandom().nextFloat()), entity.getX() + entity.getRandom().nextFloat() - 0.5, y, entity.getZ() + entity.getRandom().nextFloat() - 0.5, d0, d1, d2);
-				}
+		HatEntry.HatParticleSettings particleSettings = ((HatItem) hatStack.getItem()).getHatEntry().getHatParticleSettings();
+		if (particleSettings.getUseParticles() && !Minecraft.getInstance().isPaused() && entity.getRandom().nextFloat() < (entity.isInvisible() ? particleSettings.getParticleFrequency() / 2 : particleSettings.getParticleFrequency())) {
+			ParticleType<?> particleType = particleSettings.getParticleType();
+			ParticleEngine particleEngine = Minecraft.getInstance().particleEngine;
+
+			double d0 = entity.getRandom().nextGaussian() * 0.02D,
+				d1 = entity.getRandom().nextGaussian() * 0.02D,
+				d2 = entity.getRandom().nextGaussian() * 0.02D,
+				y = switch(particleSettings.getParticleMovement()) {
+					case TRAILING_HEAD -> entity.getY()+1.75;
+					case TRAILING_FEET -> entity.getY()+0.25;
+					case TRAILING_FULL -> entity.getRandomY();
+				};
+
+			if(particleType instanceof SimpleParticleType particleEffect) {
+				particleEngine.createParticle(particleEffect, entity.getX() + entity.getRandom().nextFloat() - 0.5, y, entity.getZ() + entity.getRandom().nextFloat() - 0.5, d0, d1, d2);
+			} else if (particleType == ParticleTypes.ENTITY_EFFECT) {
+				particleEngine.createParticle(ColorParticleOption.create(ParticleTypes.ENTITY_EFFECT, entity.getRandom().nextFloat(), entity.getRandom().nextFloat(), entity.getRandom().nextFloat()), entity.getX() + entity.getRandom().nextFloat() - 0.5, y, entity.getZ() + entity.getRandom().nextFloat() - 0.5, d0, d1, d2);
 			}
 		}
 	}

@@ -2,6 +2,7 @@
 	"credit": "Made with Blockbench",
 	"parent": "simplehats:item/hatparent",
 	"textures": {
+		"particle": "simplehats:item/hats/goggles",
 		"0": "simplehats:item/hats/goggles"
 	},
 	"elements": [

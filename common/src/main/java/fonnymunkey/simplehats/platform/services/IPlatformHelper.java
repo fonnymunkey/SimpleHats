@@ -1,5 +1,6 @@
 package fonnymunkey.simplehats.platform.services;
 
+import fonnymunkey.simplehats.common.init.IHatConfig;
 import fonnymunkey.simplehats.common.init.IModRegistry;
 
 import java.io.File;
@@ -19,4 +20,6 @@ public interface IPlatformHelper {
     File getConfigDir();
     
     IModRegistry initModRegistry();
+    
+    IHatConfig initConfig();
 }

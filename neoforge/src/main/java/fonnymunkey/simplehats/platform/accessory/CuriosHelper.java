@@ -29,6 +29,9 @@ public class CuriosHelper implements IAccessoryHelper {
                     continue;
 
                 for (int slot = 0; slot < handler.getCosmeticStacks().getSlots(); slot++) {
+                    if (!handler.getRenders().get(slot))
+                        continue;
+
                     var stack = handler.getCosmeticStacks().getStackInSlot(slot);
 
                     if (!stack.isEmpty() && stack.getItem() instanceof HatItem) {
@@ -37,6 +40,9 @@ public class CuriosHelper implements IAccessoryHelper {
                 }
 
                 for (int slot = 0; slot < handler.getStacks().getSlots(); slot++) {
+                    if (!handler.getRenders().get(slot))
+                        continue;
+
                     var stack = handler.getStacks().getStackInSlot(slot);
 
                     if (!stack.isEmpty() && stack.getItem() instanceof HatItem) {
@@ -59,6 +65,9 @@ public class CuriosHelper implements IAccessoryHelper {
                     continue;
 
                 for (int slot = 0; slot < handler.getCosmeticStacks().getSlots(); slot++) {
+                    if (!handler.getRenders().get(slot))
+                        continue;
+
                     var stack = handler.getCosmeticStacks().getStackInSlot(slot);
 
                     if (!stack.isEmpty() && stack.getItem() instanceof HatItem) {
@@ -67,6 +76,9 @@ public class CuriosHelper implements IAccessoryHelper {
                 }
 
                 for (int slot = 0; slot < handler.getStacks().getSlots(); slot++) {
+                    if (!handler.getRenders().get(slot))
+                        continue;
+
                     var stack = handler.getStacks().getStackInSlot(slot);
 
                     if (!stack.isEmpty() && stack.getItem() instanceof HatItem) {

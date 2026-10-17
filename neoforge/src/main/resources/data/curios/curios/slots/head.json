@@ -1,4 +1,5 @@
 {
+  "icon": "simplehats:slot/hatslot",
   "add_cosmetic": true,
   "validators": ["simplehats:validator"]
 }

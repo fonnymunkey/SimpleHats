@@ -2,7 +2,7 @@ package fonnymunkey.simplehats;
 
 import fonnymunkey.simplehats.common.init.HatJson;
 import fonnymunkey.simplehats.common.init.IModRegistry;
-import fonnymunkey.simplehats.common.init.SimpleHatsConfig;
+import fonnymunkey.simplehats.common.init.IHatConfig;
 import fonnymunkey.simplehats.platform.Services;
 
 import net.minecraft.core.registries.Registries;
@@ -12,7 +12,7 @@ import net.minecraft.world.item.Item;
 
 public class SimpleHatsCommon {
     
-    public static final SimpleHatsConfig CONFIG = SimpleHatsConfig.createAndLoad();
+    public static final IHatConfig CONFIG = Services.PLATFORM.initConfig();
     
     public static final IModRegistry MOD_REGISTRY = Services.PLATFORM.initModRegistry();
     

@@ -111,8 +111,7 @@ processResources {
 			'accessories_version'		   : accessories_version,
             'trinkets_version'		       : trinkets_version,
             'curios_version'               : curios_version,
-			'owo_version'		           : owo_version,
-            'owo_neoforge_version'		   : owo_neoforge_version
+			'owo_version'		           : owo_version
     ]
 
     filesMatching(['pack.mcmeta', 'fabric.mod.json', 'META-INF/mods.toml', 'META-INF/neoforge.mods.toml', '*.mixins.json']) {

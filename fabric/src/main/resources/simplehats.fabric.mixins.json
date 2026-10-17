@@ -4,7 +4,6 @@
   "package": "fonnymunkey.simplehats.mixin",
   "compatibilityLevel": "JAVA_25",
   "mixins": [
-    "MixinLivingEntity",
     "MixinTagGroupLoader"
   ],
   "client": [

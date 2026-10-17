@@ -45,4 +45,4 @@ plugins {
 rootProject.name = 'SimpleHats'
 include('common')
 include('fabric')
-//include('neoforge') // TODO: owo-lib for 26.1.2 needs to be released first.
+include('neoforge')

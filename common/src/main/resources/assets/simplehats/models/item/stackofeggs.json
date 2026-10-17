@@ -2,6 +2,7 @@
 	"credit": "Made with Blockbench",
 	"parent": "simplehats:item/hatparent",
 	"textures": {
+		"particle": "simplehats:item/hats/egghead2",
 		"0": "simplehats:item/hats/egghead2",
 		"2_0": "simplehats:item/hats/eggonhead2"
 	},
