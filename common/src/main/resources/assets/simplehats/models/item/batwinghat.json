@@ -2,6 +2,7 @@
 	"parent": "simplehats:item/hatparent",
 	"texture_size": [32, 32],
 	"textures": {
+		"particle": "simplehats:item/hats/batwinghat",
 		"0": "simplehats:item/hats/batwinghat"
 	},
 	"elements": [

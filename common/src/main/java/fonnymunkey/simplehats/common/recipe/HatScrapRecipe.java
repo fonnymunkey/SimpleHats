@@ -20,7 +20,7 @@ public class HatScrapRecipe extends CustomRecipe {
     }
 
     @Override
-    public String getGroup() {
+    public String group() {
         return Constants.MOD_ID + ":hatscraps";
     }
 
@@ -86,12 +86,7 @@ public class HatScrapRecipe extends CustomRecipe {
     }
 
     @Override
-    public boolean canCraftInDimensions(int width, int height) {
-        return width*height >= 2;
-    }
-
-    @Override
-    public RecipeSerializer<?> getSerializer() {
+    public RecipeSerializer<? extends CustomRecipe> getSerializer() {
         return SimpleHatsCommon.MOD_REGISTRY.getHatScrapSerializer();
     }
 }

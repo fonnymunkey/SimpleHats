@@ -1,0 +1,7 @@
+{
+  "model": {
+    "type": "minecraft:model",
+    "model": "simplehats:item/summerhat",
+    "tints": [{"type": "minecraft:dye", "default": -5446658}]
+  }
+}

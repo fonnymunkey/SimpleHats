@@ -1,0 +1,7 @@
+{
+  "model": {
+    "type": "minecraft:model",
+    "model": "simplehats:item/binky",
+    "tints": [{"type": "minecraft:dye", "default": -16741121}]
+  }
+}

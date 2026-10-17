@@ -102,7 +102,10 @@ processResources {
             'java_version'                 : java_version,
 			'accessories_version'		   : accessories_version,
 			'owo_version'		           : owo_version,
-            'owo_neoforge_version'		   : owo_neoforge_version
+            'owo_neoforge_version'		   : owo_neoforge_version,
+            'accessories_mod_version'      : accessories_version.split('\\+')[0],
+            'owo_neoforge_mod_version'     : owo_neoforge_version.split('\\+')[0],
+            'curios_mod_version'           : curios_version.split('\\+')[0]
     ]
 
     filesMatching(['pack.mcmeta', 'fabric.mod.json', 'META-INF/mods.toml', 'META-INF/neoforge.mods.toml', '*.mixins.json']) {

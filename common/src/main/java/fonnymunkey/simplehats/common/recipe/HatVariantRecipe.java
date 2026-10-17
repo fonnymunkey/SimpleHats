@@ -13,6 +13,8 @@ import net.minecraft.world.item.crafting.CustomRecipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.Level;
 
+import java.util.List;
+
 public class HatVariantRecipe extends CustomRecipe {
     
     public HatVariantRecipe(CraftingBookCategory category) {
@@ -20,7 +22,7 @@ public class HatVariantRecipe extends CustomRecipe {
     }
 
     @Override
-    public String getGroup() {
+    public String group() {
         return Constants.MOD_ID + ":hatvariants";
     }
 
@@ -35,17 +37,18 @@ public class HatVariantRecipe extends CustomRecipe {
         if(hat != null) {
             ItemStack hat1 = hat.copy();
             if(hat1.has(DataComponents.CUSTOM_MODEL_DATA)) {
-                var modelData = hat1.get(DataComponents.CUSTOM_MODEL_DATA).value();
+                Float modelDataFloat = hat1.get(DataComponents.CUSTOM_MODEL_DATA).getFloat(0);
+                int modelData = modelDataFloat == null ? 0 : modelDataFloat.intValue();
 
                 if (modelData + 1 > ((HatItem)hat1.getItem()).getHatEntry().getHatVariantRange())
                     modelData = 0;
                 else
                     modelData += 1;
 
-                hat1.set(DataComponents.CUSTOM_MODEL_DATA, new CustomModelData(modelData));
+                hat1.set(DataComponents.CUSTOM_MODEL_DATA, new CustomModelData(List.of((float)modelData), List.of(), List.of(), List.of()));
             }
             else {
-                hat1.set(DataComponents.CUSTOM_MODEL_DATA, new CustomModelData(1));
+                hat1.set(DataComponents.CUSTOM_MODEL_DATA, new CustomModelData(List.of(1.0F), List.of(), List.of(), List.of()));
             }
             return hat1;
         }
@@ -70,12 +73,7 @@ public class HatVariantRecipe extends CustomRecipe {
     }
 
     @Override
-    public boolean canCraftInDimensions(int width, int height) {
-        return width*height >= 1;
-    }
-
-    @Override
-    public RecipeSerializer<?> getSerializer() {
+    public RecipeSerializer<? extends CustomRecipe> getSerializer() {
         return SimpleHatsCommon.MOD_REGISTRY.getHatVariantSerializer();
     }
 }

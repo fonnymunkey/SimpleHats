@@ -5,11 +5,10 @@
   "refmap": "${mod_id}.refmap.json",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
-    "MixinLivingEntity",
     "MixinTagGroupLoader"
   ],
   "client": [
-    "MixinHumanoidArmorLayer"
+    "MixinHumanoidMobRenderer"
   ],
   "server": [],
   "injectors": {

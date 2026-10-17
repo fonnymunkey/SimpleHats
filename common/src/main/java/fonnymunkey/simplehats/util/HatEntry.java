@@ -158,7 +158,7 @@ public class HatEntry {
 
         private void parseParticleString() {
             ResourceLocation location = ResourceLocation.tryParse(this.particleTypeString);
-            if(location != null) this.particleTypeParsed = BuiltInRegistries.PARTICLE_TYPE.get(location);
+            if(location != null) this.particleTypeParsed = BuiltInRegistries.PARTICLE_TYPE.getValue(location);
             else this.particleTypeParsed = null;
 
             if(this.particleTypeParsed == null) {

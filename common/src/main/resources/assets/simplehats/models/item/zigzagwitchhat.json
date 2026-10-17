@@ -2,6 +2,7 @@
 	"parent": "simplehats:item/hatparent",
 	"texture_size": [128, 128],
 	"textures": {
+		"particle": "simplehats:item/hats/zigzagwitchhat",
 		"0": "simplehats:item/hats/zigzagwitchhat"
 	},
 	"elements": [

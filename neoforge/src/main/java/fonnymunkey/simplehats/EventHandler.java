@@ -11,9 +11,11 @@ import fonnymunkey.simplehats.util.TagInjector;
 import net.minecraft.core.cauldron.CauldronInteraction;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.entries.LootItem;
@@ -28,19 +30,21 @@ import net.neoforged.neoforge.registries.RegisterEvent;
 
 public class EventHandler {
 	
-	@EventBusSubscriber(modid = Constants.MOD_ID, bus = EventBusSubscriber.Bus.MOD)
+	@EventBusSubscriber(modid = Constants.MOD_ID)
 	public static class EventHandlerMod {
 		
 		@SubscribeEvent
 		public static void registerHats(RegisterEvent event) {
 			if(event.getRegistryKey().equals(Registries.ITEM)) {
 				for(HatEntry entry : HatJson.getHatList()) {
-					HatItem hat = entry.getHatDyeSettings().getUseDye() ? new HatItemDyeable(entry) : new HatItem(entry);
-					event.register(Registries.ITEM, ResourceLocation.tryBuild(Constants.MOD_ID, entry.getHatName()), () -> hat);
+					ResourceKey<Item> key = ResourceKey.create(Registries.ITEM, ResourceLocation.tryBuild(Constants.MOD_ID, entry.getHatName()));
+					Item.Properties properties = new Item.Properties().setId(key);
+					HatItem hat = entry.getHatDyeSettings().getUseDye() ? new HatItemDyeable(entry, properties) : new HatItem(entry, properties);
+					event.register(Registries.ITEM, key.location(), () -> hat);
 					SimpleHatsCommon.MOD_REGISTRY.getHatList().add(hat);
 					
 					if(hat instanceof HatItemDyeable) {
-						CauldronInteraction.WATER.map().put((HatItemDyeable)hat, CauldronInteraction.DYED_ITEM);
+						CauldronInteraction.WATER.map().put((HatItemDyeable)hat, CauldronInteraction.WATER.map().get(Items.LEATHER_HELMET));
 						TagInjector.inject(BuiltInRegistries.ITEM, ItemTags.DYEABLE.location(), hat);
 					}
 				}
@@ -56,7 +60,7 @@ public class EventHandler {
 		}
 	}
 	
-	@EventBusSubscriber(modid = Constants.MOD_ID, bus = EventBusSubscriber.Bus.GAME)
+	@EventBusSubscriber(modid = Constants.MOD_ID)
 	public static class EventHandlerNeoForge {
 		
 		@SubscribeEvent

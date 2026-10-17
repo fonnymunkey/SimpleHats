@@ -25,13 +25,15 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.crafting.RecipeSerializer;
-import net.minecraft.world.item.crafting.SimpleCraftingRecipeSerializer;
+import net.minecraft.world.item.crafting.CustomRecipe;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 
 public class ModRegistry implements IModRegistry {
 
@@ -63,45 +65,49 @@ public class ModRegistry implements IModRegistry {
                                  entries.accept(hat);
                              }}).build());
     
-    private static final BagItem HATBAG_COMMON = Registry.register(BuiltInRegistries.ITEM, ResourceLocation.tryBuild(Constants.MOD_ID, "hatbag_common"), new BagItem(Rarity.COMMON));
-    private static final BagItem HATBAG_UNCOMMON = Registry.register(BuiltInRegistries.ITEM, ResourceLocation.tryBuild(Constants.MOD_ID, "hatbag_uncommon"), new BagItem(Rarity.UNCOMMON));
-    private static final BagItem HATBAG_RARE = Registry.register(BuiltInRegistries.ITEM, ResourceLocation.tryBuild(Constants.MOD_ID, "hatbag_rare"), new BagItem(Rarity.RARE));
-    private static final BagItem HATBAG_EPIC = Registry.register(BuiltInRegistries.ITEM, ResourceLocation.tryBuild(Constants.MOD_ID, "hatbag_epic"), new BagItem(Rarity.EPIC));
-    private static final BagItem HATBAG_EASTER = Registry.register(BuiltInRegistries.ITEM, ResourceLocation.tryBuild(Constants.MOD_ID, "hatbag_easter"), new BagItem(HatSeason.EASTER));
-    private static final BagItem HATBAG_SUMMER = Registry.register(BuiltInRegistries.ITEM, ResourceLocation.tryBuild(Constants.MOD_ID, "hatbag_summer"), new BagItem(HatSeason.SUMMER));
-    private static final BagItem HATBAG_HALLOWEEN = Registry.register(BuiltInRegistries.ITEM, ResourceLocation.tryBuild(Constants.MOD_ID, "hatbag_halloween"), new BagItem(HatSeason.HALLOWEEN));
-    private static final BagItem HATBAG_FESTIVE = Registry.register(BuiltInRegistries.ITEM, ResourceLocation.tryBuild(Constants.MOD_ID, "hatbag_festive"), new BagItem(HatSeason.FESTIVE));
-    private static final Item HATSCRAPS_COMMON = Registry.register(BuiltInRegistries.ITEM, ResourceLocation.tryBuild(Constants.MOD_ID, "hatscraps_common"), new Item(new Item.Properties().rarity(Rarity.COMMON)));
-    private static final Item HATSCRAPS_UNCOMMON = Registry.register(BuiltInRegistries.ITEM, ResourceLocation.tryBuild(Constants.MOD_ID, "hatscraps_uncommon"), new Item(new Item.Properties().rarity(Rarity.UNCOMMON)));
-    private static final Item HATSCRAPS_RARE = Registry.register(BuiltInRegistries.ITEM, ResourceLocation.tryBuild(Constants.MOD_ID, "hatscraps_rare"), new Item(new Item.Properties().rarity(Rarity.RARE)));
-    private static final Item HATSCRAPS_EASTER = Registry.register(BuiltInRegistries.ITEM, ResourceLocation.tryBuild(Constants.MOD_ID, "hatscraps_easter"), new Item(new Item.Properties().rarity(Rarity.EPIC)));
-    private static final Item HATSCRAPS_SUMMER = Registry.register(BuiltInRegistries.ITEM, ResourceLocation.tryBuild(Constants.MOD_ID, "hatscraps_summer"), new Item(new Item.Properties().rarity(Rarity.EPIC)));
-    private static final Item HATSCRAPS_HALLOWEEN = Registry.register(BuiltInRegistries.ITEM, ResourceLocation.tryBuild(Constants.MOD_ID, "hatscraps_halloween"), new Item(new Item.Properties().rarity(Rarity.EPIC)));
-    private static final Item HATSCRAPS_FESTIVE = Registry.register(BuiltInRegistries.ITEM, ResourceLocation.tryBuild(Constants.MOD_ID, "hatscraps_festive"), new Item(new Item.Properties().rarity(Rarity.EPIC)));
-    private static final Item HATICON = Registry.register(BuiltInRegistries.ITEM, ResourceLocation.tryBuild(Constants.MOD_ID, "haticon"), new Item(new Item.Properties()));
-    private static final HatDisplayItem HATDISPLAYITEM = Registry.register(BuiltInRegistries.ITEM, ResourceLocation.tryBuild(Constants.MOD_ID, "hatdisplay"), new HatDisplayItem(new Item.Properties()));
-    private static final HatItem HATSPECIAL = Registry.register(BuiltInRegistries.ITEM, ResourceLocation.tryBuild(Constants.MOD_ID, "special"), new HatItem(new HatEntry("special", Rarity.EPIC, 0)));
+    private static final BagItem HATBAG_COMMON = registerItem("hatbag_common", properties -> new BagItem(Rarity.COMMON, properties));
+    private static final BagItem HATBAG_UNCOMMON = registerItem("hatbag_uncommon", properties -> new BagItem(Rarity.UNCOMMON, properties));
+    private static final BagItem HATBAG_RARE = registerItem("hatbag_rare", properties -> new BagItem(Rarity.RARE, properties));
+    private static final BagItem HATBAG_EPIC = registerItem("hatbag_epic", properties -> new BagItem(Rarity.EPIC, properties));
+    private static final BagItem HATBAG_EASTER = registerItem("hatbag_easter", properties -> new BagItem(HatSeason.EASTER, properties));
+    private static final BagItem HATBAG_SUMMER = registerItem("hatbag_summer", properties -> new BagItem(HatSeason.SUMMER, properties));
+    private static final BagItem HATBAG_HALLOWEEN = registerItem("hatbag_halloween", properties -> new BagItem(HatSeason.HALLOWEEN, properties));
+    private static final BagItem HATBAG_FESTIVE = registerItem("hatbag_festive", properties -> new BagItem(HatSeason.FESTIVE, properties));
+    private static final Item HATSCRAPS_COMMON = registerItem("hatscraps_common", properties -> new Item(properties.rarity(Rarity.COMMON)));
+    private static final Item HATSCRAPS_UNCOMMON = registerItem("hatscraps_uncommon", properties -> new Item(properties.rarity(Rarity.UNCOMMON)));
+    private static final Item HATSCRAPS_RARE = registerItem("hatscraps_rare", properties -> new Item(properties.rarity(Rarity.RARE)));
+    private static final Item HATSCRAPS_EASTER = registerItem("hatscraps_easter", properties -> new Item(properties.rarity(Rarity.EPIC)));
+    private static final Item HATSCRAPS_SUMMER = registerItem("hatscraps_summer", properties -> new Item(properties.rarity(Rarity.EPIC)));
+    private static final Item HATSCRAPS_HALLOWEEN = registerItem("hatscraps_halloween", properties -> new Item(properties.rarity(Rarity.EPIC)));
+    private static final Item HATSCRAPS_FESTIVE = registerItem("hatscraps_festive", properties -> new Item(properties.rarity(Rarity.EPIC)));
+    private static final Item HATICON = registerItem("haticon", Item::new);
+    private static final HatDisplayItem HATDISPLAYITEM = registerItem("hatdisplay", HatDisplayItem::new);
+    private static final HatItem HATSPECIAL = registerItem("special", properties -> new HatItem(new HatEntry("special", Rarity.EPIC, 0), properties));
     
-    private static final EntityType<HatDisplay> HATDISPLAYENTITY = Registry.register(BuiltInRegistries.ENTITY_TYPE, ResourceLocation.tryBuild(Constants.MOD_ID, "hatdisplay"), EntityType.Builder.<HatDisplay>of(HatDisplay::new, MobCategory.MISC).sized(0.75F, 0.8125F).clientTrackingRange(10).build("hatdisplay"));
+    private static final EntityType<HatDisplay> HATDISPLAYENTITY = Registry.register(BuiltInRegistries.ENTITY_TYPE, ResourceLocation.tryBuild(Constants.MOD_ID, "hatdisplay"), EntityType.Builder.<HatDisplay>of(HatDisplay::new, MobCategory.MISC).sized(0.75F, 0.8125F).clientTrackingRange(10).build(ResourceKey.create(Registries.ENTITY_TYPE, ResourceLocation.tryBuild(Constants.MOD_ID, "hatdisplay"))));
     
-    private static final RecipeSerializer<?> HATSCRAP_SERIALIZER = Registry.register(BuiltInRegistries.RECIPE_SERIALIZER, ResourceLocation.tryBuild(Constants.MOD_ID, "custom_hatscraps"), new SimpleCraftingRecipeSerializer(HatScrapRecipe::new));
-    private static final RecipeSerializer<?> HATVARIANTS_SERIALIZER = Registry.register(BuiltInRegistries.RECIPE_SERIALIZER, ResourceLocation.tryBuild(Constants.MOD_ID, "custom_hatvariants"), new SimpleCraftingRecipeSerializer(HatVariantRecipe::new));
+    private static final RecipeSerializer<HatScrapRecipe> HATSCRAP_SERIALIZER = Registry.register(BuiltInRegistries.RECIPE_SERIALIZER, ResourceLocation.tryBuild(Constants.MOD_ID, "custom_hatscraps"), new CustomRecipe.Serializer<>(HatScrapRecipe::new));
+    private static final RecipeSerializer<HatVariantRecipe> HATVARIANTS_SERIALIZER = Registry.register(BuiltInRegistries.RECIPE_SERIALIZER, ResourceLocation.tryBuild(Constants.MOD_ID, "custom_hatvariants"), new CustomRecipe.Serializer<>(HatVariantRecipe::new));
     
     public static void registerHats() {
         SimpleHatsCommon.MOD_REGISTRY.getHatList().add(SimpleHatsCommon.MOD_REGISTRY.getHatSpecial());
         for(HatEntry entry : HatJson.getHatList()) {
-            HatItem hat = entry.getHatDyeSettings().getUseDye() ? new HatItemDyeable(entry) : new HatItem(entry);
-            hat = Registry.register(BuiltInRegistries.ITEM, ResourceLocation.tryBuild(Constants.MOD_ID, entry.getHatName()), hat);
+            HatItem hat = registerItem(entry.getHatName(), properties -> entry.getHatDyeSettings().getUseDye() ? new HatItemDyeable(entry, properties) : new HatItem(entry, properties));
             SimpleHatsCommon.MOD_REGISTRY.getHatList().add(hat);
 
             if(hat instanceof HatItemDyeable) {
-                CauldronInteraction.WATER.map().put((HatItemDyeable)hat, CauldronInteraction.DYED_ITEM);
+                CauldronInteraction.WATER.map().put((HatItemDyeable)hat, CauldronInteraction.WATER.map().get(Items.LEATHER_HELMET));
                 TagInjector.inject(BuiltInRegistries.ITEM, ItemTags.DYEABLE.location(), hat);
             }
         }
         Constants.LOG.info("Generated " + SimpleHatsCommon.MOD_REGISTRY.getHatList().size() + " hat items from hat entries.");
 
         TagInjector.inject(BuiltInRegistries.ITEM, SimpleHatsCommon.ALL_HATS.location(), SimpleHatsCommon.MOD_REGISTRY.getHatList().stream().map(hatItem -> (Item)hatItem).toList());
+    }
+
+    private static <T extends Item> T registerItem(String name, Function<Item.Properties, T> factory) {
+        ResourceKey<Item> key = ResourceKey.create(Registries.ITEM, ResourceLocation.tryBuild(Constants.MOD_ID, name));
+        return Registry.register(BuiltInRegistries.ITEM, key, factory.apply(new Item.Properties().setId(key)));
     }
 
     @Override
@@ -205,12 +211,12 @@ public class ModRegistry implements IModRegistry {
     }
     
     @Override
-    public RecipeSerializer<?> getHatScrapSerializer() {
+    public RecipeSerializer<HatScrapRecipe> getHatScrapSerializer() {
         return HATSCRAP_SERIALIZER;
     }
     
     @Override
-    public RecipeSerializer<?> getHatVariantSerializer() {
+    public RecipeSerializer<HatVariantRecipe> getHatVariantSerializer() {
         return HATVARIANTS_SERIALIZER;
     }
 }

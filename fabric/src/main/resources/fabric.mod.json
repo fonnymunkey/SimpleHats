@@ -30,11 +30,13 @@
         "fabric-api": "*",
         "minecraft": "${minecraft_version}",
         "java": ">=${java_version}",
-    	"accessories": ">=${accessories_version}",
         "owo": ">=${owo_version}"
     },
     "suggests": {
-        "another-mod": "*"
+        "accessories": ">=${accessories_version}"
+    },
+    "breaks": {
+        "accessories": "<${accessories_version}"
     }
 }
   

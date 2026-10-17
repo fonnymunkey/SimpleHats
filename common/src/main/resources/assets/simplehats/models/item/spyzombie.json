@@ -2,6 +2,7 @@
 	"parent": "simplehats:item/hatparent",
 	"texture_size": [32, 32],
 	"textures": {
+		"particle": "simplehats:item/hats/spyzombie",
 		"0": "simplehats:item/hats/spyzombie"
 	},
 	"elements": [

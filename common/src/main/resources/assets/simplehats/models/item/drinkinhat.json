@@ -3,6 +3,7 @@
 	"parent": "simplehats:item/hatparent",
 	"texture_size": [32, 32],
 	"textures": {
+		"particle": "simplehats:item/hats/drinkinhat",
 		"2": "simplehats:item/hats/drinkinhat"
 	},
 	"elements": [

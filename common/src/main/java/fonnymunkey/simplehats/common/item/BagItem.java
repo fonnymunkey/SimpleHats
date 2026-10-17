@@ -7,12 +7,13 @@ import fonnymunkey.simplehats.util.HatEntry;
 import fonnymunkey.simplehats.util.HatEntry.HatSeason;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.util.random.SimpleWeightedRandomList;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.random.WeightedList;
 import net.minecraft.util.valueproviders.ConstantInt;
 import net.minecraft.util.valueproviders.IntProvider;
 import net.minecraft.util.valueproviders.WeightedListInt;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -31,13 +32,13 @@ public class BagItem extends Item {
     private final List<HatItem> availableHatList = new ArrayList<>();
     private WeightedListInt availableHatListWeighted = null;
 
-    public BagItem(Rarity rarity) {
-        super(new Item.Properties().rarity(rarity));
+    public BagItem(Rarity rarity, Item.Properties properties) {
+        super(properties.rarity(rarity));
         this.rarity = rarity;
     }
 
-    public BagItem(HatEntry.HatSeason hatSeason) {
-        super(new Item.Properties().rarity(Rarity.EPIC));
+    public BagItem(HatEntry.HatSeason hatSeason, Item.Properties properties) {
+        super(properties.rarity(Rarity.EPIC));
         this.hatSeason = hatSeason;
         this.seasonal = true;
         this.rarity = Rarity.EPIC;
@@ -48,23 +49,23 @@ public class BagItem extends Item {
     }
 
     @Override
-    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand usedHand) {
+    public InteractionResult use(Level level, Player player, InteractionHand usedHand) {
         ItemStack itemStack = player.getItemInHand(usedHand);
         player.playSound(getUnwrapFinishSound(), 1.0F, 1.0F + (level.getRandom().nextFloat() - level.getRandom().nextFloat()) * 0.4F);
 
-        if(!level.isClientSide()) {
+        if(level instanceof ServerLevel serverLevel) {
             if(!this.seasonal && HatSeason.getSeason() != HatSeason.NONE) {
                 if(level.getRandom().nextFloat()*100.0F < SimpleHatsConfigAbstract.seasonalBagChance()) {
                     Item item = getSeasonalBag();
-                    if(item != Items.AIR) player.spawnAtLocation(item);
+                    if(item != Items.AIR) player.spawnAtLocation(serverLevel, item);
                 }
             }
             Item item = this.getBagResult(level, itemStack);
-            if(item != Items.AIR) player.spawnAtLocation(item);
+            if(item != Items.AIR) player.spawnAtLocation(serverLevel, item);
         }
         
         itemStack.shrink(1);
-        return InteractionResultHolder.sidedSuccess(itemStack, level.isClientSide());
+        return InteractionResult.SUCCESS;
     }
 
     private static Item getSeasonalBag() {
@@ -94,7 +95,7 @@ public class BagItem extends Item {
         }
         if(this.availableHatListWeighted == null) {
             try {
-                SimpleWeightedRandomList.Builder<IntProvider> builder = generateSimpleWeightedList(SimpleWeightedRandomList.<IntProvider>builder().add(ConstantInt.of(0), this.availableHatList.get(0).getHatEntry().getHatWeight()), 1);
+                WeightedList.Builder<IntProvider> builder = generateSimpleWeightedList(WeightedList.<IntProvider>builder().add(ConstantInt.of(0), this.availableHatList.get(0).getHatEntry().getHatWeight()), 1);
                 this.availableHatListWeighted = new WeightedListInt(builder.build());
             }
             catch(Exception ex) {
@@ -106,7 +107,7 @@ public class BagItem extends Item {
     }
 
     //Nasty, nasty recursion
-    private SimpleWeightedRandomList.Builder<IntProvider> generateSimpleWeightedList(SimpleWeightedRandomList.Builder<IntProvider> list, int i) {
+    private WeightedList.Builder<IntProvider> generateSimpleWeightedList(WeightedList.Builder<IntProvider> list, int i) {
         if(i<this.availableHatList.size()) {
             list.add(ConstantInt.of(i), this.availableHatList.get(i).getHatEntry().getHatWeight());
             i++;

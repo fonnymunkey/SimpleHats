@@ -3,13 +3,8 @@ package fonnymunkey.simplehats.common.entity;
 import fonnymunkey.simplehats.Constants;
 import fonnymunkey.simplehats.SimpleHatsCommon;
 import fonnymunkey.simplehats.common.item.HatItem;
-import net.minecraft.core.NonNullList;
 import net.minecraft.core.particles.BlockParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.NbtOps;
-import net.minecraft.nbt.Tag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -30,10 +25,10 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.gameevent.GameEvent;
+import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.phys.Vec3;
 
 public class HatDisplay extends LivingEntity {
-    private final NonNullList<ItemStack> hatItemSlots = NonNullList.withSize(1, ItemStack.EMPTY);
     public static final EntityDataAccessor<Byte> DATA_CLIENT_FLAGS = SynchedEntityData.defineId(HatDisplay.class, EntityDataSerializers.BYTE);
     public long lastHit;
 
@@ -60,28 +55,17 @@ public class HatDisplay extends LivingEntity {
     }
 
     @Override
-    public ItemStack getItemBySlot(EquipmentSlot slot) {
-        return this.hatItemSlots.get(0);
-    }
-
-    @Override
     public void setItemSlot(EquipmentSlot slot, ItemStack stack) {
         if(!stack.isEmpty() && !(stack.getItem() instanceof HatItem)) {
             Constants.LOG.error( "Attempted to place non-hat item \"" + stack.getItem().getName(stack) + "\" on hat display stand");
             return;
         }
-        this.verifyEquippedItem(stack);
-        this.onEquipItem(EquipmentSlot.HEAD, (ItemStack)this.hatItemSlots.set(0, stack), stack);
+        super.setItemSlot(EquipmentSlot.HEAD, stack);
     }
 
     @Override
-    public boolean canTakeItem(ItemStack itemStack) {
-        return this.getItemBySlot(null).isEmpty();
-    }
-
-    @Override
-    public Iterable<ItemStack> getArmorSlots() {
-        return this.hatItemSlots;
+    public boolean canUseSlot(EquipmentSlot slot) {
+        return slot == EquipmentSlot.HEAD;
     }
 
     @Override
@@ -90,24 +74,9 @@ public class HatDisplay extends LivingEntity {
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundTag compound) {
-        super.addAdditionalSaveData(compound);
-        ListTag listTag = new ListTag();
-
-        ItemStack itemStack = this.hatItemSlots.get(0);
-        Tag compoundTag = ItemStack.CODEC.encodeStart(NbtOps.INSTANCE, itemStack).mapOrElse(e -> e, $ -> new CompoundTag());
-        listTag.add(compoundTag);
-
-        compound.put("HatItem", listTag);
-    }
-
-    @Override
-    public void readAdditionalSaveData(CompoundTag compound) {
-        super.readAdditionalSaveData(compound);
-        if(compound.contains("HatItem", 9)) {
-            ListTag listTag = compound.getList("HatItem", 10);
-            this.hatItemSlots.set(0, ItemStack.parse(this.registryAccess(), listTag.getFirst()).orElse(ItemStack.EMPTY));
-        }
+    protected void readAdditionalSaveData(ValueInput input) {
+        super.readAdditionalSaveData(input);
+        input.listOrEmpty("HatItem", ItemStack.OPTIONAL_CODEC).stream().findFirst().ifPresent(stack -> this.setItemSlot(EquipmentSlot.HEAD, stack));
     }
 
     @Override
@@ -148,12 +117,12 @@ public class HatDisplay extends LivingEntity {
     }
 
     private boolean swapItem(Player player, ItemStack stack, InteractionHand hand) {
-        ItemStack itemStack = this.getItemBySlot(null);
+        ItemStack itemStack = this.getItemBySlot(EquipmentSlot.HEAD);
         if(!stack.isEmpty() && !(stack.getItem() instanceof HatItem)) return false;
         if(player.hasInfiniteMaterials() && itemStack.isEmpty() && !stack.isEmpty()) {
             ItemStack itemStack2 = stack.copy();
             itemStack2.setCount(1);
-            this.setItemSlot(null, itemStack2);
+            this.setItemSlot(EquipmentSlot.HEAD, itemStack2);
             return true;
         }
         else if(!stack.isEmpty() && stack.getCount() > 1) {
@@ -163,83 +132,78 @@ public class HatDisplay extends LivingEntity {
             else {
                 ItemStack itemStack1 = stack.copy();
                 itemStack1.setCount(1);
-                this.setItemSlot(null, itemStack1);
+                this.setItemSlot(EquipmentSlot.HEAD, itemStack1);
                 stack.shrink(1);
                 return true;
             }
         }
         else {
-            this.setItemSlot(null, stack);
+            this.setItemSlot(EquipmentSlot.HEAD, stack);
             player.setItemInHand(hand, itemStack);
             return true;
         }
     }
 
     @Override
-    public boolean hurt(DamageSource source, float amount) {
+    public boolean hurtServer(ServerLevel serverLevel, DamageSource source, float amount) {
         if(!this.isRemoved()) {
-            if(this.level() instanceof ServerLevel serverLevel) {
-                if(source.is(DamageTypeTags.BYPASSES_INVULNERABILITY)) {
-                    this.kill();
+            if(source.is(DamageTypeTags.BYPASSES_INVULNERABILITY)) {
+                this.kill(serverLevel);
+                return false;
+            }
+            else if(!this.isInvulnerableTo(serverLevel, source)) {
+                if(source.is(DamageTypeTags.IS_EXPLOSION)) {
+                    this.onBreak(serverLevel, source);
+                    this.kill(serverLevel);
                     return false;
                 }
-                else if(!this.isInvulnerableTo(source)) {
-                    if(source.is(DamageTypeTags.IS_EXPLOSION)) {
-                        this.onBreak(serverLevel, source);
-                        this.kill();
-                        return false;
-                    }
-                    else if(source.is(DamageTypeTags.IGNITES_ARMOR_STANDS)) {
-                        if(this.isOnFire()) {
-                            this.updateHealth(serverLevel, source, 0.15F);
-                        }
-                        else {
-                            this.igniteForSeconds(5);
-                        }
-                        return false;
-                    }
-                    else if(source.is(DamageTypeTags.BURNS_ARMOR_STANDS) && this.getHealth() > 0.5F) {
-                        this.updateHealth(serverLevel, source, 4.0F);
-                        return false;
+                else if(source.is(DamageTypeTags.IGNITES_ARMOR_STANDS)) {
+                    if(this.isOnFire()) {
+                        this.updateHealth(serverLevel, source, 0.15F);
                     }
                     else {
-                        boolean flag1 = source.is(DamageTypeTags.CAN_BREAK_ARMOR_STAND);
-                        boolean flag = source.is(DamageTypeTags.ALWAYS_KILLS_ARMOR_STANDS);
-                        if (!flag1 && !flag) {
-                            return false;
-                        } else {
-                            Entity var7 = source.getEntity();
-                            if (var7 instanceof Player) {
-                                Player player = (Player)var7;
-                                if (!player.getAbilities().mayBuild) {
-                                    return false;
-                                }
-                            }
-                            
-                            if (source.isCreativePlayer()) {
-                                this.playBreakSound();
-                                this.spawnBreakParticles();
-                                this.kill();
-                                return true;
-                            } else {
-                                long i = serverLevel.getGameTime();
-                                if (i - this.lastHit > 5L && !flag) {
-                                    serverLevel.broadcastEntityEvent(this, (byte)32);
-                                    this.gameEvent(GameEvent.ENTITY_DAMAGE, source.getEntity());
-                                    this.lastHit = i;
-                                } else {
-                                    this.breakAndDropItem(serverLevel, source);
-                                    this.spawnBreakParticles();
-                                    this.kill();
-                                }
-                                
-                                return true;
-                            }
-                        }
+                        this.igniteForSeconds(5);
                     }
+                    return false;
+                }
+                else if(source.is(DamageTypeTags.BURNS_ARMOR_STANDS) && this.getHealth() > 0.5F) {
+                    this.updateHealth(serverLevel, source, 4.0F);
+                    return false;
                 }
                 else {
-                    return false;
+                    boolean flag1 = source.is(DamageTypeTags.CAN_BREAK_ARMOR_STAND);
+                    boolean flag = source.is(DamageTypeTags.ALWAYS_KILLS_ARMOR_STANDS);
+                    if (!flag1 && !flag) {
+                        return false;
+                    } else {
+                        Entity var7 = source.getEntity();
+                        if (var7 instanceof Player) {
+                            Player player = (Player)var7;
+                            if (!player.getAbilities().mayBuild) {
+                                return false;
+                            }
+                        }
+                        
+                        if (source.isCreativePlayer()) {
+                            this.playBreakSound();
+                            this.spawnBreakParticles();
+                            this.kill(serverLevel);
+                            return true;
+                        } else {
+                            long i = serverLevel.getGameTime();
+                            if (i - this.lastHit > 5L && !flag) {
+                                serverLevel.broadcastEntityEvent(this, (byte)32);
+                                this.gameEvent(GameEvent.ENTITY_DAMAGE, source.getEntity());
+                                this.lastHit = i;
+                            } else {
+                                this.breakAndDropItem(serverLevel, source);
+                                this.spawnBreakParticles();
+                                this.kill(serverLevel);
+                            }
+                            
+                            return true;
+                        }
+                    }
                 }
             }
             else {
@@ -274,7 +238,7 @@ public class HatDisplay extends LivingEntity {
         float f = this.getHealth() - dmg;
         if(f <= 0.5F) {
             this.onBreak(level, source);
-            this.kill();
+            this.kill(level);
         }
         else {
             this.setHealth(f);
@@ -291,10 +255,9 @@ public class HatDisplay extends LivingEntity {
         this.playBreakSound();
         this.dropAllDeathLoot(level, source);
 
-        ItemStack itemStack = this.hatItemSlots.get(0);
+        ItemStack itemStack = this.equipment.set(EquipmentSlot.HEAD, ItemStack.EMPTY);
         if(!itemStack.isEmpty()) {
             Block.popResource(this.level(), this.blockPosition().above(), itemStack);
-            this.hatItemSlots.set(0, ItemStack.EMPTY);
         }
     }
 
@@ -303,10 +266,9 @@ public class HatDisplay extends LivingEntity {
     }
 
     @Override
-    protected float tickHeadTurn(float f1, float f2) {
+    protected void tickHeadTurn(float yBodyRot) {
         this.yBodyRotO = this.yRotO;
         this.yBodyRot = this.getYRot();
-        return 0.0F;
     }
     
     @Override
@@ -327,7 +289,7 @@ public class HatDisplay extends LivingEntity {
     }
 
     @Override
-    public void kill() {
+    public void kill(ServerLevel level) {
         this.remove(Entity.RemovalReason.KILLED);
     }
 

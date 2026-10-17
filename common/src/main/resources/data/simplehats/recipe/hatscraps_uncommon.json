@@ -1,12 +1,8 @@
 {
     "type": "minecraft:crafting_shapeless",
     "ingredients": [
-        {
-            "item": "simplehats:hatscraps_common"
-        },
-		{
-            "item": "simplehats:hatscraps_common"
-        }
+        "simplehats:hatscraps_common",
+		"simplehats:hatscraps_common"
     ],
     "result": {
         "id": "simplehats:hatscraps_uncommon"

@@ -2,6 +2,7 @@
 	"parent": "simplehats:item/hatparent2",
 	"texture_size": [64, 64],
 	"textures": {
+		"particle": "simplehats:item/hats/fulldiamondhelm",
 		"2": "simplehats:item/hats/fulldiamondhelm"
 	},
 	"elements": [

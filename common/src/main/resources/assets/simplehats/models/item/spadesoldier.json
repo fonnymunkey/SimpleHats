@@ -2,6 +2,7 @@
 	"parent": "simplehats:item/hatparent",
 	"texture_size": [64, 64],
 	"textures": {
+		"particle": "simplehats:item/hats/spadesoldier",
 		"1": "simplehats:item/hats/spadesoldier"
 	},
 	"elements": [

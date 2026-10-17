@@ -1,0 +1,7 @@
+{
+  "model": {
+    "type": "minecraft:model",
+    "model": "simplehats:item/gnome",
+    "tints": [{"type": "minecraft:dye", "default": -16711936}]
+  }
+}

@@ -2,6 +2,7 @@ package fonnymunkey.simplehats;
 
 import fonnymunkey.simplehats.common.init.*;
 import fonnymunkey.simplehats.common.init.SimpleHatsConfig;
+import fonnymunkey.simplehats.compat.IHatSlotCompat;
 import fonnymunkey.simplehats.platform.Services;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
@@ -11,6 +12,8 @@ import net.minecraft.world.item.Item;
 public class SimpleHatsCommon {
     
     public static final SimpleHatsConfig CONFIG = SimpleHatsConfig.createAndLoad();
+    
+    public static final IHatSlotCompat HAT_SLOT_COMPAT = Services.PLATFORM.initHatSlotCompat();
     
     public static final IModRegistry MOD_REGISTRY = Services.PLATFORM.initModRegistry();
     

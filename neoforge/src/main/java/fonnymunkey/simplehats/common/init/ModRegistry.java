@@ -12,6 +12,7 @@ import fonnymunkey.simplehats.util.HatEntry;
 import fonnymunkey.simplehats.util.HatEntry.HatSeason;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.item.CreativeModeTab;
@@ -19,7 +20,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.crafting.RecipeSerializer;
-import net.minecraft.world.item.crafting.SimpleCraftingRecipeSerializer;
+import net.minecraft.world.item.crafting.CustomRecipe;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
@@ -59,32 +60,32 @@ public class ModRegistry implements IModRegistry {
                             }
                         }).build());
     
-    private static final DeferredRegister<Item> ITEM_REG = DeferredRegister.create(Registries.ITEM, Constants.MOD_ID);
-    private static final DeferredHolder<Item, BagItem> HATBAG_COMMON = ITEM_REG.register("hatbag_common", () -> new BagItem(Rarity.COMMON));
-    private static final DeferredHolder<Item, BagItem> HATBAG_UNCOMMON = ITEM_REG.register("hatbag_uncommon", () -> new BagItem(Rarity.UNCOMMON));
-    private static final DeferredHolder<Item, BagItem> HATBAG_RARE = ITEM_REG.register("hatbag_rare", () -> new BagItem(Rarity.RARE));
-    private static final DeferredHolder<Item, BagItem> HATBAG_EPIC = ITEM_REG.register("hatbag_epic", () -> new BagItem(Rarity.EPIC));
-    private static final DeferredHolder<Item, BagItem> HATBAG_EASTER = ITEM_REG.register("hatbag_easter", () -> new BagItem(HatSeason.EASTER));
-    private static final DeferredHolder<Item, BagItem> HATBAG_SUMMER = ITEM_REG.register("hatbag_summer", () -> new BagItem(HatSeason.SUMMER));
-    private static final DeferredHolder<Item, BagItem> HATBAG_HALLOWEEN = ITEM_REG.register("hatbag_halloween", () -> new BagItem(HatSeason.HALLOWEEN));
-    private static final DeferredHolder<Item, BagItem> HATBAG_FESTIVE = ITEM_REG.register("hatbag_festive", () -> new BagItem(HatSeason.FESTIVE));
-    private static final DeferredHolder<Item, Item> HATSCRAPS_COMMON = ITEM_REG.register("hatscraps_common", () -> new Item(new Item.Properties().rarity(Rarity.COMMON)));
-    private static final DeferredHolder<Item, Item> HATSCRAPS_UNCOMMON = ITEM_REG.register("hatscraps_uncommon", () -> new Item(new Item.Properties().rarity(Rarity.UNCOMMON)));
-    private static final DeferredHolder<Item, Item> HATSCRAPS_RARE = ITEM_REG.register("hatscraps_rare", () -> new Item(new Item.Properties().rarity(Rarity.RARE)));
-    private static final DeferredHolder<Item, Item> HATSCRAPS_EASTER = ITEM_REG.register("hatscraps_easter", () -> new Item(new Item.Properties().rarity(Rarity.EPIC)));
-    private static final DeferredHolder<Item, Item> HATSCRAPS_SUMMER = ITEM_REG.register("hatscraps_summer", () -> new Item(new Item.Properties().rarity(Rarity.EPIC)));
-    private static final DeferredHolder<Item, Item> HATSCRAPS_HALLOWEEN = ITEM_REG.register("hatscraps_halloween", () -> new Item(new Item.Properties().rarity(Rarity.EPIC)));
-    private static final DeferredHolder<Item, Item> HATSCRAPS_FESTIVE = ITEM_REG.register("hatscraps_festive", () -> new Item(new Item.Properties().rarity(Rarity.EPIC)));
-    private static final DeferredHolder<Item, Item> HATICON = ITEM_REG.register("haticon", () -> new Item(new Item.Properties()));
-    private static final DeferredHolder<Item, HatDisplayItem> HATDISPLAYITEM = ITEM_REG.register("hatdisplay", () -> new HatDisplayItem(new Item.Properties()));
-    private static final DeferredHolder<Item, HatItem> HATSPECIAL = ITEM_REG.register("special", () -> new HatItem(new HatEntry("special", Rarity.EPIC, 0)));
+    private static final DeferredRegister.Items ITEM_REG = DeferredRegister.createItems(Constants.MOD_ID);
+    private static final DeferredHolder<Item, BagItem> HATBAG_COMMON = ITEM_REG.registerItem("hatbag_common", properties -> new BagItem(Rarity.COMMON, properties));
+    private static final DeferredHolder<Item, BagItem> HATBAG_UNCOMMON = ITEM_REG.registerItem("hatbag_uncommon", properties -> new BagItem(Rarity.UNCOMMON, properties));
+    private static final DeferredHolder<Item, BagItem> HATBAG_RARE = ITEM_REG.registerItem("hatbag_rare", properties -> new BagItem(Rarity.RARE, properties));
+    private static final DeferredHolder<Item, BagItem> HATBAG_EPIC = ITEM_REG.registerItem("hatbag_epic", properties -> new BagItem(Rarity.EPIC, properties));
+    private static final DeferredHolder<Item, BagItem> HATBAG_EASTER = ITEM_REG.registerItem("hatbag_easter", properties -> new BagItem(HatSeason.EASTER, properties));
+    private static final DeferredHolder<Item, BagItem> HATBAG_SUMMER = ITEM_REG.registerItem("hatbag_summer", properties -> new BagItem(HatSeason.SUMMER, properties));
+    private static final DeferredHolder<Item, BagItem> HATBAG_HALLOWEEN = ITEM_REG.registerItem("hatbag_halloween", properties -> new BagItem(HatSeason.HALLOWEEN, properties));
+    private static final DeferredHolder<Item, BagItem> HATBAG_FESTIVE = ITEM_REG.registerItem("hatbag_festive", properties -> new BagItem(HatSeason.FESTIVE, properties));
+    private static final DeferredHolder<Item, Item> HATSCRAPS_COMMON = ITEM_REG.registerItem("hatscraps_common", properties -> new Item(properties.rarity(Rarity.COMMON)));
+    private static final DeferredHolder<Item, Item> HATSCRAPS_UNCOMMON = ITEM_REG.registerItem("hatscraps_uncommon", properties -> new Item(properties.rarity(Rarity.UNCOMMON)));
+    private static final DeferredHolder<Item, Item> HATSCRAPS_RARE = ITEM_REG.registerItem("hatscraps_rare", properties -> new Item(properties.rarity(Rarity.RARE)));
+    private static final DeferredHolder<Item, Item> HATSCRAPS_EASTER = ITEM_REG.registerItem("hatscraps_easter", properties -> new Item(properties.rarity(Rarity.EPIC)));
+    private static final DeferredHolder<Item, Item> HATSCRAPS_SUMMER = ITEM_REG.registerItem("hatscraps_summer", properties -> new Item(properties.rarity(Rarity.EPIC)));
+    private static final DeferredHolder<Item, Item> HATSCRAPS_HALLOWEEN = ITEM_REG.registerItem("hatscraps_halloween", properties -> new Item(properties.rarity(Rarity.EPIC)));
+    private static final DeferredHolder<Item, Item> HATSCRAPS_FESTIVE = ITEM_REG.registerItem("hatscraps_festive", properties -> new Item(properties.rarity(Rarity.EPIC)));
+    private static final DeferredHolder<Item, Item> HATICON = ITEM_REG.registerItem("haticon", Item::new);
+    private static final DeferredHolder<Item, HatDisplayItem> HATDISPLAYITEM = ITEM_REG.registerItem("hatdisplay", HatDisplayItem::new);
+    private static final DeferredHolder<Item, HatItem> HATSPECIAL = ITEM_REG.registerItem("special", properties -> new HatItem(new HatEntry("special", Rarity.EPIC, 0), properties));
 
     private static final DeferredRegister<EntityType<?>> ENTITY_REG = DeferredRegister.create(Registries.ENTITY_TYPE, Constants.MOD_ID);
-    private static final DeferredHolder<EntityType<?>,EntityType<HatDisplay>> HATDISPLAYENTITY = ENTITY_REG.register("hatdisplay", () -> EntityType.Builder.<HatDisplay>of(HatDisplay::new, MobCategory.MISC).sized(0.75F, 0.8125F).clientTrackingRange(10).build("hatdisplay"));
+    private static final DeferredHolder<EntityType<?>,EntityType<HatDisplay>> HATDISPLAYENTITY = ENTITY_REG.register("hatdisplay", key -> EntityType.Builder.<HatDisplay>of(HatDisplay::new, MobCategory.MISC).sized(0.75F, 0.8125F).clientTrackingRange(10).build(ResourceKey.create(Registries.ENTITY_TYPE, key)));
 
     private static final DeferredRegister<RecipeSerializer<?>> RECIPE_REG = DeferredRegister.create(Registries.RECIPE_SERIALIZER, Constants.MOD_ID);
-    private static final DeferredHolder<RecipeSerializer<?>,SimpleCraftingRecipeSerializer<HatScrapRecipe>> HATSCRAP_SERIALIZER = RECIPE_REG.register("custom_hatscraps", () -> new SimpleCraftingRecipeSerializer<>(HatScrapRecipe::new));
-    private static final DeferredHolder<RecipeSerializer<?>,SimpleCraftingRecipeSerializer<HatVariantRecipe>> HATVARIANTS_SERIALIZER = RECIPE_REG.register("custom_hatvariants", () -> new SimpleCraftingRecipeSerializer<>(HatVariantRecipe::new));
+    private static final DeferredHolder<RecipeSerializer<?>,CustomRecipe.Serializer<HatScrapRecipe>> HATSCRAP_SERIALIZER = RECIPE_REG.register("custom_hatscraps", () -> new CustomRecipe.Serializer<>(HatScrapRecipe::new));
+    private static final DeferredHolder<RecipeSerializer<?>,CustomRecipe.Serializer<HatVariantRecipe>> HATVARIANTS_SERIALIZER = RECIPE_REG.register("custom_hatvariants", () -> new CustomRecipe.Serializer<>(HatVariantRecipe::new));
 
     public static void registerHats(IEventBus eventBus) {
         ModRegistry.ITEM_REG.register(eventBus);
@@ -194,12 +195,12 @@ public class ModRegistry implements IModRegistry {
     }
     
     @Override
-    public RecipeSerializer<?> getHatScrapSerializer() {
+    public RecipeSerializer<HatScrapRecipe> getHatScrapSerializer() {
         return HATSCRAP_SERIALIZER.get();
     }
     
     @Override
-    public RecipeSerializer<?> getHatVariantSerializer() {
+    public RecipeSerializer<HatVariantRecipe> getHatVariantSerializer() {
         return HATVARIANTS_SERIALIZER.get();
     }
 }

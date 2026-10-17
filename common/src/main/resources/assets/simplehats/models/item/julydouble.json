@@ -3,6 +3,7 @@
 	"parent": "simplehats:item/hatparent",
 	"texture_size": [64, 64],
 	"textures": {
+		"particle": "simplehats:item/hats/julytophat",
 		"0": "simplehats:item/hats/julytophat",
 		"1_0": "simplehats:item/hats/julysunglasses"
 	},

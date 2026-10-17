@@ -4,6 +4,8 @@ import fonnymunkey.simplehats.common.entity.HatDisplay;
 import fonnymunkey.simplehats.common.item.BagItem;
 import fonnymunkey.simplehats.common.item.HatDisplayItem;
 import fonnymunkey.simplehats.common.item.HatItem;
+import fonnymunkey.simplehats.common.recipe.HatScrapRecipe;
+import fonnymunkey.simplehats.common.recipe.HatVariantRecipe;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.crafting.RecipeSerializer;
@@ -39,6 +41,6 @@ public interface IModRegistry {
 	
 	EntityType<HatDisplay> getHatDisplayEntity();
 	
-	RecipeSerializer<?> getHatScrapSerializer();
-	RecipeSerializer<?> getHatVariantSerializer();
+	RecipeSerializer<HatScrapRecipe> getHatScrapSerializer();
+	RecipeSerializer<HatVariantRecipe> getHatVariantSerializer();
 }

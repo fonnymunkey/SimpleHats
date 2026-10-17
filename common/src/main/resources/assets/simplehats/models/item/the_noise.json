@@ -2,6 +2,7 @@
 	"parent": "simplehats:item/hatparent",
 	"texture_size": [32, 32],
 	"textures": {
+		"particle": "simplehats:item/hats/the_noise",
 		"1": "simplehats:item/hats/the_noise"
 	},
 	"elements": [
