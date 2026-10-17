@@ -1,13 +1,5 @@
 package fonnymunkey.simplehats.common.init;
 
-import com.google.common.io.Files;
-import com.google.gson.*;
-import fonnymunkey.simplehats.Constants;
-import fonnymunkey.simplehats.platform.Services;
-import fonnymunkey.simplehats.util.HatEntry;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.Rarity;
-
 import java.io.File;
 import java.io.PrintWriter;
 import java.nio.charset.Charset;
@@ -15,6 +7,19 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+
+import com.google.common.io.Files;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import fonnymunkey.simplehats.Constants;
+import fonnymunkey.simplehats.platform.Services;
+import fonnymunkey.simplehats.util.HatEntry;
+
+import net.minecraft.resources.Identifier;
+import net.minecraft.world.item.Rarity;
 
 public class HatJson {
     private static List<HatEntry> hatList = new ArrayList<>();
@@ -387,7 +392,7 @@ public class HatJson {
 
     private static boolean validateName(String name) {
         for(char c : name.toCharArray()) {
-            if(!ResourceLocation.validPathChar(c)) return false;
+            if(!Identifier.validPathChar(c)) return false;
         }
         return true;
     }

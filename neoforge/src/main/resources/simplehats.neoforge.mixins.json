@@ -8,7 +8,8 @@
     "MixinTagGroupLoader"
   ],
   "client": [
-    "MixinHumanoidArmorLayer"
+    "MixinHumanoidArmorLayer",
+    "MixinLivingEntityRenderer"
   ],
   "server": [],
   "injectors": {

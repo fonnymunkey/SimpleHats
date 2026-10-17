@@ -1,0 +1,31 @@
+{
+    "model": {
+        "type": "minecraft:range_dispatch",
+        "property": "custom_model_data",
+        "entries": [
+            {
+                "threshold": 1,
+                "model": {
+                    "type": "minecraft:model",
+                    "model": "simplehats:item/sidebow",
+                    "tints": [
+                        {
+                            "type": "minecraft:dye",
+                            "default": -1
+                        }
+                    ]
+                }
+            }
+        ],
+        "fallback": {
+            "type": "minecraft:model",
+            "model": "simplehats:item/bigribbon",
+            "tints": [
+                {
+                    "type": "minecraft:dye",
+                    "default": -1
+                }
+            ]
+        }
+    }
+}

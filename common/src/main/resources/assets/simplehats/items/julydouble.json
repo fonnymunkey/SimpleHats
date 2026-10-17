@@ -1,0 +1,38 @@
+{
+    "model": {
+        "type": "minecraft:range_dispatch",
+        "property": "custom_model_data",
+        "entries": [
+            {
+                "threshold": 1,
+                "model": {
+                    "type": "minecraft:model",
+                    "model": "simplehats:item/julysunglasses",
+                    "tints": [
+                        {
+                            "type": "minecraft:dye",
+                            "default": -1
+                        }
+                    ]
+                }
+            },
+            {
+                "threshold": 2,
+                "model": {
+                    "type": "minecraft:model",
+                    "model": "simplehats:item/julytophat"
+                }
+            }
+        ],
+        "fallback": {
+            "type": "minecraft:model",
+            "model": "simplehats:item/julydouble",
+            "tints": [
+                {
+                    "type": "minecraft:dye",
+                    "default": -1
+                }
+            ]
+        }
+    }
+}

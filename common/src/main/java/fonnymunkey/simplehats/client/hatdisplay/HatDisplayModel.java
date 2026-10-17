@@ -1,19 +1,20 @@
 package fonnymunkey.simplehats.client.hatdisplay;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
-import fonnymunkey.simplehats.common.entity.HatDisplay;
-import net.minecraft.client.model.*;
+import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
-import net.minecraft.client.model.geom.builders.*;
-import net.minecraft.world.entity.Entity;
+import net.minecraft.client.model.geom.builders.CubeDeformation;
+import net.minecraft.client.model.geom.builders.CubeListBuilder;
+import net.minecraft.client.model.geom.builders.LayerDefinition;
+import net.minecraft.client.model.geom.builders.MeshDefinition;
+import net.minecraft.client.model.geom.builders.PartDefinition;
 
-public class HatDisplayModel<T extends Entity> extends EntityModel<HatDisplay> {
+public class HatDisplayModel extends EntityModel<HatDisplayRenderState> {
     
     private final ModelPart bb_main;
     
     public HatDisplayModel(ModelPart root) {
+        super(root);
         this.bb_main = root.getChild("bb_main");
     }
 
@@ -31,10 +32,6 @@ public class HatDisplayModel<T extends Entity> extends EntityModel<HatDisplay> {
     }
 
     @Override
-    public void setupAnim(HatDisplay entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) { }
-
-    @Override
-    public void renderToBuffer(PoseStack poseStack, VertexConsumer vertexConsumer, int packedLight, int packedOverlay, int color) {
-        bb_main.render(poseStack, vertexConsumer, packedLight, packedOverlay, color);
+    public void setupAnim(HatDisplayRenderState state) {
     }
 }

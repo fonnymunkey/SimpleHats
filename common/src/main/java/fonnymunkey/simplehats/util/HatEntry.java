@@ -5,7 +5,7 @@ import fonnymunkey.simplehats.Constants;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Rarity;
 
 import java.util.Date;
@@ -157,8 +157,8 @@ public class HatEntry {
         }
 
         private void parseParticleString() {
-            ResourceLocation location = ResourceLocation.tryParse(this.particleTypeString);
-            if(location != null) this.particleTypeParsed = BuiltInRegistries.PARTICLE_TYPE.get(location);
+            Identifier location = Identifier.tryParse(this.particleTypeString);
+            if(location != null) this.particleTypeParsed = BuiltInRegistries.PARTICLE_TYPE.getValue(location);
             else this.particleTypeParsed = null;
 
             if(this.particleTypeParsed == null) {

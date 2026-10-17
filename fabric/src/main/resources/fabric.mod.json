@@ -30,11 +30,9 @@
         "fabric-api": "*",
         "minecraft": "${minecraft_version}",
         "java": ">=${java_version}",
-    	"accessories": ">=${accessories_version}",
+    	"trinkets_updated": ">=${trinkets_version}",
         "owo": ">=${owo_version}"
     },
-    "suggests": {
-        "another-mod": "*"
-    }
+    "accessWidener": "${mod_id}.accesswidener"
 }
   

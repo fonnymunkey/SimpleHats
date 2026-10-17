@@ -1,14 +1,16 @@
 package fonnymunkey.simplehats.common.init;
 
+import java.util.List;
+
 import fonnymunkey.simplehats.common.entity.HatDisplay;
 import fonnymunkey.simplehats.common.item.BagItem;
 import fonnymunkey.simplehats.common.item.HatDisplayItem;
 import fonnymunkey.simplehats.common.item.HatItem;
+
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.crafting.CustomRecipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
-
-import java.util.List;
 
 public interface IModRegistry {
 	
@@ -39,6 +41,7 @@ public interface IModRegistry {
 	
 	EntityType<HatDisplay> getHatDisplayEntity();
 	
-	RecipeSerializer<?> getHatScrapSerializer();
-	RecipeSerializer<?> getHatVariantSerializer();
+	RecipeSerializer<? extends CustomRecipe> getHatScrapSerializer();
+	RecipeSerializer<? extends CustomRecipe> getHatVariantSerializer();
+	RecipeSerializer<? extends CustomRecipe> getHatDyeingSerializer();
 }

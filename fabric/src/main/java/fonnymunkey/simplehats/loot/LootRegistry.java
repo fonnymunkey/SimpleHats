@@ -1,12 +1,14 @@
 package fonnymunkey.simplehats.loot;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Stream;
+
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.storage.loot.BuiltInLootTables;
 import net.minecraft.world.level.storage.loot.LootTable;
-
-import java.util.Arrays;
-import java.util.List;
 
 public abstract class LootRegistry {
 
@@ -29,7 +31,7 @@ public abstract class LootRegistry {
 			BuiltInLootTables.BASTION_TREASURE
 	);
 	
-	public static final List<ResourceKey<LootTable>> LOOT_HATINJECT_ENTITY = Arrays.asList(
+	public static final List<ResourceKey<LootTable>> LOOT_HATINJECT_ENTITY = Stream.of(
 			EntityType.BLAZE.getDefaultLootTable(),
 			EntityType.CAVE_SPIDER.getDefaultLootTable(),
 			EntityType.CREEPER.getDefaultLootTable(),
@@ -55,5 +57,8 @@ public abstract class LootRegistry {
 			EntityType.ZOMBIFIED_PIGLIN.getDefaultLootTable(),
 			EntityType.HOGLIN.getDefaultLootTable(),
 			EntityType.ZOMBIE_VILLAGER.getDefaultLootTable()
-	);
+	)
+		.filter(Optional::isPresent)
+		.map(Optional::orElseThrow)
+		.toList();
 }
