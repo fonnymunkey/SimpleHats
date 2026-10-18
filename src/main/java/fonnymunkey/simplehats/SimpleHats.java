@@ -1,47 +1,39 @@
 package fonnymunkey.simplehats;
 
-import fonnymunkey.simplehats.common.init.HatJson;
-import fonnymunkey.simplehats.common.init.ModConfig;
-import fonnymunkey.simplehats.common.init.ModRegistry;
-import fonnymunkey.simplehats.util.UUIDHandler;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.fml.InterModComms;
-import net.minecraftforge.fml.ModLoadingContext;
+import fonnymunkey.simplehats.compat.ISlotCompat;
+import fonnymunkey.simplehats.compat.NoSlotCompat;
+import fonnymunkey.simplehats.compat.baubles.BaublesCompat;
+import fonnymunkey.simplehats.proxy.CommonProxy;
+import fonnymunkey.simplehats.util.HatJson;
+import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.fml.common.SidedProxy;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import top.theillusivec4.curios.api.CuriosApi;
-import top.theillusivec4.curios.api.SlotTypeMessage;
-import top.theillusivec4.curios.api.SlotTypePreset;
 
-@Mod(SimpleHats.modId)
+@Mod(modid = SimpleHats.MODID, version = SimpleHats.VERSION, name = SimpleHats.NAME, dependencies = "after:baubles;after:jei")
 public class SimpleHats {
-    public static final String modId = "simplehats";
-    public static Logger logger = LogManager.getLogger();
+    public static final String MODID = "simplehats";
+    public static final String VERSION = "0.4.1";
+    public static final String NAME = "SimpleHats";
+    public static final Logger LOGGER = LogManager.getLogger(NAME);
 
-    public SimpleHats() {
-        IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
-        ModLoadingContext.get().registerConfig(net.minecraftforge.fml.config.ModConfig.Type.COMMON, ModConfig.COMMON_SPEC);
-        ModLoadingContext.get().registerConfig(net.minecraftforge.fml.config.ModConfig.Type.CLIENT, ModConfig.CLIENT_SPEC);
-        eventBus.addListener(this::enqueueIMC);
+    public static ISlotCompat SLOT_COMPAT = new NoSlotCompat();
 
-        HatJson.registerHatJson();
-        if(ModConfig.manualAllowUpdateCheck()) {//Resources don't load properly if loaded after configs are actually loaded, so manually do it early
-            UUIDHandler.setupUUIDMap();
-            DistExecutor.safeRunWhenOn(Dist.CLIENT, () -> UUIDHandler::checkResourceUpdates);//Only need to download resources on client
-        }
+    @SidedProxy(clientSide = "fonnymunkey.simplehats.proxy.ClientProxy", serverSide = "fonnymunkey.simplehats.proxy.CommonProxy")
+    public static CommonProxy PROXY;
 
-        ModRegistry.ITEM_REG.register(eventBus);
-        ModRegistry.ENTITY_REG.register(eventBus);
-        ModRegistry.RECIPE_REG.register(eventBus);
-        ModRegistry.LOOT_REG.register(eventBus);
+    @Mod.EventHandler
+    public void preInit(FMLPreInitializationEvent event) {
+        if(Loader.isModLoaded("baubles")) SLOT_COMPAT = new BaublesCompat();
+        HatJson.registerHatJson(event.getModConfigurationDirectory());
+        PROXY.preInit(event);
     }
 
-    public void enqueueIMC(final InterModEnqueueEvent event) {
-        InterModComms.sendTo(CuriosApi.MODID, SlotTypeMessage.REGISTER_TYPE, () -> SlotTypePreset.HEAD.getMessageBuilder().cosmetic().build());
+    @Mod.EventHandler
+    public void init(FMLInitializationEvent event) {
+        PROXY.init();
     }
 }

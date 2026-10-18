@@ -1,0 +1,14 @@
+{
+  "required": true,
+  "package": "fonnymunkey.simplehats.mixin",
+  "refmap": "mixins.simplehats.refmap.json",
+  "compatibilityLevel": "JAVA_8",
+  "target": "@env(DEFAULT)",
+  "minVersion": "0.8",
+  "client": [
+    "vanilla.LayerArmorBaseMixin"
+  ],
+  "injectors": {
+    "maxShiftBy": 10
+  }
+}

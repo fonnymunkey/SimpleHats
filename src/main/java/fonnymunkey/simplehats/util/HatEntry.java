@@ -2,23 +2,19 @@ package fonnymunkey.simplehats.util;
 
 import com.google.gson.annotations.SerializedName;
 import fonnymunkey.simplehats.SimpleHats;
-import net.minecraft.core.Registry;
-import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.core.particles.SimpleParticleType;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.Rarity;
-import org.apache.logging.log4j.Level;
+import net.minecraft.item.EnumRarity;
+import net.minecraft.util.EnumParticleTypes;
 
 import java.util.Date;
 
 public class HatEntry {
     public static final HatDyeSettings DYE_NONE = new HatDyeSettings(false, 0);
-    public static final HatParticleSettings PARTICLE_NONE = new HatParticleSettings(false, "minecraft:heart", 0, HatParticleSettings.HatParticleMovement.TRAILING_FULL);
+    public static final HatParticleSettings PARTICLE_NONE = new HatParticleSettings(false, "heart", 0, HatParticleSettings.HatParticleMovement.TRAILING_FULL);
 
     @SerializedName("name")
     private String hatName;
     @SerializedName("rarity")
-    private Rarity hatRarity;
+    private EnumRarity hatRarity;
     @SerializedName("weight")
     private int hatWeight;
     @SerializedName("variants")
@@ -31,33 +27,33 @@ public class HatEntry {
     private HatParticleSettings hatParticleSettings;
 
     public HatEntry(String name) {
-        this(name, Rarity.COMMON, 0, 0, DYE_NONE, PARTICLE_NONE, HatSeason.NONE);
+        this(name, EnumRarity.COMMON, 0, 0, DYE_NONE, PARTICLE_NONE, HatSeason.NONE);
     }
-    public HatEntry(String name, Rarity rarity, int weight) {
+    public HatEntry(String name, EnumRarity rarity, int weight) {
         this(name, rarity, weight, 0, DYE_NONE, PARTICLE_NONE, HatSeason.NONE);
     }
-    public HatEntry(String name, Rarity rarity, int weight, int variantRange) {
+    public HatEntry(String name, EnumRarity rarity, int weight, int variantRange) {
         this(name, rarity, weight, variantRange, DYE_NONE, PARTICLE_NONE, HatSeason.NONE);
     }
-    public HatEntry(String name, Rarity rarity, int weight, int variantRange, HatDyeSettings dye) {
+    public HatEntry(String name, EnumRarity rarity, int weight, int variantRange, HatDyeSettings dye) {
         this(name, rarity, weight, variantRange, dye, PARTICLE_NONE, HatSeason.NONE);
     }
-    public HatEntry(String name, Rarity rarity, int weight, int variantRange, HatParticleSettings particle) {
+    public HatEntry(String name, EnumRarity rarity, int weight, int variantRange, HatParticleSettings particle) {
         this(name, rarity, weight, variantRange, DYE_NONE, particle, HatSeason.NONE);
     }
-    public HatEntry(String name, Rarity rarity, int weight, int variantRange, HatSeason season) {
+    public HatEntry(String name, EnumRarity rarity, int weight, int variantRange, HatSeason season) {
         this(name, rarity, weight, variantRange, DYE_NONE, PARTICLE_NONE, season);
     }
-    public HatEntry(String name, Rarity rarity, int weight, int variantRange, HatDyeSettings dye, HatParticleSettings particle) {
+    public HatEntry(String name, EnumRarity rarity, int weight, int variantRange, HatDyeSettings dye, HatParticleSettings particle) {
         this(name, rarity, weight, variantRange, dye, particle, HatSeason.NONE);
     }
-    public HatEntry(String name, Rarity rarity, int weight, int variantRange, HatDyeSettings dye, HatSeason season) {
+    public HatEntry(String name, EnumRarity rarity, int weight, int variantRange, HatDyeSettings dye, HatSeason season) {
         this(name, rarity, weight, variantRange, dye, PARTICLE_NONE, season);
     }
-    public HatEntry(String name, Rarity rarity, int weight, int variantRange, HatParticleSettings particle, HatSeason season) {
+    public HatEntry(String name, EnumRarity rarity, int weight, int variantRange, HatParticleSettings particle, HatSeason season) {
         this(name, rarity, weight, variantRange, DYE_NONE, particle, season);
     }
-    public HatEntry(String name, Rarity rarity, int weight, int variantRange, HatDyeSettings dye, HatParticleSettings particle, HatSeason season) {
+    public HatEntry(String name, EnumRarity rarity, int weight, int variantRange, HatDyeSettings dye, HatParticleSettings particle, HatSeason season) {
         this.hatName = name;
         this.hatRarity = rarity;
         this.hatWeight = Math.max(0, weight);
@@ -71,7 +67,7 @@ public class HatEntry {
         return this.hatName;
     }
 
-    public Rarity getHatRarity() {
+    public EnumRarity getHatRarity() {
         return this.hatRarity;
     }
 
@@ -89,7 +85,7 @@ public class HatEntry {
 
     public void validateDeserializedEntry() {
         //name already checked
-        if(this.hatRarity == null) this.hatRarity = Rarity.COMMON;
+        if(this.hatRarity == null) this.hatRarity = EnumRarity.COMMON;
         this.hatWeight = Math.max(0, this.hatWeight);
         this.variantRange = Math.max(0, this.variantRange);
         if(this.hatDyeSettings == null) this.hatDyeSettings = DYE_NONE;
@@ -132,7 +128,7 @@ public class HatEntry {
         @SerializedName("movement")
         private HatParticleMovement particleMovement;
 
-        private transient SimpleParticleType particleTypeParsed = ParticleTypes.HEART;
+        private transient EnumParticleTypes particleTypeParsed = EnumParticleTypes.HEART;
 
         public HatParticleSettings(boolean useParticle, String particleTypeString, float particleFrequency, HatParticleMovement particleMovement) {
             this.useParticle = useParticle;
@@ -144,7 +140,7 @@ public class HatEntry {
 
         public boolean getUseParticles() { return this.useParticle; }
 
-        public SimpleParticleType getParticleType() { return this.particleTypeParsed; }
+        public EnumParticleTypes getParticleType() { return this.particleTypeParsed; }
 
         public float getParticleFrequency() { return this.particleFrequency; }
 
@@ -152,16 +148,16 @@ public class HatEntry {
 
         public void validateParticleSettings() {
             //use defaults false
-            if(this.particleTypeString.isEmpty()) this.particleTypeString = "minecraft:heart";
+            if(this.particleTypeString.isEmpty()) this.particleTypeString = "heart";
             if(this.particleMovement == null) this.particleMovement = HatParticleMovement.TRAILING_FULL;
             this.parseParticleString();
         }
 
         private void parseParticleString() {
-            this.particleTypeParsed = (SimpleParticleType) Registry.PARTICLE_TYPE.get(new ResourceLocation(this.particleTypeString));
+            this.particleTypeParsed = EnumParticleTypes.getByName(this.particleTypeString.substring(this.particleTypeString.indexOf(':') + 1));
             if(this.particleTypeParsed == null) {
-                SimpleHats.logger.log(Level.ERROR, "Particle type \"" + this.particleTypeString + "\" failed to parse, setting default.");
-                this.particleTypeParsed = ParticleTypes.HEART;
+                SimpleHats.LOGGER.error("Particle type \"" + this.particleTypeString + "\" failed to parse, setting default.");
+                this.particleTypeParsed = EnumParticleTypes.HEART;
             }
         }
 

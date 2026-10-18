@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "L",
+    "W"
+  ],
+  "key": {
+    "L": {
+      "type": "forge:ore_dict",
+      "ore": "logWood"
+    },
+    "W": {
+      "type": "forge:ore_dict",
+      "ore": "slabWood"
+    }
+  },
+  "result": {
+    "item": "simplehats:hatdisplay"
+  }
+}
